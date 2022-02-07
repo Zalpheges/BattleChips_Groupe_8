@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+!Serverside Code.sln
+!Game Code.csproj
+!Player.IO Test Server.csproj
