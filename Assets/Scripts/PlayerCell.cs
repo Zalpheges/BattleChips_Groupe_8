@@ -29,22 +29,17 @@ public class PlayerCell : MonoBehaviour, IPointerClickHandler
     }
     private void OnMouseExit()
     {
-        if (!EventSystem.current.IsPointerOverGameObject())
-        {
-            Material mat = GetComponent<MeshRenderer>().material;
-            DisableHighlight(mat);
-        }        
+        Material mat = GetComponent<MeshRenderer>().material;
+        DisableHighlight(mat);              
     }
 
     private void EnableHighlight(Material mat)
     {
-        mat.color = Color.red;
         mat?.EnableKeyword("_EMISSION");
         mat?.SetColor("_EmissionColor", Color.grey);
     }
     private void DisableHighlight(Material mat)
     {
-        mat.color = Color.white;
         mat?.DisableKeyword("_EMISSION");
     }
 }
