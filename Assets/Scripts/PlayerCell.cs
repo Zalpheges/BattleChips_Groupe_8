@@ -34,11 +34,13 @@ public class PlayerCell : MonoBehaviour, IPointerClickHandler
 
     private void EnableHighlight(Material mat)
     {
+        mat.color = Color.red;
         mat?.EnableKeyword("_EMISSION");
         mat?.SetColor("_EmissionColor", Color.grey);
     }
     private void DisableHighlight(Material mat)
     {
+        mat.color = Color.white;
         mat?.DisableKeyword("_EMISSION");
     }
 }
