@@ -25,7 +25,9 @@ public class Player : MonoBehaviour
         _grid = new PlayerCell[height, width];
         _gridStart = transform.position +
                     transform.forward * (width - 1) / 2f * _cellSize -
-                    transform.right * (height - 1) / 2f * _cellSize;
+                    transform.right * (height - 1) / 2f * _cellSize
+                    +Vector3.up * 10;
+
 
         for (int x = 0; x < height; x++)
         {

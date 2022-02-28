@@ -16,11 +16,12 @@ public class PlayerCell : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        onClick?.Invoke(this);
+        if(!EventSystem.current.IsPointerOverGameObject())
+            onClick?.Invoke(this);
     }
     private void OnMouseEnter()
     {
-        if (true)
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
             Material mat = GetComponent<MeshRenderer>().material;
             EnableHighlight(mat);
@@ -28,8 +29,11 @@ public class PlayerCell : MonoBehaviour, IPointerClickHandler
     }
     private void OnMouseExit()
     {
-        Material mat = GetComponent<MeshRenderer>().material;
-        DisableHighlight(mat);
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            Material mat = GetComponent<MeshRenderer>().material;
+            DisableHighlight(mat);
+        }        
     }
 
     private void EnableHighlight(Material mat)

@@ -7,7 +7,14 @@ public class CameraManager : MonoBehaviour
     private static CameraManager instance;
 
     [SerializeField] private GameObject cameraPrefab;
-    [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
+
+    [Space(5)]
+
+    [SerializeField] private Vector3 offSetPosition;
+
+    [Space(5)]
+
+    [SerializeField] private Vector3 offSetRotation;
 
     private CinemachineClearShot cinemachineClearShot;
     private int index = 0;
@@ -19,10 +26,6 @@ public class CameraManager : MonoBehaviour
         cinemachineClearShot = GetComponent<CinemachineClearShot>();
     }
 
-    private void Start()
-    {
-
-    }
 
     private void ChangePriority(int index)
     {
@@ -38,19 +41,26 @@ public class CameraManager : MonoBehaviour
 
     public void Previous()
     {
-        index = (index + 1) % cinemachineClearShot.ChildCameras.Length;
+        index = (index - 1);
+        if(index < 0)
+            index = cinemachineClearShot.ChildCameras.Length - 1;
+        
         ChangePriority(index);
     }
 
-    public static void InitCamera(List<Vector3> playersTransform)
+    public static void InitCamera(List<Transform> playersTransform)
     {
-        foreach (Vector3 playerTransform in playersTransform)
+        foreach (Transform playerTransform in playersTransform)
         {
-            GameObject cameraObject = Instantiate(instance.cameraPrefab);
-            cameraObject.transform.position += playerTransform;
+
+            GameObject cameraObject = Instantiate(instance.cameraPrefab, instance.cameraPrefab.transform.position, playerTransform.rotation);
+            cameraObject.transform.position = playerTransform.position + instance.offSetPosition;
+            cameraObject.transform.Rotate(instance.offSetRotation);
             cameraObject.transform.SetParent(instance.transform, true);
+
         }
-        instance.ChangePriority(0);
+
+        instance.cinemachineClearShot.ChildCameras[0].Priority = 1;
     }
 
 }

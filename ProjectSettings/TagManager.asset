@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Sea
+    uniqueID: 806630205
+    locked: 0
+  - name: Board
+    uniqueID: 3764934245
+    locked: 0

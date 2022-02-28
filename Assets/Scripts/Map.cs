@@ -12,18 +12,22 @@ public class Map : MonoBehaviour
 
     private void Start()
     {
+        List<Transform> playersTransform = new List<Transform>();
+
         List<Vector3> players = CalculatePlayersCoords();
-        CameraManager.InitCamera(players);
+
         bool a = false;
-        foreach(var p in players)
+        foreach (Vector3 playerPos in players)
         {
-            GameObject go = Instantiate(_playerPrefab, p, Quaternion.identity);
+            GameObject go = Instantiate(_playerPrefab, playerPos, Quaternion.identity);
             go.transform.LookAt(center);
             go.GetComponent<Player>().Initialize();
-            if(!a)
+            if (!a)
                 go.GetComponent<Renderer>().material.color = Color.red;
             a = true;
+            playersTransform.Add(go.transform);
         }
+        CameraManager.InitCamera(playersTransform);
     }
 
     private List<Vector3> CalculatePlayersCoords()
