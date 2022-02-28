@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5828929068489409347}
   m_Layer: 0
-  m_Name: 150MofSea
+  m_Name: PlayerField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

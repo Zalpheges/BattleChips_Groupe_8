@@ -9,9 +9,11 @@ public class Map : MonoBehaviour
     [SerializeField] private float _radius;
     [SerializeField] private int _nPlayers;
     [SerializeField] private GameObject _playerPrefab;
+
     private void Start()
     {
         List<Vector3> players = CalculatePlayersCoords();
+        CameraManager.InitCamera(players);
         bool a = false;
         foreach(var p in players)
         {
@@ -23,7 +25,8 @@ public class Map : MonoBehaviour
             a = true;
         }
     }
-    List<Vector3> CalculatePlayersCoords()
+
+    private List<Vector3> CalculatePlayersCoords()
     {
         float angleDelta = 360f / _nPlayers;
         List<Vector3> coords = new List<Vector3>();
