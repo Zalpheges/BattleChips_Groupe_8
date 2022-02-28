@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,22 +8,21 @@ public class Map : MonoBehaviour
     [SerializeField] private Transform center;
     [SerializeField] private float _radius;
     [SerializeField] private int _nPlayers;
-    [SerializeField] private GameObject playerPrefab;
-
+    [SerializeField] private GameObject _playerPrefab;
     private void Start()
     {
         List<Vector3> players = CalculatePlayersCoords();
         bool a = false;
         foreach(var p in players)
         {
-            GameObject go = Instantiate(playerPrefab, p, Quaternion.identity);
+            GameObject go = Instantiate(_playerPrefab, p, Quaternion.identity);
             go.transform.LookAt(center);
+            go.GetComponent<Player>().Initialize();
             if(!a)
                 go.GetComponent<Renderer>().material.color = Color.red;
             a = true;
         }
     }
-
     List<Vector3> CalculatePlayersCoords()
     {
         float angleDelta = 360f / _nPlayers;
