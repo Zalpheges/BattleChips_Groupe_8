@@ -25,12 +25,21 @@ public class PlayerCell : MonoBehaviour, IPointerClickHandler
         {
             Material mat = GetComponent<MeshRenderer>().material;
             EnableHighlight(mat);
+            if(Main.currentState == Main.PlayerState.PlacingChips && Main.currentSelectedChip != null)
+            {
+                Main.currentInstanciatedChip = Instantiate(Main.currentSelectedChip, transform.parent);
+                Main.currentInstanciatedChip.transform.Rotate(transform.up * Main.lastRotation);
+            }
         }
     }
     private void OnMouseExit()
     {
         Material mat = GetComponent<MeshRenderer>().material;
-        DisableHighlight(mat);              
+        DisableHighlight(mat); 
+        if (Main.currentState == Main.PlayerState.PlacingChips && Main.currentInstanciatedChip != null)
+        {
+            Destroy(Main.currentInstanciatedChip);
+        }
     }
 
     private void EnableHighlight(Material mat)

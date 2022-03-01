@@ -48,7 +48,20 @@ public class Player : MonoBehaviour
     }
     void OnCellClicked(PlayerCell cell)
     {
+        if (Main.currentState == Main.PlayerState.Waiting)
+            Debug.Log("fdp");
+        else if (Main.currentState == Main.PlayerState.Aiming)
+            Shoot();
+        else if (Main.currentState == Main.PlayerState.PlacingChips)
+            return;
         //TODO: Avertir Serveur
         Debug.Log(cell.position.ToString() + cell.type.ToString());
+    }
+
+    bool Shoot()
+    {
+        if (true) return false;
+        else if (false) return true;
+        else return false;
     }
 }

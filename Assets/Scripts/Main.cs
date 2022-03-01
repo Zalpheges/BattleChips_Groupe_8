@@ -5,7 +5,16 @@ using UnityEngine;
 public class Main : MonoBehaviour
 {
     private static Main instance;
-
+    public static GameObject currentSelectedChip;
+    public static GameObject currentInstanciatedChip;
+    public static float lastRotation;
+    public enum PlayerState
+    {
+        PlacingChips,
+        Waiting,
+        Aiming
+    }
+    public static PlayerState currentState;
     [SerializeField] private GameObject mainPlayerField;
     [SerializeField] private GameObject otherPlayerField;
 
@@ -14,4 +23,8 @@ public class Main : MonoBehaviour
         instance = this;
     }
 
+    private void ChangeCurrentChip(GameObject chip)
+    {
+        currentSelectedChip = chip;
+    }
 }
