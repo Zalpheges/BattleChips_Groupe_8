@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Player : MonoBehaviour
     private PlayerCell[,] _grid;
 
     private bool you;
+    private bool _displayShipMenu = false;
 
     private void Start()
     {
@@ -53,9 +55,45 @@ public class Player : MonoBehaviour
         else if (Main.currentState == Main.PlayerState.Aiming)
             Shoot();
         else if (Main.currentState == Main.PlayerState.PlacingChips)
-            return;
+        {
+            if(Main.currentSelectedChip != null)
+            {
+                Main.currentInstanciatedChip = null;
+                Main.currentSelectedChip = null;
+            }
+            else
+            {
+                _displayShipMenu = true;
+            }
+        }
         //TODO: Avertir Serveur
         Debug.Log(cell.position.ToString() + cell.type.ToString());
+    }
+
+    void OnGUI()
+    {
+        if (_displayShipMenu)
+        {
+            Vector2 position = Camera.main.WorldToScreenPoint(Main.currentInstanciatedChip.transform.position);
+            position.y = Screen.height - position.y;
+            GUILayout.BeginArea(new Rect(position.x, position.y, 160, 200), GUI.skin.box);
+
+            GUILayout.Label("Remove this ship ?");
+
+            if (GUILayout.Button("Remove it"))
+            {
+                Destroy(Main.currentInstanciatedChip);
+                Main.chipsButtons[Main.currentSelectedChip].interactable = true;
+                Main.currentSelectedChip = null;
+            }
+
+            if (GUILayout.Button("Cancel"))
+            {
+                _displayShipMenu = false;
+            }
+
+            GUILayout.EndArea();
+        }
     }
 
     bool Shoot()

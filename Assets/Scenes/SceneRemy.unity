@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &59688752 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1171684472522874, guid: 74d0740f4abc7e54fab50d33af2582da, type: 3}
+  m_PrefabInstance: {fileID: 536637559}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &120027806
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,6 +244,7 @@ GameObject:
   - component: {fileID: 241190287}
   - component: {fileID: 241190286}
   - component: {fileID: 241190285}
+  - component: {fileID: 241190288}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -258,8 +264,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d64efccde7c97c04db4aad9be8cc38c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  center: {fileID: 915609300}
-  _radius: 65
+  _center: {fileID: 915609300}
+  _radius: 200
   _nPlayers: 5
   _playerPrefab: {fileID: 3784581188055352593, guid: 8700f7701ec422f4bb56381a1c61ae6e, type: 3}
 --- !u!114 &241190286
@@ -288,6 +294,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &241190288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241190284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06e07768d8fd0e64d888551558120f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedButtons:
+  - button: {fileID: 1246412156}
+    prefabChip: {fileID: 1081981321}
+  - button: {fileID: 956767575}
+    prefabChip: {fileID: 1130881245}
+  - button: {fileID: 1965407105}
+    prefabChip: {fileID: 1402281829}
+  - button: {fileID: 378459864}
+    prefabChip: {fileID: 59688752}
+  - button: {fileID: 2114038494}
+    prefabChip: {fileID: 539110934}
 --- !u!1001 &252198716
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -523,7 +552,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 378459865}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 241190288}
+        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+        m_MethodName: DisableButton
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 378459864}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &378459865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -768,6 +809,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74d0740f4abc7e54fab50d33af2582da, type: 3}
+--- !u!1 &539110934 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1257255175192470, guid: c3672f9b2e0555e418f7dcc46c6d0d10, type: 3}
+  m_PrefabInstance: {fileID: 1663542901}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &915609300 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3645501962300292292, guid: b3a4ddab237f0bc44b11155c72e30c05, type: 3}
@@ -855,7 +901,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 956767576}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 241190288}
+        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+        m_MethodName: DisableButton
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 956767575}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &956767576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -894,6 +952,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956767573}
   m_CullTransparentMesh: 1
+--- !u!1 &1081981321 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2756375870549394231, guid: 2eed531adb9d7f14a806048db3b2519c, type: 3}
+  m_PrefabInstance: {fileID: 1961196165}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1129436605
 GameObject:
   m_ObjectHideFlags: 0
@@ -960,6 +1023,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1130881245 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1042197431107668, guid: ec5d6bc6e2d4942448a8b3d9eddf3865, type: 3}
+  m_PrefabInstance: {fileID: 252198716}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1163285775
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,7 +1190,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1246412157}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 241190288}
+        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+        m_MethodName: DisableButton
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1246412156}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1246412157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1293,6 +1373,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4870287529633702271, guid: 2eed531adb9d7f14a806048db3b2519c, type: 3}
   m_PrefabInstance: {fileID: 1961196165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1402281829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1307028158353980, guid: 09419625ea90e2f478b96ae476784b2c, type: 3}
+  m_PrefabInstance: {fileID: 1405918495}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1405918495
 PrefabInstance:
@@ -1598,7 +1683,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1811452116}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!4 &1811452120
 Transform:
   m_ObjectHideFlags: 0
@@ -1784,7 +1869,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1965407106}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 241190288}
+        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+        m_MethodName: DisableButton
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1965407105}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1965407106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1910,7 +2007,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2114038495}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 241190288}
+        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+        m_MethodName: DisableButton
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2114038494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2114038495
 MonoBehaviour:
   m_ObjectHideFlags: 0
