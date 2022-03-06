@@ -10,6 +10,7 @@ public class Map : MonoBehaviour
     [SerializeField] private int _nPlayers;
     [SerializeField] private GameObject _playerPrefab;
 
+
     private void Start()
     {
         List<Transform> playersTransform = new List<Transform>();
