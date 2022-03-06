@@ -28,7 +28,7 @@ public class Map : MonoBehaviour
             a = true;
             playersTransform.Add(go.transform);
         }
-        //CameraManager.InitCamera(playersTransform);
+        CameraManager.InitCamera(playersTransform);
     }
 
     private List<Vector3> CalculatePlayersCoords()
