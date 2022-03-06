@@ -6,10 +6,15 @@ using UnityEngine.UI;
 
 public class Main : MonoBehaviour
 {
-    private static Main _instance;
+    public static Main instance;
+    public GameObject canvasSelection;
+    public Button submitButton;
     public static int currentId = -1;
     public static GameObject currentInstanciatedChip;
     public static float lastRotation;
+    public static int nShipsToPlace = 5;
+    public static Dictionary<int, Button> chipsButtons = new Dictionary<int, Button>();
+    public static Dictionary<int, int> chipsLengths = new Dictionary<int, int>();
     public enum PlayerState
     {
         PlacingChips,
@@ -19,8 +24,6 @@ public class Main : MonoBehaviour
 
     public static PlayerState currentState;
 
-    public static Dictionary<int, Button> chipsButtons = new Dictionary<int, Button>();
-    public static Dictionary<int, int> chipsLengths = new Dictionary<int, int>();
 
     [Serializable]
     private struct ShipsData
@@ -35,7 +38,7 @@ public class Main : MonoBehaviour
 
     private void Awake()
     {
-        _instance = this;
+        instance = this;
         foreach (ShipsData button in shipsDatas)
         {
             chipsButtons.Add(button.shipId, button.button);
@@ -62,6 +65,7 @@ public class Main : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(1))
             RotateChip();
+        submitButton.interactable = nShipsToPlace == 0;
     }
 
     public void RotateChip()

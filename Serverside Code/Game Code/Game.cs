@@ -179,7 +179,7 @@ public class GameCode : Game<Player>
                     for (int i = 0; i < players.Count; ++i)
                     {
                         players[i].Index = i;
-                        players[i].Send("Board", i);
+                        players[i].Send("Board", i, players.Count);
                         players[i].IsReady = false;
                     }
                 }

@@ -11,6 +11,8 @@ public class ClientManager : MonoBehaviour
 
 	private static ClientManager instance;
 
+	private int nCurrentPlayer = 0;
+
     private void Awake()
     {
 		if (instance == null)
@@ -99,6 +101,11 @@ public class ClientManager : MonoBehaviour
 		instance.server.Send("Add", x, y, dir, length);
 	}
 
+	public static void Boarded()
+    {
+		instance.server.Send("Boarded");
+    }
+
 	private void FixedUpdate()
 	{
 		while (messages.Count > 0)
@@ -110,10 +117,15 @@ public class ClientManager : MonoBehaviour
 				case "Board":
                 {
 					int id = message.GetInt(0);
+					int count = message.GetInt(1);
 
 					ShowMenu(Menu.None);
-
-					// Lancer la selection de board et répondre "Boarded" quand terminé
+					Map.nPlayers = count;
+					Map.myId = id;
+					Map.Init();
+					Main.instance.canvasSelection.SetActive(true);
+					
+					// Lancer la selection de board et répondre "Boarded" quand terminé CHECK
 
 					break;
                 }
@@ -141,14 +153,16 @@ public class ClientManager : MonoBehaviour
 						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coulé pendant l'animation
                     }
 					else {
-						// Case de vient rouge
+						// Case devient rouge
                     }
-
+					nCurrentPlayer++;
+					nCurrentPlayer %= Map.nPlayers;
 					break;
                 }
 
 				case "Play":
-                {
+				{
+					Main.instance.canvasSelection.SetActive(false);
 					// La partie vient de commencer tous les joueurs ont répondu "Boarded"
 
 					break;
