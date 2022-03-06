@@ -23,7 +23,6 @@ public class PlayerCell : MonoBehaviour
 
     public void MouseEnter()
     {
-        Debug.Log("fdpEnter");
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             Material mat = GetComponent<MeshRenderer>().material;
@@ -39,7 +38,6 @@ public class PlayerCell : MonoBehaviour
     }
     public void MouseExit()
     {
-        Debug.Log("fdpExit");
         Material mat = GetComponent<MeshRenderer>().material;
         DisableHighlight(mat); 
         if (Main.currentState == Main.PlayerState.PlacingChips && Main.currentInstanciatedChip != null && Main.currentId != -1)

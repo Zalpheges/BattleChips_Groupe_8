@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Main : MonoBehaviour
 {
     private static Main _instance;
-    public static int currentId;
+    public static int currentId = -1;
     public static GameObject currentInstanciatedChip;
     public static float lastRotation;
     public enum PlayerState
@@ -20,23 +20,26 @@ public class Main : MonoBehaviour
     public static PlayerState currentState;
 
     public static Dictionary<int, Button> chipsButtons = new Dictionary<int, Button>();
+    public static Dictionary<int, int> chipsLengths = new Dictionary<int, int>();
 
     [Serializable]
-    private struct LinkedButton
+    private struct ShipsData
     {
         public Button button;
         public int shipId;
+        public int length;
     }
-    [SerializeField] private LinkedButton[] linkedButtons;
+    [SerializeField] private ShipsData[] shipsDatas;
     [SerializeField] private LayerMask _cellsLayer;
-    private PlayerCell currentCell;
+    private PlayerCell _currentCell;
 
     private void Awake()
     {
         _instance = this;
-        foreach (LinkedButton button in linkedButtons)
+        foreach (ShipsData button in shipsDatas)
         {
             chipsButtons.Add(button.shipId, button.button);
+            chipsLengths.Add(button.shipId, button.length);
         }
     }
 
@@ -49,20 +52,30 @@ public class Main : MonoBehaviour
             tmp = hitInfo.transform.GetComponent<PlayerCell>();
             if (Input.GetMouseButtonDown(0))
                 tmp.PointerClick();
-            if (currentCell != tmp)
+            if (_currentCell != tmp)
             {
-                if(currentCell != null)
-                    currentCell.MouseExit();
-                currentCell = tmp;
-                currentCell.MouseEnter();
+                if(_currentCell != null)
+                    _currentCell.MouseExit();
+                _currentCell = tmp;
+                _currentCell.MouseEnter();
             }
         }
+        if (Input.GetMouseButtonDown(1))
+            RotateChip();
+    }
+
+    public void RotateChip()
+    {
+        if (currentId == -1)
+            return;
+        lastRotation += 90;
+        currentInstanciatedChip.transform.Rotate(Vector3.up * 90);
     }
 
     public void ChangeCurrentChip(int id)
     {
         Destroy(currentInstanciatedChip);
-        if (currentId != 1)
+        if (currentId != -1)
             chipsButtons[currentId].interactable = true;
         chipsButtons[id].interactable = false;
         currentId = id;

@@ -58,19 +58,21 @@ public class Player : MonoBehaviour
             Shoot();
         else if (Main.currentState == Main.PlayerState.PlacingChips)
         {
-            if(Main.currentId != -1)
+            if (Main.currentId != -1)
             {
-                cell.ship = Main.currentInstanciatedChip;
-                //remplir les cell nécessaires pour stocker le bati bato
-                Main.currentInstanciatedChip = null;
-                Main.currentId = -1;
+                bool a = PlaceChip(cell.position);
+                Debug.Log(a);
+                if (a)
+                {
+                    Main.currentInstanciatedChip = null;
+                    Main.currentId = -1;
+                }
             }
             else
             {
-                if(cell.ship != null)
+                if (cell.ship != null)
                 {
                     Main.currentInstanciatedChip = cell.ship;
-                    Main.currentId = cell.ship.GetComponent<Chip>().id;
                     _displayShipMenu = true;
                 }
             }
@@ -79,27 +81,65 @@ public class Player : MonoBehaviour
         Debug.Log(cell.position.ToString() + cell.type.ToString());
     }
 
+    private bool PlaceChip(Vector2Int cellPosition)
+    {
+        Vector3 vect = Main.currentInstanciatedChip.transform.GetChild(0).forward;
+        Debug.Log(vect);
+        Vector2Int dir = new Vector2Int((int)vect.x, -(int)vect.z);
+        int i = cellPosition.x, j = cellPosition.y;
+        for(int k = 0; k < Main.chipsLengths[Main.currentId]; k++)
+        {
+            Debug.Log(i + " " + j);
+            if (i < 0 || i >= _grid.GetLength(0) || j < 0 || j >= _grid.GetLength(1))
+                return false;
+            if (_grid[i, j].ship != null)
+                return false;
+            i += dir.x;
+            j += dir.y;
+        }
+
+        i = cellPosition.x;
+        j = cellPosition.y;
+        for (int k = 0; k < Main.chipsLengths[Main.currentId]; k++)
+        {
+            _grid[i, j].ship = Main.currentInstanciatedChip;
+            i += dir.x;
+            j += dir.y;
+        }
+        return true;
+    }
+    private void FillGridWithChip(Vector2Int cellPosition)
+    {
+        Vector3 vect = Main.currentInstanciatedChip.transform.forward;
+        Vector2Int dir = new Vector2Int((int)vect.x, -(int)vect.z);
+    }
+
     void OnGUI()
     {
         if (_displayShipMenu)
         {
             Vector2 position = Camera.main.WorldToScreenPoint(Main.currentInstanciatedChip.transform.position);
             position.y = Screen.height - position.y;
-            GUILayout.BeginArea(new Rect(position.x, position.y, 160, 200), GUI.skin.box);
+            GUILayout.BeginArea(new Rect(position.x, position.y, 300, 400), GUI.skin.box);
 
-            GUILayout.Label("Remove this ship ?");
-
-            if (GUILayout.Button("Remove it"))
+            GUIStyle labelStyle = new GUIStyle("Label");
+            labelStyle.fontSize = 32;
+            GUILayout.Label("Remove this ship ?", labelStyle);
+            GUIStyle buttonStyle = new GUIStyle("Button");
+            buttonStyle.fontSize = 32;
+            if (GUILayout.Button("Remove it", buttonStyle))
             {
+                Main.chipsButtons[Main.currentInstanciatedChip.GetComponentInChildren<Chip>().id].interactable = true;
                 Destroy(Main.currentInstanciatedChip);
-                Main.chipsButtons[Main.currentId].interactable = true;
                 Main.currentId = -1;
                 Main.currentInstanciatedChip = null;
                 _displayShipMenu = false;
             }
 
-            if (GUILayout.Button("Cancel"))
+            if (GUILayout.Button("Cancel", buttonStyle))
             {
+                Main.currentId = -1;
+                Main.currentInstanciatedChip = null;
                 _displayShipMenu = false;
             }
 
