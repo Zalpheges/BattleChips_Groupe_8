@@ -4812,6 +4812,7 @@ GameObject:
   - component: {fileID: 416014}
   - component: {fileID: 13613378}
   - component: {fileID: 8190119338221220687}
+  - component: {fileID: 8942751841908093992}
   m_Layer: 3
   m_Name: missile
   m_TagString: Untagged
@@ -4866,6 +4867,17 @@ MonoBehaviour:
   offSetCameraRotation: {x: 0, y: 0, z: 0}
   offSetyBezierPoint: 500
   travelTime: 5
+--- !u!210 &8942751841908093992
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115386}
+  m_Enabled: 1
+  m_SortingLayerID: -530033051
+  m_SortingLayer: 2
+  m_SortingOrder: 1
 --- !u!1 &155060
 GameObject:
   m_ObjectHideFlags: 0
