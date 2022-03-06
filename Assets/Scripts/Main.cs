@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class Main : MonoBehaviour
 {
-    private static Main instance;
-    public static GameObject currentSelectedChip;
+    private static Main _instance;
+    public static int currentId;
     public static GameObject currentInstanciatedChip;
     public static float lastRotation;
     public enum PlayerState
@@ -19,33 +19,52 @@ public class Main : MonoBehaviour
 
     public static PlayerState currentState;
 
-    public static Dictionary<GameObject, Button> chipsButtons = new Dictionary<GameObject, Button>();
+    public static Dictionary<int, Button> chipsButtons = new Dictionary<int, Button>();
 
     [Serializable]
     private struct LinkedButton
     {
         public Button button;
-        public GameObject prefabChip;
+        public int shipId;
     }
     [SerializeField] private LinkedButton[] linkedButtons;
-    //[SerializeField] private GameObject mainPlayerField;
-    //[SerializeField] private GameObject otherPlayerField;
+    [SerializeField] private LayerMask _cellsLayer;
+    private PlayerCell currentCell;
 
     private void Awake()
     {
-        instance = this;
+        _instance = this;
         foreach (LinkedButton button in linkedButtons)
         {
-            chipsButtons.Add(button.prefabChip, button.button);
+            chipsButtons.Add(button.shipId, button.button);
         }
     }
 
-    private void ChangeCurrentChip(GameObject chip)
+    private void Update()
     {
-        currentSelectedChip = chip;
+        PlayerCell tmp;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, _cellsLayer))
+        {
+            tmp = hitInfo.transform.GetComponent<PlayerCell>();
+            if (Input.GetMouseButtonDown(0))
+                tmp.PointerClick();
+            if (currentCell != tmp)
+            {
+                if(currentCell != null)
+                    currentCell.MouseExit();
+                currentCell = tmp;
+                currentCell.MouseEnter();
+            }
+        }
     }
-    public void DisableButton(Button button)
+
+    public void ChangeCurrentChip(int id)
     {
-        button.interactable = false;
+        Destroy(currentInstanciatedChip);
+        if (currentId != 1)
+            chipsButtons[currentId].interactable = true;
+        chipsButtons[id].interactable = false;
+        currentId = id;
     }
 }

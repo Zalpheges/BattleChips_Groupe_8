@@ -50,20 +50,29 @@ public class Player : MonoBehaviour
     }
     void OnCellClicked(PlayerCell cell)
     {
+        if (_displayShipMenu)
+            return;
         if (Main.currentState == Main.PlayerState.Waiting)
             Debug.Log("fdp");
         else if (Main.currentState == Main.PlayerState.Aiming)
             Shoot();
         else if (Main.currentState == Main.PlayerState.PlacingChips)
         {
-            if(Main.currentSelectedChip != null)
+            if(Main.currentId != -1)
             {
+                cell.ship = Main.currentInstanciatedChip;
+                //remplir les cell nécessaires pour stocker le bati bato
                 Main.currentInstanciatedChip = null;
-                Main.currentSelectedChip = null;
+                Main.currentId = -1;
             }
             else
             {
-                _displayShipMenu = true;
+                if(cell.ship != null)
+                {
+                    Main.currentInstanciatedChip = cell.ship;
+                    Main.currentId = cell.ship.GetComponent<Chip>().id;
+                    _displayShipMenu = true;
+                }
             }
         }
         //TODO: Avertir Serveur
@@ -83,8 +92,9 @@ public class Player : MonoBehaviour
             if (GUILayout.Button("Remove it"))
             {
                 Destroy(Main.currentInstanciatedChip);
-                Main.chipsButtons[Main.currentSelectedChip].interactable = true;
-                Main.currentSelectedChip = null;
+                Main.chipsButtons[Main.currentId].interactable = true;
+                Main.currentId = -1;
+                _displayShipMenu = false;
             }
 
             if (GUILayout.Button("Cancel"))

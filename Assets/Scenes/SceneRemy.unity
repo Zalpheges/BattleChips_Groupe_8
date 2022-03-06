@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -555,11 +555,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 241190288}
         m_TargetAssemblyTypeName: Main, Assembly-CSharp
-        m_MethodName: DisableButton
+        m_MethodName: ChangeCurrentChip
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 378459864}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_ObjectArgument: {fileID: 59688752}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -904,11 +904,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 241190288}
         m_TargetAssemblyTypeName: Main, Assembly-CSharp
-        m_MethodName: DisableButton
+        m_MethodName: ChangeCurrentChip
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 956767575}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_ObjectArgument: {fileID: 1130881245}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1006,7 +1006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 1270273621}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1129436608
@@ -1193,11 +1193,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 241190288}
         m_TargetAssemblyTypeName: Main, Assembly-CSharp
-        m_MethodName: DisableButton
+        m_MethodName: ChangeCurrentChip
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1246412156}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_ObjectArgument: {fileID: 1081981321}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1319,7 +1319,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1270273621}
   m_LocalRotation: {x: 0.36422032, y: -0, z: -0, w: 0.9313129}
-  m_LocalPosition: {x: 0, y: 67.3, z: -98.7}
+  m_LocalPosition: {x: 0, y: 91.3, z: -308.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1691,8 +1691,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1811452116}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1010, y: 67.3, z: -98.7}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1010, y: 67.29999, z: -98.69997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1872,11 +1872,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 241190288}
         m_TargetAssemblyTypeName: Main, Assembly-CSharp
-        m_MethodName: DisableButton
+        m_MethodName: ChangeCurrentChip
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1965407105}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_ObjectArgument: {fileID: 1402281829}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2010,11 +2010,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 241190288}
         m_TargetAssemblyTypeName: Main, Assembly-CSharp
-        m_MethodName: DisableButton
+        m_MethodName: ChangeCurrentChip
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 2114038494}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_ObjectArgument: {fileID: 539110934}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
