@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Player : MonoBehaviour
     private PlayerCell[,] _grid;
 
     private bool you;
+    private bool _displayShipMenu = false;
 
     private void Start()
     {
@@ -48,7 +50,67 @@ public class Player : MonoBehaviour
     }
     void OnCellClicked(PlayerCell cell)
     {
+        if (_displayShipMenu)
+            return;
+        if (Main.currentState == Main.PlayerState.Waiting)
+            Debug.Log("fdp");
+        else if (Main.currentState == Main.PlayerState.Aiming)
+            Shoot();
+        else if (Main.currentState == Main.PlayerState.PlacingChips)
+        {
+            if(Main.currentId != -1)
+            {
+                cell.ship = Main.currentInstanciatedChip;
+                //remplir les cell nécessaires pour stocker le bati bato
+                Main.currentInstanciatedChip = null;
+                Main.currentId = -1;
+            }
+            else
+            {
+                if(cell.ship != null)
+                {
+                    Main.currentInstanciatedChip = cell.ship;
+                    Main.currentId = cell.ship.GetComponent<Chip>().id;
+                    _displayShipMenu = true;
+                }
+            }
+        }
         //TODO: Avertir Serveur
         Debug.Log(cell.position.ToString() + cell.type.ToString());
+    }
+
+    void OnGUI()
+    {
+        if (_displayShipMenu)
+        {
+            Vector2 position = Camera.main.WorldToScreenPoint(Main.currentInstanciatedChip.transform.position);
+            position.y = Screen.height - position.y;
+            GUILayout.BeginArea(new Rect(position.x, position.y, 160, 200), GUI.skin.box);
+
+            GUILayout.Label("Remove this ship ?");
+
+            if (GUILayout.Button("Remove it"))
+            {
+                Destroy(Main.currentInstanciatedChip);
+                Main.chipsButtons[Main.currentId].interactable = true;
+                Main.currentId = -1;
+                Main.currentInstanciatedChip = null;
+                _displayShipMenu = false;
+            }
+
+            if (GUILayout.Button("Cancel"))
+            {
+                _displayShipMenu = false;
+            }
+
+            GUILayout.EndArea();
+        }
+    }
+
+    bool Shoot()
+    {
+        if (true) return false;
+        else if (false) return true;
+        else return false;
     }
 }

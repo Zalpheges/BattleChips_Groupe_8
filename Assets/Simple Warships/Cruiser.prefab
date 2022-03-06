@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33995632954652046}
   - component: {fileID: 23248618128248286}
   - component: {fileID: 64146703819460646}
+  - component: {fileID: 6048739489501047795}
   m_Layer: 0
   m_Name: Cruiser
   m_TagString: Untagged
@@ -101,6 +102,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300026, guid: 46cd524120389ad418423045618d2621, type: 3}
+--- !u!114 &6048739489501047795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042197431107668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e128ec5aa44c8849b26e8e2ad2eb540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 1
 --- !u!1 &1063994187883712
 GameObject:
   m_ObjectHideFlags: 0

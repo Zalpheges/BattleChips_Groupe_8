@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
-    [SerializeField] private Transform center;
+    [SerializeField] private Transform _center;
     [SerializeField] private float _radius;
     [SerializeField] private int _nPlayers;
     [SerializeField] private GameObject _playerPrefab;
@@ -21,24 +21,24 @@ public class Map : MonoBehaviour
         foreach (Vector3 playerPos in players)
         {
             GameObject go = Instantiate(_playerPrefab, playerPos, Quaternion.identity);
-            go.transform.LookAt(center);
+            go.transform.LookAt(_center);
             go.GetComponent<Player>().Initialize();
             if (!a)
                 go.GetComponent<Renderer>().material.color = Color.red;
             a = true;
             playersTransform.Add(go.transform);
         }
-        CameraManager.InitCamera(playersTransform);
+        //CameraManager.InitCamera(playersTransform);
     }
 
     private List<Vector3> CalculatePlayersCoords()
     {
         float angleDelta = 360f / _nPlayers;
         List<Vector3> coords = new List<Vector3>();
-        coords.Add(center.position + Vector3.back * _radius);
+        coords.Add(_center.position + Vector3.back * _radius);
         for (int i = 1; i < _nPlayers; ++i)
         {
-            Vector3 pos = center.position;
+            Vector3 pos = _center.position;
             float currentAngle = i * angleDelta;
             pos += Mathf.Sin(currentAngle % 90 * Mathf.Deg2Rad + ((int)(currentAngle / 90) % 2 == 0 ? 0 : Mathf.PI / 2)/*turn sin into cos if needed*/)
                 * _radius *

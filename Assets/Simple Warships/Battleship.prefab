@@ -2540,6 +2540,7 @@ GameObject:
   - component: {fileID: 33000963977026716}
   - component: {fileID: 23691176581414648}
   - component: {fileID: 64536545008364172}
+  - component: {fileID: 6188356052421712422}
   m_Layer: 0
   m_Name: Battleship
   m_TagString: Untagged
@@ -2629,6 +2630,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300024, guid: 46cd524120389ad418423045618d2621, type: 3}
+--- !u!114 &6188356052421712422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813258765252098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e128ec5aa44c8849b26e8e2ad2eb540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
 --- !u!1 &1831865685939244
 GameObject:
   m_ObjectHideFlags: 0
