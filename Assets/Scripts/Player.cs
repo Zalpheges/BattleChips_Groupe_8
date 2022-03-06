@@ -94,6 +94,7 @@ public class Player : MonoBehaviour
                 Destroy(Main.currentInstanciatedChip);
                 Main.chipsButtons[Main.currentId].interactable = true;
                 Main.currentId = -1;
+                Main.currentInstanciatedChip = null;
                 _displayShipMenu = false;
             }
 
