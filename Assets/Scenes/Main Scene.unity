@@ -355,7 +355,7 @@ MonoBehaviour:
   - cellType: 1
     material: {fileID: 2100000, guid: 0a099689bdb985540a52ac305675ee3e, type: 2}
   - cellType: 2
-    material: {fileID: 0}
+    material: {fileID: 2100000, guid: abfd2fa713eb8a149a69740220da298b, type: 2}
   _cellsLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -696,7 +696,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &243884051
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1637,7 +1637,7 @@ GameObject:
   - component: {fileID: 516417886}
   - component: {fileID: 516417885}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Connexion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3147,7 +3147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1133732006
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5049,6 +5049,7 @@ MonoBehaviour:
   username: {fileID: 77209503}
   roomname: {fileID: 1429783486}
   playerCount: {fileID: 1448657917}
+  background: {fileID: 1133732005}
   connect: {fileID: 243884050}
   ready: {fileID: 1187345362}
 --- !u!4 &1560429289

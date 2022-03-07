@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
             direction = 1;
         Main.currentInstanciatedChip.GetComponentInChildren<Chip>().direction = dir;
         ClientManager.AddShip(Main.currentId, i, j, direction, length);
-        Main.nShipsToPlace--;
+        --Main.nShipsToPlace;
 
         for (int k = 0; k < Main.chipsLengths[Main.currentId]; k++)
         {

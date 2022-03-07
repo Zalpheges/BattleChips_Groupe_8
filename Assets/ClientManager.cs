@@ -33,7 +33,7 @@ public class ClientManager : MonoBehaviour
 
     private void Start()
     {
-		_offsetMissileSpawn = _exampleFiringPoint.position - _examplePlayer.position;
+		_offsetMissileSpawn = Vector3.zero;//_exampleFiringPoint.position - _examplePlayer.position;
 		messages = new Queue<Message>();
 
 		if (PlayerPrefs.HasKey("Username"))
@@ -111,6 +111,7 @@ public class ClientManager : MonoBehaviour
 
 	public static void Boarded()
     {
+		Main.boarded = true;
 		instance.server.Send("Boarded");
     }
 
@@ -131,6 +132,7 @@ public class ClientManager : MonoBehaviour
 					Map.nPlayers = count;
 					Map.myId = id;
 					Map.Init();
+					Main.connected = true;
 					Main.instance.canvasSelection.SetActive(true);
 					
 					// Lancer la selection de board et répondre "Boarded" quand terminé CHECK
@@ -170,7 +172,8 @@ public class ClientManager : MonoBehaviour
 					Transform currentPlayerT = Map.GetPlayerById(nCurrentPlayer).transform;
 					Player targetedPlayer = Map.GetPlayerById(id);
 					Missile missile = Instantiate(_prefabMissile).GetComponent<Missile>();
-					missile.Init(currentPlayerT.position + _offsetMissileSpawn, targetedPlayer.GetWorldPosition(x, y));
+					Vector3 relativeOffset = currentPlayerT.forward * _offsetMissileSpawn.z + currentPlayerT.right * _offsetMissileSpawn.x;
+					missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y));
 
 					if (touched) {
 						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coulé pendant l'animation
@@ -260,6 +263,9 @@ public class ClientManager : MonoBehaviour
 	private TextMeshProUGUI playerCount;
 
 	[SerializeField]
+	private GameObject background;
+
+	[SerializeField]
 	private GameObject connect;
 
 	[SerializeField]
@@ -275,6 +281,7 @@ public class ClientManager : MonoBehaviour
 
 	private void ShowMenu(Menu menu)
     {
+		background.SetActive(menu != Menu.None);
 		connect.SetActive(menu == Menu.Connect);
 		ready.SetActive(menu == Menu.Ready);
     }
