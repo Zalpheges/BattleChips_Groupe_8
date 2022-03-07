@@ -81,8 +81,17 @@ public class Player : MonoBehaviour
 
     private bool PlaceChip(Vector2Int cellPosition)
     {
-        Vector3 vect = Main.currentInstanciatedChip.transform.GetChild(0).forward;
-        Vector2Int dir = new Vector2Int((int)vect.x, -(int)vect.z);
+        int dir = (int)Main.lastRotation / 90;//sens horaire
+        Vector2Int vect = Vector2Int.zero;
+        if (dir == 0)
+            vect = Vector2Int.right;
+        else if (dir == 1)
+            vect = Vector2Int.up;
+        else if (dir == 2)
+            vect = Vector2Int.left;
+        else if (dir == 3)
+            vect = Vector2Int.down;
+        Debug.Log(vect);
         int i = cellPosition.x, j = cellPosition.y;
         int length = Main.chipsLengths[Main.currentId];
         for (int k = 0; k < length; k++)
@@ -91,30 +100,21 @@ public class Player : MonoBehaviour
                 return false;
             if (_grid[i, j].ship != null)
                 return false;
-            i += dir.x;
-            j += dir.y;
+            i += vect.x;
+            j += vect.y;
         }
 
         i = cellPosition.x;
         j = cellPosition.y;
-        int direction = 0;
-        if (dir == Vector2Int.right)
-            direction = 0;
-        else if (dir == Vector2Int.up)
-            direction = 3;
-        else if (dir == Vector2Int.left)
-            direction = 2;
-        else if (dir == Vector2Int.down)
-            direction = 1;
-        Main.currentInstanciatedChip.GetComponentInChildren<Chip>().direction = dir;
-        ClientManager.AddShip(Main.currentId, i, j, direction, length);
+        Main.currentInstanciatedChip.GetComponentInChildren<Chip>().direction = vect;
+        ClientManager.AddShip(Main.currentId, i, j, dir, length);
         --Main.nShipsToPlace;
 
         for (int k = 0; k < Main.chipsLengths[Main.currentId]; k++)
         {
             _grid[i, j].ship = Main.currentInstanciatedChip;
-            i += dir.x;
-            j += dir.y;
+            i += vect.x;
+            j += vect.y;
         }
         return true;
     }
