@@ -42,8 +42,8 @@ public class Ship
 
     public bool Intersect(int x, int y)
     {
-        return (this.y == y && IsHorizontallyDirectedTo(x) && state.Length >= Math.Abs(x - this.x)) ||
-            (this.x == x && IsVerticallyDirectedTo(y) && state.Length >= Math.Abs(y - this.y));
+        return (this.y == y && IsHorizontallyDirectedTo(x) && state.Length > Math.Abs(x - this.x)) ||
+            (this.x == x && IsVerticallyDirectedTo(y) && state.Length > Math.Abs(y - this.y));
     }
 
     public bool Intersect(Ship other)
@@ -57,7 +57,7 @@ public class Ship
             if (other.dir == 0 || other.dir == 2)
                 x += other.dir == 0 ? 1 : -1;
             else
-                y += other.dir == 1 ? 1 : -1;
+                y += other.dir == 1 ? -1 : 1;
         }
 
         return false;
@@ -73,8 +73,8 @@ public class Ship
     public bool IsVerticallyDirectedTo(int y)
     {
         return this.y == y ||
-            (dir == 1 && this.y < y) ||
-            (dir == 3 && this.y > y);
+            (dir == 1 && this.y > y) ||
+            (dir == 3 && this.y < y);
     }
 }
 
@@ -257,7 +257,7 @@ public class GameCode : Game<Player>
                         if (players[id].IsDead())
                         Broadcast("Dead", id);
 
-                        ++current;
+                        current = (current + 1) % players.Count;
 
                         int count = 0, winner = -1;
                         foreach (Player player in players)

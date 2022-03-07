@@ -2,38 +2,8 @@ C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\bi
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\BattleChips.pdb
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.dll
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.xml
-C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.AssemblyReference.cache
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.CoreCompileInputs.cache
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.CopyComplete
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\BattleChips.dll
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\BattleChips.pdb
-C:\Users\remid\OneDrive\Desktop\Cours\M1\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\BattleChips.dll
-C:\Users\remid\OneDrive\Desktop\Cours\M1\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\BattleChips.pdb
-C:\Users\remid\OneDrive\Desktop\Cours\M1\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.dll
-C:\Users\remid\OneDrive\Desktop\Cours\M1\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.xml
-C:\Users\remid\OneDrive\Desktop\Cours\M1\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.AssemblyReference.cache
-C:\Users\remid\OneDrive\Desktop\Cours\M1\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.CoreCompileInputs.cache
-C:\Users\remid\OneDrive\Desktop\Cours\M1\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.CopyComplete
-C:\Users\remid\OneDrive\Desktop\Cours\M1\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\BattleChips.dll
-C:\Users\remid\OneDrive\Desktop\Cours\M1\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\BattleChips.pdb
-<<<<<<< HEAD
-C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\BattleChips.dll
-C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\BattleChips.pdb
-C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.dll
-C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.xml
-C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.AssemblyReference.cache
-C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.CoreCompileInputs.cache
-C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.CopyComplete
-C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\BattleChips.dll
-C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\BattleChips.pdb
-=======
-D:\Utilisateur\Documents\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\BattleChips.dll
-D:\Utilisateur\Documents\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\BattleChips.pdb
-D:\Utilisateur\Documents\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.dll
-D:\Utilisateur\Documents\Battlechips_Groupe_8\Serverside Code\Game Code\bin\Debug\Player.IO GameLibrary.xml
-D:\Utilisateur\Documents\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.AssemblyReference.cache
-D:\Utilisateur\Documents\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.CoreCompileInputs.cache
-D:\Utilisateur\Documents\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.CopyComplete
-D:\Utilisateur\Documents\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\BattleChips.dll
-D:\Utilisateur\Documents\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\BattleChips.pdb
->>>>>>> main
+C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Game Code\obj\Debug\Game Code.csproj.AssemblyReference.cache
