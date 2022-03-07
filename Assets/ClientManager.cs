@@ -33,7 +33,7 @@ public class ClientManager : MonoBehaviour
 
     private void Start()
     {
-		_offsetMissileSpawn = Vector3.zero;//_exampleFiringPoint.position - _examplePlayer.position;
+		_offsetMissileSpawn = _exampleFiringPoint.position - _examplePlayer.position;
 		messages = new Queue<Message>();
 
 		if (PlayerPrefs.HasKey("Username"))
@@ -114,6 +114,11 @@ public class ClientManager : MonoBehaviour
 		Main.boarded = true;
 		instance.server.Send("Boarded");
     }
+	public static void Shoot(int id, int x, int y)
+    {
+		Debug.Log("Shoot");
+		instance.server.Send("Shoot", id, x, y);
+    }
 
 	private void FixedUpdate()
 	{
@@ -191,11 +196,15 @@ public class ClientManager : MonoBehaviour
                     }
 					++nCurrentPlayer;
 					nCurrentPlayer %= Map.nPlayers;
+					Main.currentState = Map.GetPlayerById(nCurrentPlayer).id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
 					break;
                 }
 
 				case "Play":
 				{
+					nCurrentPlayer = 0;
+					Main.currentState = Map.GetPlayerById(nCurrentPlayer).id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
+
 					Main.instance.canvasSelection.SetActive(false);
 					_gamePanel.SetActive(true);
 					// La partie vient de commencer tous les joueurs ont répondu "Boarded"

@@ -64,7 +64,7 @@ public class Main : MonoBehaviour
     {
         if (!connected)
             return;
-        if ((currentState != PlayerState.PlacingChips && !ClientManager.MyTurn) || Map.playersTransform[0].GetComponent<Player>().hasShot)
+        if ((currentState != PlayerState.PlacingChips && !ClientManager.MyTurn) || currentState == PlayerState.Waiting)
             return;
         //placingShips or myTurn
         PlayerCell tmp;
