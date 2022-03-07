@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using PlayerIOClient;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+
 public class ClientManager : MonoBehaviour
 {
 	private Queue<Message> messages;
@@ -48,6 +50,8 @@ public class ClientManager : MonoBehaviour
 		if (username.text.Length < 3 || roomname.text.Length < 3)
 			return;
 
+		b_connect.interactable = false;
+
 		PlayerIO.Authenticate(
 			"battlechips-tmwm0lz8memju96zesetw",
 			"public",
@@ -84,6 +88,7 @@ public class ClientManager : MonoBehaviour
 						Debug.Log("Error Joining Room: " + error.ToString());
 
 						ShowMenu(Menu.Connect);
+						b_connect.interactable = true;
 					}
 				);
 			},
@@ -91,6 +96,7 @@ public class ClientManager : MonoBehaviour
 				Debug.Log("Error connecting: " + error.ToString());
 
 				ShowMenu(Menu.Connect);
+				b_connect.interactable = true;
 			}
 		);
 	}
@@ -153,7 +159,7 @@ public class ClientManager : MonoBehaviour
 						int ready = message.GetInt(0);
 						int total = message.GetInt(1);
 
-						playerCount.text = ready + "/" + total + " pr�t" + (ready > 1 ? "s" : "");
+						playerCount.text = ready + "/" + total + " pret" + (ready > 1 ? "s" : "");
 
 						break;
 					}
@@ -305,6 +311,9 @@ public class ClientManager : MonoBehaviour
 
 	[SerializeField]
 	private GameObject connect;
+
+	[SerializeField]
+	private Button b_connect;
 
 	[SerializeField]
 	private GameObject ready;
