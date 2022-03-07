@@ -21,9 +21,7 @@ public class Temp : MonoBehaviour
         yield return new WaitForSeconds(2f);
         temp = Instantiate(prefab);
         Missile missile = temp.GetComponent<Missile>();
-        missile.StartPosition = StartTransform.position;
-        missile.EndPosition = EndTransform.position;
-        //Destroy(temp, 4f);
+        missile.Init(StartTransform.position, EndTransform.position, true);
 
     }
 }

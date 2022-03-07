@@ -19,6 +19,10 @@ public class Missile : MonoBehaviour
 
     [SerializeField] private float travelTime;
 
+    [Space(5)]
+
+    [SerializeField] private GameObject explosionPrefab;
+
     [System.NonSerialized] public Vector3 StartPosition;
     [System.NonSerialized] public Vector3 EndPosition;
 
@@ -27,11 +31,12 @@ public class Missile : MonoBehaviour
     private new CinemachineVirtualCamera camera;
 
     private bool launchMissile = false;
+    private bool shipHit = false;
     private float bezierProgression = 0f;
 
     private Vector3 nextPosition;
 
-    public void Init(Vector3 startPosition, Vector3 endPosition)
+    public void Init(Vector3 startPosition, Vector3 endPosition, bool shipHit)
     {
         StartPosition = startPosition;
         EndPosition = endPosition;
@@ -45,37 +50,49 @@ public class Missile : MonoBehaviour
         StartCoroutine(CameraMove());
         StartCoroutine(WaitTransition());
 
-        interpolatePoint = (EndPosition - StartPosition)/2f;
+        interpolatePoint = (EndPosition - StartPosition) / 2f;
         interpolatePoint.y += offSetyBezierPoint;
+
+        this.shipHit = shipHit;
     }
 
     private void Update()
     {
-        if(launchMissile && bezierProgression < 1)
+        if (launchMissile && bezierProgression < 1)
         {
             transform.position = nextPosition;
 
             float coeff = 1 - bezierProgression;
-            nextPosition = Mathf.Pow(coeff,2) * StartPosition + 2 * bezierProgression * coeff * interpolatePoint + Mathf.Pow(bezierProgression,2) * EndPosition;
-            bezierProgression += Time.deltaTime/ travelTime;
+            nextPosition = Mathf.Pow(coeff, 2) * StartPosition + 2 * bezierProgression * coeff * interpolatePoint + Mathf.Pow(bezierProgression, 2) * EndPosition;
+            bezierProgression += Time.deltaTime / travelTime;
             transform.LookAt(nextPosition);
             camera.transform.LookAt(nextPosition);
 
             if (bezierProgression >= 1)
-                Explosion();
+            {
+                EndReached();
+                if(shipHit)
+                    Explosion();
+            }           
+
+            if (CameraManager.transitionDelay / 10 + bezierProgression >= 1f && camera != null)
+                CameraManager.DestroyCamera(camera, 8);
         }
-    }
-
-    
-
-    private void OnDestroy()
-    {
-        CameraManager.DestroyCamera(camera, 8);
     }
 
     private void Explosion()
     {
+        Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), 2f);
+        
+    }
 
+    private void EndReached()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+        Destroy(gameObject, 4f);
     }
 
     private IEnumerator CameraMove()

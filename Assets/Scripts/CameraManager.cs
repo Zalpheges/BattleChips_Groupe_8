@@ -77,19 +77,6 @@ public class CameraManager : MonoBehaviour
         instance.cinemachineClearShot.ChildCameras[0].Priority = 1;
     }
 
-    /*public static void MissileCamera(Transform objectTransform, Vector3 offSetPosition, Vector3 offSetRotation)
-    {
-        instance.CreateCamera(objectTransform, offSetPosition, offSetRotation);
-        instance.cinemachineClearShot.ChildCameras[instance.index].Priority = 0;
-        instance.index = instance.cinemachineClearShot.ChildCameras.Length - 1;
-
-        instance.cinemachineClearShot.ChildCameras[instance.index].Priority = 1;
-    }*/
-    public static void ChangeCamera(CinemachineVirtualCamera cinemachineVirtualCamera)
-    {
-        cinemachineVirtualCamera.Priority = 10;
-    }
-
     public static void DestroyCamera(CinemachineVirtualCamera cinemachineVirtualCamera, int nextCamera)
     {
 

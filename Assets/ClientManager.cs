@@ -170,7 +170,7 @@ public class ClientManager : MonoBehaviour
 					Transform currentPlayerT = Map.GetPlayerById(nCurrentPlayer).transform;
 					Player targetedPlayer = Map.GetPlayerById(id);
 					Missile missile = Instantiate(_prefabMissile).GetComponent<Missile>();
-					missile.Init(currentPlayerT.position + _offsetMissileSpawn, targetedPlayer.GetWorldPosition(x, y));
+					missile.Init(currentPlayerT.position + _offsetMissileSpawn, targetedPlayer.GetWorldPosition(x, y), false);
 
 					if (touched) {
 						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coulé pendant l'animation
