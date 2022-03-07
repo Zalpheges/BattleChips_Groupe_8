@@ -5,27 +5,36 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
+    private static Map _instance;
+    public GameObject _prefabCell;
+    public static int nPlayers;
+    public static int myId;
     [SerializeField] private Transform _center;
-    [SerializeField] private float _radius;
-    [SerializeField] private int _nPlayers;
     [SerializeField] private GameObject _playerPrefab;
+    private float _radius;
 
 
-    private void Start()
+    private void Awake()
     {
+        _instance = this;
+    }
+
+    public static void Init()
+    {
+        _instance._radius = 1.5f * 10f / 2f * _instance._prefabCell.transform.localScale.x / Mathf.Tan(36f * Mathf.Deg2Rad);
         List<Transform> playersTransform = new List<Transform>();
 
-        List<Vector3> players = CalculatePlayersCoords();
+        List<Vector3> players = _instance.CalculatePlayersCoords();
 
-        bool a = false;
-        foreach (Vector3 playerPos in players)
+        for (int i = 0; i < players.Count; i++)
         {
-            GameObject go = Instantiate(_playerPrefab, playerPos, Quaternion.identity);
-            go.transform.LookAt(_center);
-            go.GetComponent<Player>().Initialize();
-            if (!a)
-                go.GetComponent<Renderer>().material.color = Color.red;
-            a = true;
+            GameObject go = Instantiate(_instance._playerPrefab, players[i], Quaternion.identity);
+            go.transform.LookAt(_instance._center);
+            Player player = go.GetComponent<Player>();
+            player.you = i == 0;
+            player.id = (myId + i) % nPlayers;
+            player.prefabCell = _instance._prefabCell;
+            player.Initialize();
             playersTransform.Add(go.transform);
         }
         CameraManager.InitCamera(playersTransform);
@@ -33,10 +42,10 @@ public class Map : MonoBehaviour
 
     private List<Vector3> CalculatePlayersCoords()
     {
-        float angleDelta = 360f / _nPlayers;
+        float angleDelta = 360f / nPlayers;
         List<Vector3> coords = new List<Vector3>();
         coords.Add(_center.position + Vector3.back * _radius);
-        for (int i = 1; i < _nPlayers; ++i)
+        for (int i = 1; i < nPlayers; ++i)
         {
             Vector3 pos = _center.position;
             float currentAngle = i * angleDelta;
