@@ -31,8 +31,10 @@ public class Missile : MonoBehaviour
 
     private Vector3 nextPosition;
 
-    private void Start()
+    public void Init(Vector3 startPosition, Vector3 endPosition)
     {
+        StartPosition = startPosition;
+        EndPosition = endPosition;
         transform.position = StartPosition;
         camera = CameraManager.CreateCamera(transform, offSetCameraPosition, offSetCameraRotation);
         camera.Follow = transform;

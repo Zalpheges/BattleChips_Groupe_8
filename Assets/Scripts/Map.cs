@@ -9,6 +9,7 @@ public class Map : MonoBehaviour
     public GameObject _prefabCell;
     public static int nPlayers;
     public static int myId;
+    public static List<Transform> playersTransform = new List<Transform>();
     [SerializeField] private Transform _center;
     [SerializeField] private GameObject _playerPrefab;
     private float _radius;
@@ -22,7 +23,6 @@ public class Map : MonoBehaviour
     public static void Init()
     {
         _instance._radius = 1.5f * 10f / 2f * _instance._prefabCell.transform.localScale.x / Mathf.Tan(36f * Mathf.Deg2Rad);
-        List<Transform> playersTransform = new List<Transform>();
 
         List<Vector3> players = _instance.CalculatePlayersCoords();
 
@@ -60,5 +60,16 @@ public class Map : MonoBehaviour
             coords.Add(pos);
         }
         return coords;
+    }
+
+    public static Player GetPlayerById(int id)
+    {
+        foreach (Transform playerT in playersTransform)
+        {
+            Player player = playerT.GetComponent<Player>();
+            if (player.id == id)
+                return player;
+        }
+        return null;
     }
 }

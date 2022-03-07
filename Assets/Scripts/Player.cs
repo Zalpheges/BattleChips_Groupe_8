@@ -1,23 +1,19 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public GameObject prefabCell;
     public int id;
     public bool you;
+    public bool hasShot = false;
     private const int WIDTH = 10, HEIGHT = 10;
     private float _cellSize;
     private Vector3 _gridStart;
     private PlayerCell[,] _grid;
 
     private bool _displayShipMenu = false;
-
-    private int iRemove;
-    private int jRemove;
+    private int _iRemove;
+    private int _jRemove;
 
 
 
@@ -54,8 +50,11 @@ public class Player : MonoBehaviour
             return;
         if (Main.currentState == Main.PlayerState.Waiting)
             Debug.Log("fdp");
-        else if (Main.currentState == Main.PlayerState.Aiming)
+        else if (Main.currentState == Main.PlayerState.Aiming && !you && !hasShot)
+        {
             Shoot();
+            hasShot = true;
+        }
         else if (Main.currentState == Main.PlayerState.PlacingChips)
         {
             if (Main.currentId != -1)
@@ -71,8 +70,8 @@ public class Player : MonoBehaviour
                 if (cell.ship != null)
                 {
                     Main.currentInstanciatedChip = cell.ship;
-                    iRemove = cell.position.x;
-                    jRemove = cell.position.y;
+                    _iRemove = cell.position.x;
+                    _jRemove = cell.position.y;
                     _displayShipMenu = true;
                 }
             }
@@ -108,7 +107,7 @@ public class Player : MonoBehaviour
         else if (dir == Vector2Int.down)
             direction = 1;
         Main.currentInstanciatedChip.GetComponentInChildren<Chip>().direction = dir;
-        ClientManager.AddShip(i, j, direction, length);
+        ClientManager.AddShip(Main.currentId, i, j, direction, length);
         Main.nShipsToPlace--;
 
         for (int k = 0; k < Main.chipsLengths[Main.currentId]; k++)
@@ -118,6 +117,38 @@ public class Player : MonoBehaviour
             j += dir.y;
         }
         return true;
+    }
+
+    private void RemoveShip()
+    {
+        Chip chip = _grid[_iRemove, _jRemove].ship.GetComponentInChildren<Chip>();
+        Vector2Int shipDir = chip.direction;
+        Vector2Int browseDir = new Vector2Int(shipDir.x, -shipDir.y);
+        while ((_iRemove < 0 || _iRemove >= _grid.GetLength(0) || _jRemove < 0 || _jRemove >= _grid.GetLength(1))
+            && _grid[_iRemove + browseDir.x, _jRemove + browseDir.y].ship == _grid[_iRemove, _jRemove].ship)
+        {
+            _iRemove += browseDir.x;
+            _jRemove += browseDir.y;
+        }
+    }
+
+    public Vector3 GetWorldPosition(int i, int j)
+    {
+        return _gridStart + i * _cellSize * transform.right - j * _cellSize * transform.forward;
+    }
+
+    public void EmptyCellHit(int i, int j)
+    {
+        _grid[i, j].GetComponent<MeshRenderer>().material = Main.cellMaterials[PlayerCell.CellType.EmptyHit];
+    }
+    public void ShipCellHit(int i, int j)
+    {
+        _grid[i, j].GetComponent<MeshRenderer>().material = Main.cellMaterials[PlayerCell.CellType.ShipHit];
+    }
+
+    private void Shoot()
+    {
+
     }
 
     void OnGUI()
@@ -136,8 +167,8 @@ public class Player : MonoBehaviour
             buttonStyle.fontSize = 32;
             if (GUILayout.Button("Remove it", buttonStyle))
             {
-                (int, int) dirAndLen = RemoveShip();
-                ClientManager.RemoveShip(iRemove, jRemove, dirAndLen.Item1, dirAndLen.Item2);
+                RemoveShip();
+                ClientManager.RemoveShip(_iRemove, _jRemove);
                 Main.nShipsToPlace++;
                 Main.chipsButtons[Main.currentInstanciatedChip.GetComponentInChildren<Chip>().id].interactable = true;
                 Destroy(Main.currentInstanciatedChip);
@@ -152,38 +183,7 @@ public class Player : MonoBehaviour
                 Main.currentInstanciatedChip = null;
                 _displayShipMenu = false;
             }
-
             GUILayout.EndArea();
         }
-    }
-
-    private (int, int) RemoveShip()
-    {
-        Chip chip = _grid[iRemove, jRemove].ship.GetComponentInChildren<Chip>();
-        Vector2Int shipDir = chip.direction;
-        Vector2Int browseDir = new Vector2Int(shipDir.x, -shipDir.y);
-        while((iRemove < 0 || iRemove >= _grid.GetLength(0) || jRemove < 0 || jRemove >= _grid.GetLength(1)) 
-            && _grid[iRemove + browseDir.x, jRemove + browseDir.y].ship == _grid[iRemove, jRemove].ship)
-        {
-            iRemove += browseDir.x;
-            jRemove += browseDir.y;
-        }
-        int dir;
-        if (shipDir == Vector2Int.right)
-            dir = 0;
-        else if (shipDir == Vector2Int.up)
-            dir = 3;
-        else if (shipDir == Vector2Int.left)
-            dir = 2;
-        else //if (shipDir == Vector2Int.down)
-            dir = 1;
-        return (dir, Main.chipsLengths[chip.id]);
-    }
-
-    bool Shoot()
-    {
-        if (true) return false;
-        else if (false) return true;
-        else return false;
     }
 }

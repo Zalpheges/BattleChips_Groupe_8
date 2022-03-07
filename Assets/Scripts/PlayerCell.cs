@@ -7,7 +7,8 @@ public class PlayerCell : MonoBehaviour
     public enum CellType
     {
         None,
-        Attacked
+        EmptyHit,
+        ShipHit
     }
     public Action<PlayerCell> onClick;
 
@@ -23,6 +24,10 @@ public class PlayerCell : MonoBehaviour
 
     public void MouseEnter()
     {
+        if(ClientManager.MyTurn && transform.parent.GetComponent<Player>().you)
+        {
+           return;
+        }
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             Material mat = GetComponent<MeshRenderer>().material;
@@ -38,6 +43,11 @@ public class PlayerCell : MonoBehaviour
     }
     public void MouseExit()
     {
+        if (ClientManager.MyTurn)
+        {
+            if (transform.parent.GetComponent<Player>().you || type != CellType.None)
+                return;
+        }
         Material mat = GetComponent<MeshRenderer>().material;
         DisableHighlight(mat); 
         if (Main.currentState == Main.PlayerState.PlacingChips && Main.currentInstanciatedChip != null && Main.currentId != -1)

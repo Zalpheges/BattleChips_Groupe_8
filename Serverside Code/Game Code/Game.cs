@@ -4,6 +4,8 @@ using System;
 
 public class Ship
 {
+    public readonly int id;
+
     public readonly int x;
     public readonly int y;
     public readonly int dir;
@@ -13,8 +15,10 @@ public class Ship
 
     public bool destroyed => Array.TrueForAll(state, s => s);
 
-    public Ship(int x, int y, int dir, int length)
+    public Ship(int id, int x, int y, int dir, int length)
     {
+        this.id = id;
+
         this.x = x;
         this.y = y;
         this.dir = dir;
@@ -100,9 +104,9 @@ public class Player : BasePlayer
         return null;
     }
 
-	public bool AddShip(int x, int y, int dir, int length)
+	public bool AddShip(int id, int x, int y, int dir, int length)
 	{
-        Ship ship = new Ship(x, y, dir, length);
+        Ship ship = new Ship(id, x, y, dir, length);
 
         bool intersect = ships.Find(s => s.Intersect(ship)) != null;
 
@@ -189,12 +193,13 @@ public class GameCode : Game<Player>
 
             case "Add":
             {
-                int x = message.GetInt(0);
-                int y = message.GetInt(1);
-                int dir = message.GetInt(2);
-                int length = message.GetInt(3);
+                int id = message.GetInt(0);
+                int x = message.GetInt(1);
+                int y = message.GetInt(2);
+                int dir = message.GetInt(3);
+                int length = message.GetInt(4);
 
-                sender.AddShip(x, y, dir, length);
+                sender.AddShip(id, x, y, dir, length);
 
                 break;
             }
@@ -245,7 +250,7 @@ public class GameCode : Game<Player>
                         bool touched = ship != null;
 
                         if (touched && ship.destroyed)
-                            Broadcast("Shoot", id, x, y, true, true, ship.x, ship.y, ship.dir, ship.length);
+                            Broadcast("Shoot", id, x, y, true, true, ship.id, ship.x, ship.y, ship.dir);
                         else
                             Broadcast("Shoot", id, x, y, touched, false);
 

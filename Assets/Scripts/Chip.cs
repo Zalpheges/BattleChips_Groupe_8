@@ -6,4 +6,5 @@ public class Chip : MonoBehaviour
 {
     public int id;
     public Vector2Int direction = Vector2Int.zero;
+    public bool visible = false;
 }

@@ -302,9 +302,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d64efccde7c97c04db4aad9be8cc38c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _prefabCell: {fileID: 8975873784072870405, guid: 18090b1b9757c3749a7edc4866d75883, type: 3}
   _center: {fileID: 1506706414}
-  _radius: 250
-  _nPlayers: 5
   _playerPrefab: {fileID: 3784581188055352593, guid: 8700f7701ec422f4bb56381a1c61ae6e, type: 3}
 --- !u!4 &70659243
 Transform:
@@ -333,7 +332,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasSelection: {fileID: 896382219}
-  shipsDatas:
+  submitButton: {fileID: 1401390631}
+  _shipsDatas:
   - button: {fileID: 2089744503}
     shipId: 0
     length: 5
@@ -349,6 +349,13 @@ MonoBehaviour:
   - button: {fileID: 18382535}
     shipId: 4
     length: 2
+  _cellsMaterials:
+  - cellType: 0
+    material: {fileID: 2100000, guid: eeb1f62320396114fa79791a44a45049, type: 2}
+  - cellType: 1
+    material: {fileID: 2100000, guid: 0a099689bdb985540a52ac305675ee3e, type: 2}
+  - cellType: 2
+    material: {fileID: 0}
   _cellsLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -1059,7 +1066,7 @@ MonoBehaviour:
     Zalphug'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1122,7 +1129,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &366978518
@@ -2283,7 +2290,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &896382220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4345,11 +4352,35 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1401390632}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1560429288}
+        m_TargetAssemblyTypeName: ClientManager, Assembly-CSharp
+        m_MethodName: Boarded
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1401390631}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1401390632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5011,6 +5042,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 197e42e8c87cca24cb5db12e574511ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gamePanel: {fileID: 336863078}
+  _prefabMissile: {fileID: 115386, guid: 1d37014fd411c524db3696bba6ff1d21, type: 3}
+  _exampleFiringPoint: {fileID: 0}
+  _examplePlayer: {fileID: 0}
   username: {fileID: 77209503}
   roomname: {fileID: 1429783486}
   playerCount: {fileID: 1448657917}
@@ -5237,7 +5272,7 @@ MonoBehaviour:
     eded'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5300,7 +5335,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1724209672

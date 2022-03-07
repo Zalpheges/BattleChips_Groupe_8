@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using PlayerIOClient;
 using UnityEngine;
 using TMPro;
-
 public class ClientManager : MonoBehaviour
 {
 	private Queue<Message> messages;
@@ -11,7 +10,15 @@ public class ClientManager : MonoBehaviour
 
 	private static ClientManager instance;
 
-	private int nCurrentPlayer = 0;
+	public static int nCurrentPlayer = -1;
+
+	public static bool MyTurn => nCurrentPlayer == Map.myId;
+
+	[SerializeField] private GameObject _gamePanel;
+	[SerializeField] private GameObject _prefabMissile;
+	[SerializeField] private Transform _exampleFiringPoint;
+	[SerializeField] private Transform _examplePlayer;
+	private Vector3 _offsetMissileSpawn;
 
     private void Awake()
     {
@@ -26,6 +33,7 @@ public class ClientManager : MonoBehaviour
 
     private void Start()
     {
+		_offsetMissileSpawn = _exampleFiringPoint.position - _examplePlayer.position;
 		messages = new Queue<Message>();
 
 		if (PlayerPrefs.HasKey("Username"))
@@ -91,14 +99,14 @@ public class ClientManager : MonoBehaviour
 		server.Send("Ready", state);
     }
 
-	public static void AddShip(int x, int y, int dir, int length)
+	public static void AddShip(int id, int x, int y, int dir, int length)
     {
-		instance.server.Send("Add", x, y, dir, length);
+		instance.server.Send("Add", id, x, y, dir, length);
 	}
 
-	public static void RemoveShip(int x, int y, int dir, int length)
+	public static void RemoveShip(int x, int y)
 	{
-		instance.server.Send("Add", x, y, dir, length);
+		instance.server.Send("Remove", x, y);
 	}
 
 	public static void Boarded()
@@ -149,13 +157,36 @@ public class ClientManager : MonoBehaviour
 					bool touched = message.GetBoolean(3);
 					bool destroyed = message.GetBoolean(4);
 
+					int idShip = 0, xShip = 0, yShip = 0, dirShip = 0;
+
+					if(destroyed)
+                    {
+						idShip = message.GetInt(5);
+						xShip = message.GetInt(6);
+						yShip = message.GetInt(7);
+						dirShip = message.GetInt(8);
+                    }
+
+					Transform currentPlayerT = Map.GetPlayerById(nCurrentPlayer).transform;
+					Player targetedPlayer = Map.GetPlayerById(id);
+					Missile missile = Instantiate(_prefabMissile).GetComponent<Missile>();
+					missile.Init(currentPlayerT.position + _offsetMissileSpawn, targetedPlayer.GetWorldPosition(x, y));
+
 					if (touched) {
 						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coulé pendant l'animation
+						targetedPlayer.ShipCellHit(x, y);
+						if(destroyed)
+                        {
+							Vector3 yRotation = new Vector3(0, -dirShip * 90, 0);
+							Instantiate(Main.chipsButtons[idShip].transform.GetChild(0), targetedPlayer.GetWorldPosition(xShip, yShip), 
+								targetedPlayer.transform.rotation * Quaternion.Euler(yRotation));
+                        }
                     }
 					else {
 						// Case devient rouge
+						targetedPlayer.EmptyCellHit(x, y);
                     }
-					nCurrentPlayer++;
+					++nCurrentPlayer;
 					nCurrentPlayer %= Map.nPlayers;
 					break;
                 }
@@ -163,6 +194,7 @@ public class ClientManager : MonoBehaviour
 				case "Play":
 				{
 					Main.instance.canvasSelection.SetActive(false);
+					_gamePanel.SetActive(true);
 					// La partie vient de commencer tous les joueurs ont répondu "Boarded"
 
 					break;
