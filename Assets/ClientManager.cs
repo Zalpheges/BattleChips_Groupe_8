@@ -178,7 +178,7 @@ public class ClientManager : MonoBehaviour
 					Player targetedPlayer = Map.GetPlayerById(id);
 					Missile missile = Instantiate(_prefabMissile).GetComponent<Missile>();
 					Vector3 relativeOffset = currentPlayerT.forward * _offsetMissileSpawn.z + currentPlayerT.right * _offsetMissileSpawn.x;
-					missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y));
+					missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y), touched);
 
 					if (touched) {
 						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coul� pendant l'animation

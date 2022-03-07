@@ -825,7 +825,7 @@ PrefabInstance:
       objectReference: {fileID: 5839431993526260737, guid: 47b746d31cb815541a9ee8a2503719e7, type: 3}
     - target: {fileID: 2212950859682844276, guid: 7442bb68aabaea047892753951dba33d, type: 3}
       propertyPath: offSetPosition.y
-      value: 135
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 2212950859682844276, guid: 7442bb68aabaea047892753951dba33d, type: 3}
       propertyPath: offSetRotation.x

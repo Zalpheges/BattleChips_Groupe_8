@@ -4986,7 +4986,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eff69c5176e1fc4aa430d4e4b3bdbe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firePrefab: {fileID: 0}
+  firePrefab: {fileID: 2701727054351025667, guid: 75e54243e6d204bf7a1c6910b40e77f2, type: 3}
   fireOffSetY: 1
 --- !u!1 &4494955615146372297
 GameObject:
