@@ -23,6 +23,11 @@ public class Missile : MonoBehaviour
 
     [SerializeField] private GameObject explosionPrefab;
 
+    [Space(5)]
+
+    [SerializeField] private float explosionDelay = 0.5f;
+
+    [System.NonSerialized] public GameObject gameUiPrefab;
     [System.NonSerialized] public Vector3 StartPosition;
     [System.NonSerialized] public Vector3 EndPosition;
 
@@ -36,8 +41,10 @@ public class Missile : MonoBehaviour
 
     private Vector3 nextPosition;
 
-    public void Init(Vector3 startPosition, Vector3 endPosition, bool shipHit)
+    public void Init(Vector3 startPosition, Vector3 endPosition, bool shipHit, GameObject gameUiPrefab)
     {
+        this.gameUiPrefab = gameUiPrefab;
+        gameUiPrefab.SetActive(false);
         StartPosition = startPosition;
         EndPosition = endPosition;
         transform.position = StartPosition;
@@ -82,7 +89,7 @@ public class Missile : MonoBehaviour
 
     private void Explosion()
     {
-        Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), 2f);
+        Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), explosionDelay);
         
     }
 
@@ -92,7 +99,15 @@ public class Missile : MonoBehaviour
         {
             child.gameObject.SetActive(false);
         }
-        Destroy(gameObject, 4f);
+        StartCoroutine(SetUi());
+        Destroy(gameObject, explosionDelay);
+        
+    }
+
+    private IEnumerator SetUi()
+    {
+        yield return new WaitForSeconds(explosionDelay - 0.1f);
+        gameUiPrefab.SetActive(true);
     }
 
     private IEnumerator CameraMove()

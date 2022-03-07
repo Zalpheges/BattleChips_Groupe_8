@@ -58,7 +58,7 @@ public class ClientManager : MonoBehaviour
 			delegate (Client client) {
 				Debug.Log("Successfully connected to Player.IO");
 
-				client.Multiplayer.DevelopmentServer = new ServerEndpoint("localhost", 8184);
+				//client.Multiplayer.DevelopmentServer = new ServerEndpoint("25.59.158.42", 8184);
 
 				client.Multiplayer.CreateJoinRoom(
 					roomname.text,
@@ -178,7 +178,7 @@ public class ClientManager : MonoBehaviour
 					Player targetedPlayer = Map.GetPlayerById(id);
 					Missile missile = Instantiate(_prefabMissile).GetComponent<Missile>();
 					Vector3 relativeOffset = currentPlayerT.forward * _offsetMissileSpawn.z + currentPlayerT.right * _offsetMissileSpawn.x;
-					missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y), touched);
+					missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y), touched, _gamePanel);
 
 					if (touched) {
 						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coul� pendant l'animation
@@ -279,6 +279,7 @@ public class ClientManager : MonoBehaviour
 
 	[SerializeField]
 	private GameObject ready;
+
 
 	private enum Menu
     {
