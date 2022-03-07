@@ -76,12 +76,14 @@ public class Main : MonoBehaviour
                 tmp.PointerClick();
             if (_currentCell != tmp)
             {
-                if(_currentCell != null)
+                if (_currentCell != null)
                     _currentCell.MouseExit();
                 _currentCell = tmp;
                 _currentCell.MouseEnter();
             }
         }
+        else
+            _currentCell?.MouseExit();
         if (currentState == PlayerState.PlacingChips)
         {
             if (Input.GetMouseButtonDown(1))
@@ -96,6 +98,7 @@ public class Main : MonoBehaviour
         if (currentId == -1)
             return;
         lastRotation += 90;
+        lastRotation %= 360;
         currentInstanciatedChip.transform.Rotate(Vector3.up * 90);
     }
 

@@ -34,10 +34,10 @@ public class PlayerCell : MonoBehaviour
             if(Main.currentState == Main.PlayerState.PlacingChips && Main.currentId != -1)
             {
                 GameObject newChip = Main.chipsButtons[Main.currentId].transform.GetChild(0).gameObject;
-                Main.currentInstanciatedChip = Instantiate(newChip, transform.position, Quaternion.identity);
+                Main.currentInstanciatedChip = Instantiate(newChip, transform.position, transform.rotation);
                 Main.currentInstanciatedChip.transform.SetParent(transform);
                 Main.currentInstanciatedChip.transform.Rotate(transform.up * 1 * Main.lastRotation);
-                Debug.Log(Main.lastRotation);
+                Debug.Log(Main.currentInstanciatedChip.transform.rotation.eulerAngles.y);
             }
         }
     }
