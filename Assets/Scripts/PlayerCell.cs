@@ -18,16 +18,15 @@ public class PlayerCell : MonoBehaviour
 
     public void PointerClick()
     {
-        if(!EventSystem.current.IsPointerOverGameObject())
+        if(!EventSystem.current.IsPointerOverGameObject() && type == CellType.None)
             onClick?.Invoke(this);
     }
 
     public void MouseEnter()
     {
-        if(ClientManager.MyTurn && transform.parent.GetComponent<Player>().you)
-        {
+        Player parentPlayer = transform.parent.GetComponent<Player>();
+        if(ClientManager.MyTurn && parentPlayer.you || type != CellType.None || parentPlayer.dead)
            return;
-        }
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             Material mat = GetComponent<MeshRenderer>().material;
@@ -43,13 +42,8 @@ public class PlayerCell : MonoBehaviour
     }
     public void MouseExit()
     {
-        if (ClientManager.MyTurn)
-        {
-            if (transform.parent.GetComponent<Player>().you || type != CellType.None)
-                return;
-        }
         Material mat = GetComponent<MeshRenderer>().material;
-        DisableHighlight(mat); 
+        DisableHighlight(mat);
         if (Main.currentState == Main.PlayerState.PlacingChips && Main.currentInstanciatedChip != null && Main.currentId != -1)
         {
             Destroy(Main.currentInstanciatedChip);

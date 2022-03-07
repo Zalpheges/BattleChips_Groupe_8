@@ -57,7 +57,6 @@ public class ClientManager : MonoBehaviour
 			null,
 			delegate (Client client) {
 				Debug.Log("Successfully connected to Player.IO");
-
 				//client.Multiplayer.DevelopmentServer = new ServerEndpoint("25.59.158.42", 8184);
 
 				client.Multiplayer.CreateJoinRoom(
@@ -185,17 +184,28 @@ public class ClientManager : MonoBehaviour
 						targetedPlayer.ShipCellHit(x, y);
 						if(destroyed)
                         {
-							Vector3 yRotation = new Vector3(0, -dirShip * 90, 0);
-							Instantiate(Main.chipsButtons[idShip].transform.GetChild(0), targetedPlayer.GetWorldPosition(xShip, yShip), 
-								targetedPlayer.transform.rotation * Quaternion.Euler(yRotation));
+							Transform shipT;
+							if (!targetedPlayer.you)
+							{
+								Vector3 yRotation = new Vector3(0, -dirShip * 90, 0);
+								shipT = Instantiate(Main.chipsButtons[idShip].transform.GetChild(0), targetedPlayer.GetWorldPosition(xShip, yShip),
+									targetedPlayer.transform.rotation * Quaternion.Euler(yRotation));
+							}
+							else
+								shipT = targetedPlayer.GetShip(x, y).transform;
+							missile.SetDestroyedShip(shipT);
                         }
                     }
 					else {
 						// Case devient rouge
 						targetedPlayer.EmptyCellHit(x, y);
                     }
-					++nCurrentPlayer;
-					nCurrentPlayer %= Map.nPlayers;
+					do
+					{
+						++nCurrentPlayer;
+						nCurrentPlayer %= Map.nPlayers;
+
+					} while (Map.GetPlayerById(nCurrentPlayer).dead);
 					Main.currentState = Map.GetPlayerById(nCurrentPlayer).id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
 					break;
                 }
@@ -216,6 +226,7 @@ public class ClientManager : MonoBehaviour
                 {
 					int id = message.GetInt(0);
 
+					Map.GetPlayerById(id).dead = true;
 					// Le joueur id vient de perdre son dernier vaisseau
 
 					break;

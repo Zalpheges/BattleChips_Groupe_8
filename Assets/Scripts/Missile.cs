@@ -40,6 +40,7 @@ public class Missile : MonoBehaviour
     private float bezierProgression = 0f;
 
     private Vector3 nextPosition;
+    private Transform shipToDestroy;
 
     public void Init(Vector3 startPosition, Vector3 endPosition, bool shipHit, GameObject gameUiPrefab)
     {
@@ -61,6 +62,11 @@ public class Missile : MonoBehaviour
         interpolatePoint.y += offSetyBezierPoint;
 
         this.shipHit = shipHit;
+    }
+
+    public void SetDestroyedShip(Transform ship)
+    {
+        shipToDestroy = ship;
     }
 
     private void Update()
@@ -90,7 +96,6 @@ public class Missile : MonoBehaviour
     private void Explosion()
     {
         Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), explosionDelay);
-        
     }
 
     private void EndReached()
@@ -99,9 +104,9 @@ public class Missile : MonoBehaviour
         {
             child.gameObject.SetActive(false);
         }
+        shipToDestroy?.Rotate(shipToDestroy.right * 1000f);
         StartCoroutine(SetUi());
         Destroy(gameObject, explosionDelay);
-        
     }
 
     private IEnumerator SetUi()

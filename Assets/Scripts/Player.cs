@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
     public GameObject prefabCell;
     public int id;
     public bool you;
+    public bool dead = false;
     private const int WIDTH = 10, HEIGHT = 10;
     private float _cellSize;
     private Vector3 _gridStart;
@@ -45,7 +46,7 @@ public class Player : MonoBehaviour
     }
     void OnCellClicked(PlayerCell cell)
     {
-        if (_displayShipMenu)
+        if (_displayShipMenu || dead)
             return;
         if (Main.currentState == Main.PlayerState.Waiting)
             Debug.Log("fdp");
@@ -137,11 +138,18 @@ public class Player : MonoBehaviour
 
     public void EmptyCellHit(int i, int j)
     {
+        _grid[i, j].type = PlayerCell.CellType.EmptyHit;
         _grid[i, j].GetComponent<MeshRenderer>().material = Main.cellMaterials[PlayerCell.CellType.EmptyHit];
     }
     public void ShipCellHit(int i, int j)
     {
+        _grid[i, j].type = PlayerCell.CellType.ShipHit;
         _grid[i, j].GetComponent<MeshRenderer>().material = Main.cellMaterials[PlayerCell.CellType.ShipHit];
+    }
+
+    public GameObject GetShip(int i, int j)
+    {
+        return _grid[i, j].ship;
     }
 
     void OnGUI()
