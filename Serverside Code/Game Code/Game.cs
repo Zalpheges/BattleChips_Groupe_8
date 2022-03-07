@@ -86,18 +86,18 @@ public class Player : BasePlayer
         return ships.TrueForAll(s => s.destroyed);
     }
 
-    public bool Shoot(int x, int y, out bool destroyed)
+    public Ship Shoot(int x, int y)
     {
         Ship ship = ships.Find(s => s.Intersect(x, y));
 
         if (ship != null)
         {
-            destroyed = ship.Shoot(x, y);
+            ship.Shoot(x, y);
 
-            return true;
+            return ship;
         }
 
-        return destroyed = false;
+        return null;
     }
 
 	public bool AddShip(int x, int y, int dir, int length)
@@ -241,12 +241,16 @@ public class GameCode : Game<Player>
                         int x = message.GetInt(1);
                         int y = message.GetInt(2);
 
-                        bool touched = players[id].Shoot(x, y, out bool destroyed);
+                        Ship ship = players[id].Shoot(x, y);
+                        bool touched = ship != null;
 
-                        Broadcast("Shoot", id, x, y, touched, destroyed);
+                        if (touched && ship.destroyed)
+                            Broadcast("Shoot", id, x, y, true, true, ship.x, ship.y, ship.dir, ship.length);
+                        else
+                            Broadcast("Shoot", id, x, y, touched, false);
 
                         if (players[id].IsDead())
-                            Broadcast("Dead", id);
+                        Broadcast("Dead", id);
 
                         ++current;
 
