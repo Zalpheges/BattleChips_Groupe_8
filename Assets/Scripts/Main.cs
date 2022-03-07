@@ -24,6 +24,8 @@ public class Main : MonoBehaviour
     public static Dictionary<int, int> chipsLengths = new Dictionary<int, int>();
     public static Dictionary<PlayerCell.CellType, Material> cellMaterials = new Dictionary<PlayerCell.CellType, Material>();
     public static PlayerState currentState;
+    public static bool connected = false;
+    public static bool boarded = false;
 
     [Serializable]
     private struct ShipsData
@@ -57,10 +59,12 @@ public class Main : MonoBehaviour
             cellMaterials.Add(cellMat.cellType, cellMat.material);
         }
     }
-
+    
     private void Update()
     {
-        if ((currentState != PlayerState.PlacingChips && !ClientManager.MyTurn) || Map.playersTransform[0].GetComponent<Player>().hasShot)
+        if (!connected)
+            return;
+        if ((currentState != PlayerState.PlacingChips && !ClientManager.MyTurn) || currentState == PlayerState.Waiting)
             return;
         //placingShips or myTurn
         PlayerCell tmp;
@@ -82,7 +86,8 @@ public class Main : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(1))
                 RotateChip();
-            submitButton.interactable = nShipsToPlace == 0;
+
+            submitButton.interactable = boarded ? false : nShipsToPlace == 0;
         }
     }
 

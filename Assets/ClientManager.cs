@@ -111,7 +111,13 @@ public class ClientManager : MonoBehaviour
 
 	public static void Boarded()
     {
+		Main.boarded = true;
 		instance.server.Send("Boarded");
+    }
+	public static void Shoot(int id, int x, int y)
+    {
+		Debug.Log("Shoot");
+		instance.server.Send("Shoot", id, x, y);
     }
 
 	private void FixedUpdate()
@@ -131,9 +137,10 @@ public class ClientManager : MonoBehaviour
 					Map.nPlayers = count;
 					Map.myId = id;
 					Map.Init();
+					Main.connected = true;
 					Main.instance.canvasSelection.SetActive(true);
 					
-					// Lancer la selection de board et répondre "Boarded" quand terminé CHECK
+					// Lancer la selection de board et rï¿½pondre "Boarded" quand terminï¿½ CHECK
 
 					break;
                 }
@@ -143,7 +150,7 @@ public class ClientManager : MonoBehaviour
 					int ready = message.GetInt(0);
 					int total = message.GetInt(1);
 
-					playerCount.text = ready + "/" + total + " prêt" + (ready > 1 ? "s" : "");
+					playerCount.text = ready + "/" + total + " prï¿½t" + (ready > 1 ? "s" : "");
 
 					break;
                 }
@@ -170,10 +177,11 @@ public class ClientManager : MonoBehaviour
 					Transform currentPlayerT = Map.GetPlayerById(nCurrentPlayer).transform;
 					Player targetedPlayer = Map.GetPlayerById(id);
 					Missile missile = Instantiate(_prefabMissile).GetComponent<Missile>();
-					missile.Init(currentPlayerT.position + _offsetMissileSpawn, targetedPlayer.GetWorldPosition(x, y), false);
+					Vector3 relativeOffset = currentPlayerT.forward * _offsetMissileSpawn.z + currentPlayerT.right * _offsetMissileSpawn.x;
+					missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y));
 
 					if (touched) {
-						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coulé pendant l'animation
+						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coulï¿½ pendant l'animation
 						targetedPlayer.ShipCellHit(x, y);
 						if(destroyed)
                         {
@@ -188,14 +196,18 @@ public class ClientManager : MonoBehaviour
                     }
 					++nCurrentPlayer;
 					nCurrentPlayer %= Map.nPlayers;
+					Main.currentState = Map.GetPlayerById(nCurrentPlayer).id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
 					break;
                 }
 
 				case "Play":
 				{
+					nCurrentPlayer = 0;
+					Main.currentState = Map.GetPlayerById(nCurrentPlayer).id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
+
 					Main.instance.canvasSelection.SetActive(false);
 					_gamePanel.SetActive(true);
-					// La partie vient de commencer tous les joueurs ont répondu "Boarded"
+					// La partie vient de commencer tous les joueurs ont rï¿½pondu "Boarded"
 
 					break;
                 }
@@ -260,6 +272,9 @@ public class ClientManager : MonoBehaviour
 	private TextMeshProUGUI playerCount;
 
 	[SerializeField]
+	private GameObject background;
+
+	[SerializeField]
 	private GameObject connect;
 
 	[SerializeField]
@@ -275,6 +290,7 @@ public class ClientManager : MonoBehaviour
 
 	private void ShowMenu(Menu menu)
     {
+		background.SetActive(menu != Menu.None);
 		connect.SetActive(menu == Menu.Connect);
 		ready.SetActive(menu == Menu.Ready);
     }

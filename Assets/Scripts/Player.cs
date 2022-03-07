@@ -5,7 +5,6 @@ public class Player : MonoBehaviour
     public GameObject prefabCell;
     public int id;
     public bool you;
-    public bool hasShot = false;
     private const int WIDTH = 10, HEIGHT = 10;
     private float _cellSize;
     private Vector3 _gridStart;
@@ -50,10 +49,9 @@ public class Player : MonoBehaviour
             return;
         if (Main.currentState == Main.PlayerState.Waiting)
             Debug.Log("fdp");
-        else if (Main.currentState == Main.PlayerState.Aiming && !you && !hasShot)
+        else if (Main.currentState == Main.PlayerState.Aiming && !you)
         {
-            Shoot();
-            hasShot = true;
+            ClientManager.Shoot(id, cell.position.x, cell.position.y);
         }
         else if (Main.currentState == Main.PlayerState.PlacingChips)
         {
@@ -108,7 +106,7 @@ public class Player : MonoBehaviour
             direction = 1;
         Main.currentInstanciatedChip.GetComponentInChildren<Chip>().direction = dir;
         ClientManager.AddShip(Main.currentId, i, j, direction, length);
-        Main.nShipsToPlace--;
+        --Main.nShipsToPlace;
 
         for (int k = 0; k < Main.chipsLengths[Main.currentId]; k++)
         {
@@ -144,11 +142,6 @@ public class Player : MonoBehaviour
     public void ShipCellHit(int i, int j)
     {
         _grid[i, j].GetComponent<MeshRenderer>().material = Main.cellMaterials[PlayerCell.CellType.ShipHit];
-    }
-
-    private void Shoot()
-    {
-
     }
 
     void OnGUI()
