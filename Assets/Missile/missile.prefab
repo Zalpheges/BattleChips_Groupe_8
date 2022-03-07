@@ -4868,6 +4868,7 @@ MonoBehaviour:
   offSetyBezierPoint: 500
   travelTime: 5
   explosionPrefab: {fileID: 3351706144011111760, guid: 180b8d26899824fa8884b05d27ab33c2, type: 3}
+  explosionDelay: 0.25
 --- !u!210 &8942751841908093992
 SortingGroup:
   m_ObjectHideFlags: 0

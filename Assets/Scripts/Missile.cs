@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Missile : MonoBehaviour
@@ -23,6 +24,14 @@ public class Missile : MonoBehaviour
 
     [SerializeField] private GameObject explosionPrefab;
 
+    [Space(5)]
+
+    [SerializeField] private float explosionDelay = 0.5f;
+
+    
+
+
+    [System.NonSerialized] public GameObject gameUiPrefab;
     [System.NonSerialized] public Vector3 StartPosition;
     [System.NonSerialized] public Vector3 EndPosition;
 
@@ -35,9 +44,19 @@ public class Missile : MonoBehaviour
     private float bezierProgression = 0f;
 
     private Vector3 nextPosition;
+    private Transform shipToDestroy;
 
-    public void Init(Vector3 startPosition, Vector3 endPosition, bool shipHit)
+    private TextMeshProUGUI text;
+    private GameObject textGameObject;
+
+    public void Init(Vector3 startPosition, Vector3 endPosition, bool shipHit, GameObject gameUiPrefab, GameObject textGameObject)
     {
+        this.textGameObject = textGameObject;
+        text = textGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+
+        this.gameUiPrefab = gameUiPrefab;
+        gameUiPrefab.SetActive(false);
+
         StartPosition = startPosition;
         EndPosition = endPosition;
         transform.position = StartPosition;
@@ -54,6 +73,18 @@ public class Missile : MonoBehaviour
         interpolatePoint.y += offSetyBezierPoint;
 
         this.shipHit = shipHit;
+        
+    }
+
+    public void SetDestroyedShip(Transform ship)
+    {
+        shipToDestroy = ship;
+    }
+
+    public void SetText(string message)
+    {
+        text.text = message;
+        textGameObject.SetActive(true);
     }
 
     private void Update()
@@ -82,8 +113,7 @@ public class Missile : MonoBehaviour
 
     private void Explosion()
     {
-        Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), 2f);
-        
+        Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), explosionDelay);
     }
 
     private void EndReached()
@@ -92,7 +122,16 @@ public class Missile : MonoBehaviour
         {
             child.gameObject.SetActive(false);
         }
-        Destroy(gameObject, 4f);
+        shipToDestroy?.Rotate(shipToDestroy.right * 1000f);
+        StartCoroutine(SetUi());
+        Destroy(gameObject, explosionDelay);
+    }
+
+    private IEnumerator SetUi()
+    {
+        yield return new WaitForSeconds(explosionDelay - 0.1f);
+        textGameObject.SetActive(false);
+        gameUiPrefab.SetActive(true);
     }
 
     private IEnumerator CameraMove()

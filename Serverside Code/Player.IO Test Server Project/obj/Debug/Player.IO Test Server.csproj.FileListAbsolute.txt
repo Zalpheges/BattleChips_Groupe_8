@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.exe.config
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.exe
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.pdb
@@ -12,3 +13,19 @@ C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Player.IO Te
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\obj\Debug\Test Server.exe
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\obj\Debug\Test Server.pdb
 C:\Users\geoff\Documents\Unity\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.csproj.AssemblyReference.cache
+=======
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.exe.config
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.exe
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\Test Server.pdb
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\BattleChips.dll
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\Player.IO Development Server.exe
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\Player.IO GameLibrary.dll
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\BattleChips.pdb
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\bin\Debug\Player.IO GameLibrary.xml
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.csproj.AssemblyReference.cache
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.csproj.SuggestedBindingRedirects.cache
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.csproj.CoreCompileInputs.cache
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\obj\Debug\Player.IO Test Server.csproj.CopyComplete
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\obj\Debug\Test Server.exe
+C:\Users\Bryan\Desktop\Projet\Battlechips_Groupe_8\Serverside Code\Player.IO Test Server Project\obj\Debug\Test Server.pdb
+>>>>>>> main
