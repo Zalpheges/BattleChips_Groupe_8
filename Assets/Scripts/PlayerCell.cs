@@ -36,7 +36,8 @@ public class PlayerCell : MonoBehaviour
                 GameObject newChip = Main.chipsButtons[Main.currentId].transform.GetChild(0).gameObject;
                 Main.currentInstanciatedChip = Instantiate(newChip, transform.position, Quaternion.identity);
                 Main.currentInstanciatedChip.transform.SetParent(transform);
-                Main.currentInstanciatedChip.transform.Rotate(transform.up * Main.lastRotation);
+                Main.currentInstanciatedChip.transform.Rotate(transform.up * 1 * Main.lastRotation);
+                Debug.Log(Main.lastRotation);
             }
         }
     }

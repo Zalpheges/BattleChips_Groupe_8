@@ -20,7 +20,7 @@ public class Map : MonoBehaviour
         _instance = this;
     }
 
-    public static void Init()
+    public static void Init(string[] playersName)
     {
         _instance._radius = 1.5f * 10f / 2f * _instance._prefabCell.transform.localScale.x / Mathf.Tan(36f * Mathf.Deg2Rad);
 
@@ -31,8 +31,9 @@ public class Map : MonoBehaviour
             GameObject go = Instantiate(_instance._playerPrefab, players[i], Quaternion.identity);
             go.transform.LookAt(_instance._center);
             Player player = go.GetComponent<Player>();
-            player.you = i == 0;
-            player.id = (myId + i) % nPlayers;
+            player.you = i == myId;
+            player.id = i;
+            player.nickName = playersName[i];
             player.prefabCell = _instance._prefabCell;
             player.Initialize();
             playersTransform.Add(go.transform);

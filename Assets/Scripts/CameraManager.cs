@@ -1,5 +1,6 @@
 using Cinemachine;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour
@@ -19,8 +20,13 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] private Vector3 offSetRotation;
 
+    [Space(20)]
+
+    [SerializeField] private TextMeshProUGUI playerText;
+
     private CinemachineClearShot cinemachineClearShot;
     private int index = 0;
+    
 
     private void Awake()
     {
@@ -39,6 +45,7 @@ public class CameraManager : MonoBehaviour
     {
         cinemachineClearShot.LiveChild.Priority = 0;
         cinemachineClearShot.ChildCameras[index].Priority = 1;
+        playerText.text = Map.GetPlayerById(index).nickName;
     }
 
     public void Next()
@@ -74,7 +81,8 @@ public class CameraManager : MonoBehaviour
             CreateCamera(playerTransform, instance.offSetPosition, instance.offSetRotation);
         }
 
-        instance.cinemachineClearShot.ChildCameras[0].Priority = 1;
+        instance.cinemachineClearShot.ChildCameras[Map.myId].Priority = 1;
+        instance.playerText.text = Map.GetPlayerById(Map.myId).nickName;
     }
 
     public static void DestroyCamera(CinemachineVirtualCamera cinemachineVirtualCamera, int nextCamera)

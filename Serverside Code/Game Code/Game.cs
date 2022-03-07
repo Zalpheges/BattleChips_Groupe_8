@@ -183,7 +183,8 @@ public class GameCode : Game<Player>
                     for (int i = 0; i < players.Count; ++i)
                     {
                         players[i].Index = i;
-                        players[i].Send("Board", i, players.Count);
+                        players[i].Send(CreateMessage("Board", players.ConvertAll(p => p.ConnectUserId), i, players.Count));
+                        
                         players[i].IsReady = false;
                     }
                 }
@@ -224,7 +225,7 @@ public class GameCode : Game<Player>
 
                 if (players.Count > 1 && count == players.Count)
                 {
-                    Broadcast("Play");
+                    Broadcast(CreateMessage("Play", players.ConvertAll(p => p.ConnectUserId)));
 
                     current = 0;
 
@@ -287,4 +288,22 @@ public class GameCode : Game<Player>
             }
         }
 	}
+
+    private Message CreateMessage<T>(string type, List<T> list, params object[] parameters)
+    {
+        return CreateMessage(type, list.ToArray(), parameters);
+    }
+
+    private Message CreateMessage<T>(string type, T[] list, params object[] parameters)
+    {
+        Message message = Message.Create(type);
+
+        foreach (object parameter in parameters)
+            message.Add(parameter);
+
+        foreach (T item in list)
+            message.Add(item);
+
+        return message;
+    }
 }

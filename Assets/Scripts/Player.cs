@@ -3,6 +3,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public GameObject prefabCell;
+    public string nickName;
     public int id;
     public bool you;
     public bool dead = false;
@@ -49,7 +50,7 @@ public class Player : MonoBehaviour
         if (_displayShipMenu || dead)
             return;
         if (Main.currentState == Main.PlayerState.Waiting)
-            Debug.Log("fdp");
+            Debug.Log("Ce n'est pas ton tour");
         else if (Main.currentState == Main.PlayerState.Aiming && !you)
         {
             ClientManager.Shoot(id, cell.position.x, cell.position.y);
