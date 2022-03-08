@@ -35,9 +35,8 @@ public class PlayerCell : MonoBehaviour
             {
                 GameObject newChip = Main.chipsButtons[Main.currentId].transform.GetChild(0).gameObject;
                 Main.currentInstanciatedChip = Instantiate(newChip, transform.position, transform.rotation);
-                Main.currentInstanciatedChip.transform.SetParent(transform);
+                Main.currentInstanciatedChip.transform.SetParent(transform.parent);
                 Main.currentInstanciatedChip.transform.Rotate(transform.up * 1 * Main.lastRotation);
-                Debug.Log(Main.currentInstanciatedChip.transform.rotation.eulerAngles.y);
             }
         }
     }

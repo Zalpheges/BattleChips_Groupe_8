@@ -266,7 +266,6 @@ GameObject:
   m_Component:
   - component: {fileID: 70659243}
   - component: {fileID: 70659242}
-  - component: {fileID: 70659241}
   - component: {fileID: 70659244}
   m_Layer: 0
   m_Name: GameManager

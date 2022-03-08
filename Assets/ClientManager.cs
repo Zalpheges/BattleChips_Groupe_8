@@ -206,11 +206,11 @@ public class ClientManager : MonoBehaviour
 								{
 									Vector3 yRotation = new Vector3(0, -dirShip * 90, 0);
 									shipT = Instantiate(Main.chipsButtons[idShip].transform.GetChild(0), targetedPlayer.GetWorldPosition(xShip, yShip),
-										targetedPlayer.transform.rotation * Quaternion.Euler(yRotation));
+										targetedPlayer.transform.rotation * Quaternion.Euler(yRotation), targetedPlayer.transform);
 								}
 								else
 									shipT = targetedPlayer.GetShip(x, y).transform;
-								missile.SetDestroyedShip(shipT);
+							missile.SetDestroyedShip(shipT);
 							}
 						}
 						else
@@ -336,9 +336,9 @@ public class ClientManager : MonoBehaviour
 
 	private void ShowMenu(Menu menu)
 	{
-		background.SetActive(menu != Menu.None);
-		connect.SetActive(menu == Menu.Connect);
-		ready.SetActive(menu == Menu.Ready);
+		background?.SetActive(menu != Menu.None);
+		connect?.SetActive(menu == Menu.Connect);
+		ready?.SetActive(menu == Menu.Ready);
 	}
 
 	#endregion

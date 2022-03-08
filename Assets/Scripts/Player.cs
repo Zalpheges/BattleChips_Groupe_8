@@ -91,7 +91,6 @@ public class Player : MonoBehaviour
             vect = Vector2Int.left;
         else if (dir == 3)
             vect = Vector2Int.down;
-        Debug.Log(vect);
         int i = cellPosition.x, j = cellPosition.y;
         int length = Main.chipsLengths[Main.currentId];
         for (int k = 0; k < length; k++)
@@ -155,7 +154,7 @@ public class Player : MonoBehaviour
 
     void OnGUI()
     {
-        if (_displayShipMenu)
+        if (_displayShipMenu && !Main.boarded)
         {
             Vector2 position = Camera.main.WorldToScreenPoint(Main.currentInstanciatedChip.transform.position);
             position.y = Screen.height - position.y;

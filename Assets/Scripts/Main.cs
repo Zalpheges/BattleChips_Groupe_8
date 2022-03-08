@@ -62,10 +62,11 @@ public class Main : MonoBehaviour
     
     private void Update()
     {
-        if (!connected)
+        if ((currentState != PlayerState.PlacingChips && !ClientManager.MyTurn) || currentState == PlayerState.Waiting || !connected)
+        {
+            _currentCell?.MouseExit();
             return;
-        if ((currentState != PlayerState.PlacingChips && !ClientManager.MyTurn) || currentState == PlayerState.Waiting)
-            return;
+        }
         //placingShips or myTurn
         PlayerCell tmp;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

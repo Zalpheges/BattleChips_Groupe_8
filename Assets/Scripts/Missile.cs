@@ -120,7 +120,11 @@ public class Missile : MonoBehaviour
         {
             child.gameObject.SetActive(false);
         }
-        shipToDestroy?.Rotate(shipToDestroy.right * 1000f);
+        if (shipToDestroy)
+        {
+            Vector3 vect = shipToDestroy.localRotation.eulerAngles + Vector3.right * 1000f;
+            shipToDestroy.localRotation = Quaternion.Euler(vect);
+        }
         StartCoroutine(SetUi());
         Destroy(gameObject, explosionDelay);
     }
