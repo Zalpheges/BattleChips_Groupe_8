@@ -17,6 +17,7 @@ public class ClientManager : MonoBehaviour
 	public static bool MyTurn => nCurrentPlayer == Map.myId;
 
 	[SerializeField] private GameObject _gamePanel;
+	[SerializeField] private TextMeshProUGUI _currentPlayerText;
 	[SerializeField] private GameObject _prefabMissile;
 	[SerializeField] private Transform _exampleFiringPoint;
 	[SerializeField] private Transform _examplePlayer;
@@ -143,7 +144,6 @@ public class ClientManager : MonoBehaviour
 			{
 				case "Board":
 				{
-					Debug.Log("Recu board");
 					int id = message.GetInt(0);
 					int count = message.GetInt(1);
 
@@ -161,7 +161,6 @@ public class ClientManager : MonoBehaviour
 
 				case "Count":
 				{
-					Debug.Log("Recu Count");
 					int ready = message.GetInt(0);
 					int total = message.GetInt(1);
 
@@ -237,8 +236,6 @@ public class ClientManager : MonoBehaviour
 
 				case "Play":
 				{
-					Debug.Log("recu play");
-
 					nCurrentPlayer = 0;
 					Main.currentState = Map.GetPlayerById(nCurrentPlayer).id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
 
@@ -261,7 +258,6 @@ public class ClientManager : MonoBehaviour
 
 				case "End":
 				{
-					Debug.Log("recu end");
 					int winner = message.GetInt(0);
 
 					ShowMenu(Menu.End);
@@ -348,6 +344,7 @@ public class ClientManager : MonoBehaviour
 	private enum Menu
 	{
 		None,
+		Play,
 		Connect,
 		Ready,
 		End
@@ -355,7 +352,7 @@ public class ClientManager : MonoBehaviour
 
 	private void ShowMenu(Menu menu)
 	{
-		background?.SetActive(menu != Menu.None);
+		background?.SetActive(menu != Menu.None && menu != Menu.Play);
 		connect?.SetActive(menu == Menu.Connect);
 		ready?.SetActive(menu == Menu.Ready);
 		end?.SetActive(menu == Menu.End);
