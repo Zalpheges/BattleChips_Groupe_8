@@ -230,14 +230,18 @@ public class ClientManager : MonoBehaviour
 						nCurrentPlayer %= Map.nPlayers;
 
 					} while (Map.GetPlayerById(nCurrentPlayer).dead);
-					Main.currentState = Map.GetPlayerById(nCurrentPlayer).id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
+					Player currentPlayer = Map.GetPlayerById(nCurrentPlayer);
+					_currentPlayerText.text = $"Tour de {currentPlayer.nickName}";
+					Main.currentState = currentPlayer.id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
 					break;
 				}
 
 				case "Play":
 				{
 					nCurrentPlayer = 0;
-					Main.currentState = Map.GetPlayerById(nCurrentPlayer).id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
+					Player currentPlayer = Map.GetPlayerById(nCurrentPlayer);
+					_currentPlayerText.text = $"Tour de {currentPlayer.nickName}";
+					Main.currentState = currentPlayer.id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
 
 					Main.instance.canvasSelection.SetActive(false);
 					_gamePanel.SetActive(true);
@@ -356,6 +360,7 @@ public class ClientManager : MonoBehaviour
 		connect?.SetActive(menu == Menu.Connect);
 		ready?.SetActive(menu == Menu.Ready);
 		end?.SetActive(menu == Menu.End);
+		_gamePanel?.SetActive(menu == Menu.Play);
 	}
 
 	private void SetBoard(int winnerID)
