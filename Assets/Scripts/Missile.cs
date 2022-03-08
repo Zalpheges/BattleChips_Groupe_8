@@ -28,10 +28,10 @@ public class Missile : MonoBehaviour
 
     [SerializeField] private float explosionDelay = 0.5f;
 
-    
 
 
-    [System.NonSerialized] public GameObject gameUiPrefab;
+    [System.NonSerialized] public GameObject TextGameObject;
+    [System.NonSerialized] public GameObject GameUiPrefab;
     [System.NonSerialized] public Vector3 StartPosition;
     [System.NonSerialized] public Vector3 EndPosition;
 
@@ -43,22 +43,20 @@ public class Missile : MonoBehaviour
     private bool shipHit = false;
     private float bezierProgression = 0f;
 
+    private int idTarget = int.MaxValue;
     private Vector3 nextPosition;
     private Transform shipToDestroy;
 
     private TextMeshProUGUI text;
-    private GameObject textGameObject;
 
-    public void Init(Vector3 startPosition, Vector3 endPosition, bool shipHit, GameObject gameUiPrefab, GameObject textGameObject)
+    public void Init(Vector3 startPosition, Vector3 endPosition, bool shipHit, int targetID)
     {
-        this.textGameObject = textGameObject;
-        text = textGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
-
-        this.gameUiPrefab = gameUiPrefab;
-        gameUiPrefab.SetActive(false);
-
+        text = TextGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+        GameUiPrefab.SetActive(false);
+        idTarget = targetID;
         StartPosition = startPosition;
         EndPosition = endPosition;
+
         transform.position = StartPosition;
         camera = CameraManager.CreateCamera(transform, offSetCameraPosition, offSetCameraRotation);
         camera.Follow = transform;
@@ -84,7 +82,7 @@ public class Missile : MonoBehaviour
     public void SetText(string message)
     {
         text.text = message;
-        textGameObject.SetActive(true);
+        TextGameObject.SetActive(true);
     }
 
     private void Update()
@@ -107,7 +105,7 @@ public class Missile : MonoBehaviour
             }           
 
             if (CameraManager.transitionDelay / 10 + bezierProgression >= 1f && camera != null)
-                CameraManager.DestroyCamera(camera, 8);
+                CameraManager.DestroyCamera(camera, idTarget);
         }
     }
 
@@ -130,8 +128,8 @@ public class Missile : MonoBehaviour
     private IEnumerator SetUi()
     {
         yield return new WaitForSeconds(explosionDelay - 0.1f);
-        textGameObject.SetActive(false);
-        gameUiPrefab.SetActive(true);
+        TextGameObject.SetActive(false);
+        GameUiPrefab.SetActive(true);
     }
 
     private IEnumerator CameraMove()

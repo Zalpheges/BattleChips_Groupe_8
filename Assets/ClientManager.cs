@@ -31,6 +31,7 @@ public class ClientManager : MonoBehaviour
 		}
 		else
 			Destroy(gameObject);
+		
 	}
 
 	private void Start()
@@ -62,7 +63,7 @@ public class ClientManager : MonoBehaviour
 			delegate (Client client) {
 				Debug.Log("Successfully connected to Player.IO");
 
-				client.Multiplayer.DevelopmentServer = new ServerEndpoint("25.59.158.42", 8184);
+				//client.Multiplayer.DevelopmentServer = new ServerEndpoint("25.59.158.42", 8184);
 				//client.Multiplayer.DevelopmentServer = new ServerEndpoint("localhost", 8184);
 
 				client.Multiplayer.CreateJoinRoom(
@@ -185,9 +186,13 @@ public class ClientManager : MonoBehaviour
 
 						Transform currentPlayerT = Map.GetPlayerById(nCurrentPlayer).transform;
 						Player targetedPlayer = Map.GetPlayerById(id);
+						
 						Missile missile = Instantiate(_prefabMissile).GetComponent<Missile>();
 						Vector3 relativeOffset = currentPlayerT.forward * _offsetMissileSpawn.z + currentPlayerT.right * _offsetMissileSpawn.x;
-						missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y), touched, _gamePanel, shootTextGameObject);
+
+						missile.TextGameObject = shootTextGameObject;
+						missile.GameUiPrefab = _gamePanel;
+						missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y), touched, id);
 						missile.SetText(Map.GetPlayerById(nCurrentPlayer).nickName + " tire sur " + Map.GetPlayerById(id).nickName);
 
 						if (touched)

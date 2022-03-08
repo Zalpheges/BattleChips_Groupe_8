@@ -287,10 +287,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cbd58460ac5b7541a96c46554415a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 115386, guid: 1d37014fd411c524db3696bba6ff1d21, type: 3}
-  StartTransform: {fileID: 850671870}
-  EndTransform: {fileID: 1765444461}
-  temp: {fileID: 0}
 --- !u!114 &70659242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -716,8 +712,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.87750006, y: 0.87000006}
   m_AnchorMax: {x: 0.87750006, y: 0.87000006}
-  m_AnchoredPosition: {x: 270, y: 125}
-  m_SizeDelta: {x: 183.8508, y: 85.042}
+  m_AnchoredPosition: {x: 258.80853, y: 124.99999}
+  m_SizeDelta: {x: 161.4679, y: 85.042}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &190643108
 MonoBehaviour:
@@ -739,7 +735,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Joueur : X'
+  m_text: FDPDEMERDE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -766,14 +762,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -833,7 +829,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &243884051
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2382,11 +2378,6 @@ RectTransform:
   m_AnchoredPosition: {x: -25, y: -15}
   m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 1, y: 0.5}
---- !u!4 &850671870 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2693017205329370454, guid: 709db3e339838a346b7d488b0ce241a0, type: 3}
-  m_PrefabInstance: {fileID: 486172411}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &896382219
 GameObject:
   m_ObjectHideFlags: 0
@@ -3251,7 +3242,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1133732006
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5061,6 +5052,7 @@ MonoBehaviour:
   playerCount: {fileID: 1448657917}
   background: {fileID: 1133732005}
   connect: {fileID: 243884050}
+  b_connect: {fileID: 516417885}
   ready: {fileID: 1187345362}
   shootTextGameObject: {fileID: 1883341475}
 --- !u!4 &1560429289
@@ -5358,11 +5350,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1724209669}
   m_CullTransparentMesh: 1
---- !u!4 &1765444461 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1841816352106921198, guid: 709db3e339838a346b7d488b0ce241a0, type: 3}
-  m_PrefabInstance: {fileID: 486172411}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1796985266
 GameObject:
   m_ObjectHideFlags: 0
@@ -5802,7 +5789,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1883341476
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5820,8 +5807,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 166}
-  m_SizeDelta: {x: 415.3969, y: 69.502}
+  m_AnchoredPosition: {x: -6.5226, y: 166}
+  m_SizeDelta: {x: 670.2266, y: 69.502}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1920985782
 GameObject:
@@ -6390,7 +6377,6 @@ MonoBehaviour:
   offSetPosition: {x: 0, y: 150, z: 0}
   offSetRotation: {x: 90, y: 0, z: 0}
   playerText: {fileID: 190643108}
-  startText: 'Joueur : '
 --- !u!4 &2212950859957287999
 Transform:
   m_ObjectHideFlags: 0
