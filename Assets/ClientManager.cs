@@ -63,7 +63,7 @@ public class ClientManager : MonoBehaviour
 			delegate (Client client) {
 				Debug.Log("Successfully connected to Player.IO");
 
-				//client.Multiplayer.DevelopmentServer = new ServerEndpoint("25.59.158.42", 8184);
+				client.Multiplayer.DevelopmentServer = new ServerEndpoint("25.59.158.42", 8184);
 				//client.Multiplayer.DevelopmentServer = new ServerEndpoint("localhost", 8184);
 
 				client.Multiplayer.CreateJoinRoom(
@@ -109,16 +109,19 @@ public class ClientManager : MonoBehaviour
 
 	public static void AddShip(int id, int x, int y, int dir, int length)
 	{
+		Debug.Log("Add");
 		instance.server.Send("Add", id, x, y, dir, length);
 	}
 
 	public static void RemoveShip(int x, int y)
 	{
+		Debug.Log("Remove");
 		instance.server.Send("Remove", x, y);
 	}
 
 	public static void Boarded()
 	{
+		Debug.Log("Boarded");
 		Main.boarded = true;
 		instance.server.Send("Boarded");
 	}
@@ -137,8 +140,9 @@ public class ClientManager : MonoBehaviour
 			switch (message.Type)
 			{
 				case "Board":
-					{
-						int id = message.GetInt(0);
+				{
+					Debug.Log("Recu board");
+					int id = message.GetInt(0);
 						int count = message.GetInt(1);
 
 						string[] playersName = ExtractMessage<string>(message, 2);
@@ -156,8 +160,9 @@ public class ClientManager : MonoBehaviour
 					}
 
 				case "Count":
-					{
-						int ready = message.GetInt(0);
+				{
+					Debug.Log("Recu Count");
+					int ready = message.GetInt(0);
 						int total = message.GetInt(1);
 
 						playerCount.text = ready + "/" + total + " pret" + (ready > 1 ? "s" : "");
@@ -166,8 +171,9 @@ public class ClientManager : MonoBehaviour
 					}
 
 				case "Shoot":
-					{
-						int id = message.GetInt(0);
+				{
+					Debug.Log("recu Shoot");
+					int id = message.GetInt(0);
 						int x = message.GetInt(1);
 						int y = message.GetInt(2);
 
@@ -229,9 +235,10 @@ public class ClientManager : MonoBehaviour
 					}
 
 				case "Play":
-					{
-						
-						nCurrentPlayer = 0;
+				{
+					Debug.Log("recu play");
+
+					nCurrentPlayer = 0;
 						Main.currentState = Map.GetPlayerById(nCurrentPlayer).id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
 
 						Main.instance.canvasSelection.SetActive(false);
@@ -252,8 +259,9 @@ public class ClientManager : MonoBehaviour
 					}
 
 				case "End":
-					{
-						int winner = message.GetInt(0);
+				{
+					Debug.Log("recu end");
+					int winner = message.GetInt(0);
 
 						ShowMenu(Menu.End);
 

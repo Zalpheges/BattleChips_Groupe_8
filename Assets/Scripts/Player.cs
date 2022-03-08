@@ -106,7 +106,8 @@ public class Player : MonoBehaviour
         i = cellPosition.x;
         j = cellPosition.y;
         Main.currentInstanciatedChip.GetComponentInChildren<Chip>().direction = vect;
-        ClientManager.AddShip(Main.currentId, i, j, dir, length);
+        int trigDir = dir % 2 == 1 ? dir + 2 % 4 : dir;
+        ClientManager.AddShip(Main.currentId, i, j, trigDir, length);
         --Main.nShipsToPlace;
 
         for (int k = 0; k < Main.chipsLengths[Main.currentId]; k++)
