@@ -80,10 +80,16 @@ public class Ship
 
 public class Player : BasePlayer
 {
-	public bool IsReady = false;
+    public bool IsReady = false;
     public int Index;
 
-	private List<Ship> ships = new List<Ship>();
+    private List<Ship> ships = new List<Ship>();
+
+    public void debug()
+    {
+        foreach (Ship ship in ships)
+            Console.WriteLine(ship.x + " " + ship.y);
+    }
 
     public bool IsDead()
     {
@@ -104,8 +110,8 @@ public class Player : BasePlayer
         return null;
     }
 
-	public bool AddShip(int id, int x, int y, int dir, int length)
-	{
+    public bool AddShip(int id, int x, int y, int dir, int length)
+    {
         Ship ship = new Ship(id, x, y, dir, length);
 
         bool intersect = ships.Find(s => s.Intersect(ship)) != null;
@@ -132,162 +138,173 @@ public class Player : BasePlayer
 [RoomType("BattleChip")]
 public class GameCode : Game<Player>
 {
-	private List<Player> players;
+    private List<Player> players;
 
-	private bool isRunning = false;
+    private bool isRunning = false;
 
-	int current;
+    int current;
 
-	public override void GameStarted()
-	{
-		players = new List<Player>();
-	}
+    public override void GameStarted()
+    {
+        players = new List<Player>();
+    }
 
     public override bool AllowUserJoin(Player player)
     {
-		return !isRunning && players.Count <= 5;
+        return !isRunning && players.Count <= 5;
     }
 
     public override void GameClosed()
-	{
+    {
 
-	}
+    }
 
-	public override void UserJoined(Player player)
-	{
-		players.Add(player);
-	}
+    public override void UserJoined(Player player)
+    {
+        players.Add(player);
+    }
 
-	public override void UserLeft(Player player)
-	{
-		if (isRunning)
-			players.ForEach(p => p.Disconnect());
-	}
+    public override void UserLeft(Player player)
+    {
+        if (isRunning)
+            players.ForEach(p => p.Disconnect());
+    }
 
-	public override void GotMessage(Player sender, Message message)
-	{
-		switch (message.Type)
-		{
-			case "Ready":
-			{
-				sender.IsReady = message.GetBoolean(0);
-
-				int count = players.FindAll(player => player.IsReady).Count;
-
-				Broadcast("Count", count, players.Count);
-
-				if (players.Count > 1 && count == players.Count)
+    public override void GotMessage(Player sender, Message message)
+    {
+        switch (message.Type)
+        {
+            case "Ready":
                 {
-					isRunning = true;
+                    sender.IsReady = message.GetBoolean(0);
 
-                    for (int i = 0; i < players.Count; ++i)
+                    int count = players.FindAll(player => player.IsReady).Count;
+
+                    Broadcast("Count", count, players.Count);
+
+                    if (players.Count > 1 && count == players.Count)
                     {
-                        players[i].Index = i;
-                        players[i].Send(CreateMessage("Board", players.ConvertAll(p => p.ConnectUserId), i, players.Count));
-                        
-                        players[i].IsReady = false;
-                    }
-                }
+                        isRunning = true;
 
-				break;
-			}
+                        for (int i = 0; i < players.Count; ++i)
+                        {
+                            players[i].Index = i;
+                            players[i].Send(CreateMessage("Board", players.ConvertAll(p => p.ConnectUserId), i, players.Count));
+
+                            players[i].IsReady = false;
+                        }
+                    }
+
+                    break;
+                }
 
             case "Add":
-            {
-                int id = message.GetInt(0);
-                int x = message.GetInt(1);
-                int y = message.GetInt(2);
-                int dir = message.GetInt(3);
-                int length = message.GetInt(4);
-
-                sender.AddShip(id, x, y, dir, length);
-
-                break;
-            }
-
-            case "Remove":
-            {
-                int x = message.GetInt(0);
-                int y = message.GetInt(1);
-
-                sender.RemoveShip(x, y);
-
-                break;
-            }
-
-            case "Boarded":
-            {
-                sender.IsReady = true;
-
-                int count = players.FindAll(player => player.IsReady).Count;
-
-                Broadcast("Count", count, players.Count);
-
-                if (players.Count > 1 && count == players.Count)
-                {
-                    Broadcast(CreateMessage("Play", players.ConvertAll(p => p.ConnectUserId)));
-
-                    current = 0;
-
-                    foreach (Player player in players)
-                        player.IsReady = false;
-                }
-
-                break;
-            }
-
-            case "Shoot":
-            {
-                if (current == sender.Index)
                 {
                     int id = message.GetInt(0);
+                    int x = message.GetInt(1);
+                    int y = message.GetInt(2);
+                    int dir = message.GetInt(3);
+                    int length = message.GetInt(4);
 
-                    if (id >= 0 && id != sender.Index && id < players.Count)
-                    {
-                        int x = message.GetInt(1);
-                        int y = message.GetInt(2);
+                    if (players.IndexOf(sender) == 1)
+                        Console.WriteLine("{0} {1} {2} {3} {4} {5}", players.IndexOf(sender), sender.AddShip(id, x, y, dir, length), x, y, dir, length);
 
-                        Ship ship = players[id].Shoot(x, y);
-                        bool touched = ship != null;
-
-                        if (touched && ship.destroyed)
-                            Broadcast("Shoot", id, x, y, true, true, ship.id, ship.x, ship.y, ship.dir);
-                        else
-                            Broadcast("Shoot", id, x, y, touched, false);
-
-                        if (players[id].IsDead())
-                        Broadcast("Dead", id);
-
-                        current = (current + 1) % players.Count;
-
-                        int count = 0, winner = -1;
-                        foreach (Player player in players)
-                        {
-                            if (!player.IsDead())
-                            {
-                                ++count;
-                                winner = player.Index;
-                            }
-                        }
-
-                        if (count == 1)
-                            Broadcast("End", winner);
-                    }
+                    break;
                 }
 
-                break;
-            }
+            case "Remove":
+                {
+                    int x = message.GetInt(0);
+                    int y = message.GetInt(1);
+
+                    if (players.IndexOf(sender) == 1)
+                        Console.WriteLine("{0} {1} {2} {3}", players.IndexOf(sender), sender.RemoveShip(x, y), x, y);
+
+                    break;
+                }
+
+            case "Boarded":
+                {
+                    sender.IsReady = true;
+
+                    int count = players.FindAll(player => player.IsReady).Count;
+
+                    Broadcast("Count", count, players.Count);
+
+                    if (players.Count > 1 && count == players.Count)
+                    {
+                        Broadcast(CreateMessage("Play", players.ConvertAll(p => p.ConnectUserId)));
+
+                        current = 0;
+
+                        foreach (Player player in players)
+                            player.IsReady = false;
+                    }
+
+                    break;
+                }
+
+            case "Shoot":
+                {
+                    if (current == sender.Index)
+                    {
+                        int id = message.GetInt(0);
+
+                        if (id >= 0 && id != sender.Index && id < players.Count)
+                        {
+                            int x = message.GetInt(1);
+                            int y = message.GetInt(2);
+
+                            Ship ship = players[id].Shoot(x, y);
+                            bool touched = ship != null;
+
+                            if (touched && ship.destroyed)
+                                Broadcast("Shoot", id, x, y, true, true, ship.id, ship.x, ship.y, ship.dir);
+                            else
+                                Broadcast("Shoot", id, x, y, touched, false);
+
+                            if (players[id].IsDead())
+                                Broadcast("Dead", id);
+
+                            do
+                            {
+                                current = (current + 1) % players.Count;
+                            }
+                            while (players[current].IsDead());
+
+                            int count = 0, winner = -1;
+                            foreach (Player player in players)
+                            {
+                                if (!player.IsDead())
+                                {
+                                    ++count;
+                                    winner = player.Index;
+                                }
+                                else
+                                {
+                                    Console.WriteLine(player.ConnectUserId);
+                                    player.debug();
+                                }
+                            }
+
+                            if (count == 1)
+                                Broadcast("End", winner);
+                        }
+                    }
+
+                    break;
+                }
 
             case "Count":
-            {
-                int count = players.FindAll(player => player.IsReady).Count;
+                {
+                    int count = players.FindAll(player => player.IsReady).Count;
 
-                sender.Send("Count", count, players.Count);
+                    sender.Send("Count", count, players.Count);
 
-                break;
-            }
+                    break;
+                }
         }
-	}
+    }
 
     private Message CreateMessage<T>(string type, List<T> list, params object[] parameters)
     {
