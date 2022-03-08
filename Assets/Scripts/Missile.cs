@@ -134,6 +134,7 @@ public class Missile : MonoBehaviour
         yield return new WaitForSeconds(explosionDelay - 0.1f);
         TextGameObject.SetActive(false);
         GameUiPrefab.SetActive(true);
+        ClientManager.wait = false;
     }
 
     private IEnumerator CameraMove()

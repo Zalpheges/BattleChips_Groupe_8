@@ -816,7 +816,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &243884051
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5039,6 +5039,9 @@ MonoBehaviour:
   playerCount: {fileID: 1448657917}
   background: {fileID: 1133732005}
   connect: {fileID: 243884050}
+  end: {fileID: 1616616749}
+  winnerText: {fileID: 366978517}
+  othersText: {fileID: 1724209671}
   b_connect: {fileID: 516417885}
   ready: {fileID: 1187345362}
   shootTextGameObject: {fileID: 1883341475}
@@ -5073,7 +5076,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1616616750
 RectTransform:
   m_ObjectHideFlags: 0

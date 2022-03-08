@@ -19,7 +19,7 @@ public class Main : MonoBehaviour
     public static int currentId = -1;
     public static GameObject currentInstanciatedChip;
     public static float lastRotation;
-    public static int nShipsToPlace = 5;
+    public static int nShipsToPlace = 1;
     public static Dictionary<int, Button> chipsButtons = new Dictionary<int, Button>();
     public static Dictionary<int, int> chipsLengths = new Dictionary<int, int>();
     public static Dictionary<PlayerCell.CellType, Material> cellMaterials = new Dictionary<PlayerCell.CellType, Material>();

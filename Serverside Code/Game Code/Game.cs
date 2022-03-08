@@ -206,8 +206,7 @@ public class GameCode : Game<Player>
                     int dir = message.GetInt(3);
                     int length = message.GetInt(4);
 
-                    if (players.IndexOf(sender) == 1)
-                        Console.WriteLine("{0} {1} {2} {3} {4} {5}", players.IndexOf(sender), sender.AddShip(id, x, y, dir, length), x, y, dir, length);
+                    Console.WriteLine("{0} {1} {2} {3} {4} {5}", players.IndexOf(sender), sender.AddShip(id, x, y, dir, length), x, y, dir, length);
 
                     break;
                 }
@@ -217,8 +216,7 @@ public class GameCode : Game<Player>
                     int x = message.GetInt(0);
                     int y = message.GetInt(1);
 
-                    if (players.IndexOf(sender) == 1)
-                        Console.WriteLine("{0} {1} {2} {3}", players.IndexOf(sender), sender.RemoveShip(x, y), x, y);
+                    Console.WriteLine("{0} {1} {2} {3}", players.IndexOf(sender), sender.RemoveShip(x, y), x, y);
 
                     break;
                 }
