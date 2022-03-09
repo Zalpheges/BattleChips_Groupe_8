@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,21 +16,34 @@ public class GameManager : MonoBehaviour
         PlacingShips,
         Playing
     }
+    public static PlayerState CurrentState;
     public static int CurrentShipId = -1;
     public static GameObject CurrentInstanciatedChip;
     public static int LastRotation;
     public static int NShipsToPlace = 1;
-    public static PlayerState CurrentState;
-    public static Dictionary<int, Button> ChipsButtons = new Dictionary<int, Button>();
-    public static Dictionary<int, int> ChipsLengths = new Dictionary<int, int>();
+    public static Dictionary<int, ShipData> ShipDatas = new Dictionary<int, ShipData>();
     public static Dictionary<PlayerCell.CellType, Material> CellMaterials = new Dictionary<PlayerCell.CellType, Material>();
     public static bool Boarded = false;
     public static bool PlacingShips => CurrentState == PlayerState.PlacingShips;
+    public static bool IsShipSelected => CurrentShipId != -1;
+
+
+
+    private Player[] _players;
+
+    private Player Me => _players[MyID];
+    private Player CurrentPlayer => _players[_currentTurn];
+    private int _currentTurn = -1;
+
+    public static int MyID { get; private set; }
+    public static bool MyTurn => _instance._currentTurn == MyID;
+
     [Serializable]
-    private struct ShipsData
+    public struct ShipData
     {
+        public GameObject prefab;
         public Button button;
-        public int shipId;
+        public int id;
         public int length;
     }
     [Serializable]
@@ -39,7 +52,7 @@ public class GameManager : MonoBehaviour
         public PlayerCell.CellType cellType;
         public Material material;
     }
-    [SerializeField] private ShipsData[] _shipsDatas;
+    [SerializeField] private ShipData[] _shipsDatas;
     [SerializeField] private CellMaterial[] _cellsMaterials;
     private bool _displayShipMenu = false;
     private Player _player;
@@ -47,18 +60,25 @@ public class GameManager : MonoBehaviour
     private int _iRemove;
     private int _jRemove;
 
+    [SerializeField]
+    private Missile _missilePrefab;
+    [SerializeField] private Transform _exampleFiringPoint;
+    [SerializeField] private Transform _examplePlayer;
+    private Vector3 _localSpawnPosition;
+
     private void Awake()
     {
         _instance = this;
-        foreach (ShipsData button in _shipsDatas)
+        foreach (ShipData shipData in _shipsDatas)
         {
-            ChipsButtons.Add(button.shipId, button.button);
-            ChipsLengths.Add(button.shipId, button.length);
+            ShipDatas.Add(shipData.id, shipData);
         }
         foreach (CellMaterial cellMat in _cellsMaterials)
         {
             CellMaterials.Add(cellMat.cellType, cellMat.material);
         }
+
+        _localSpawnPosition = _exampleFiringPoint.position - _examplePlayer.position;
     }
 
     private void Update()
@@ -104,12 +124,13 @@ public class GameManager : MonoBehaviour
             GUILayout.EndArea();
         }
     }
+
     public static void OnCellClicked(PlayerCell cell)
     {
         Player player = cell.transform.parent.GetComponent<Player>();
         if (_instance._displayShipMenu)
             return;
-        if (ClientManager.MyTurn && !player.you)
+        if (MyTurn && !player.you)
         {
             ClientManager.Shoot(player.id, cell.position.x, cell.position.y);
         }
@@ -136,6 +157,79 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log(cell.position.ToString() + cell.type.ToString());
     }
+
+    public static void Board(int id, int count)
+    {
+        _instance._players = Map.CreatePlayers(id, count);
+
+        UIManager.ShowMenu(UIManager.Menu.Board);
+    }
+
+    public static void KillPlayer(int id)
+    {
+
+    }
+
+    public static void Play()
+    {
+
+        _currentTurn = 0;
+
+        InputManager.currentState = currentPlayer.id == current ? InputManager.PlayerState.Aiming : InputManager.PlayerState.Waiting;
+
+        UIManager.SetTurn(CurrentPlayer.nickName);
+    }
+
+    public static void Shoot(int id, int x, int y, bool touched)
+    {
+
+    }
+    public static void Shoot(int id, int x, int y, int shipId, int shipX, int shipY, int shipDir)//destroyed == true
+    {
+
+        Player target = _instance._players[id];
+        Transform player = _instance.CurrentPlayer.transform;
+
+        Vector3 from = player.position + _instance._localSpawnPosition;
+        Vector3 to = target.GetWorldPosition(x, y);
+
+        ClientManager.Wait = true;
+
+        Vector3 worldSpawnPosition = player.forward * _instance._localSpawnPosition.z + player.right * _instance._localSpawnPosition.x;
+
+        Missile missile = Instantiate(_instance._missilePrefab);
+        missile.SetCallbacks(
+            delegate () {
+                target.GetShip(x, y).transform.localRotation *= Quaternion.Euler(Vector3.right * 1000f);
+            },
+            delegate () {
+                UIManager.SetTurn(_instance.CurrentPlayer.nickName);
+            }
+        );
+
+        missile.Shoot(from, to, true);
+
+        UIManager.ShowShoot(_instance.CurrentPlayer.nickName, target.nickName);
+
+        target.SetCellType(x, y, PlayerCell.CellType.ShipHit);
+        Transform shipT;
+        if (!target.you)
+        {
+            Vector3 yRotation = new Vector3(0, -shipDir * 90, 0);
+            shipT = Instantiate(ShipDatas[shipId].prefab, target.GetWorldPosition(shipX, shipY),
+                target.transform.rotation * Quaternion.Euler(yRotation), target.transform).transform;
+        }
+        else
+            shipT = target.GetShip(x, y).transform;
+
+        do
+        {
+            _instance._currentTurn = (_instance._currentTurn + 1) % _instance._players.Length;
+        } while (_instance.CurrentPlayer.dead);
+
+        CurrentState = PlayerState.Playing;
+    }
+
     public static void RotateChip()
     {
         if (CurrentShipId == -1)
@@ -144,15 +238,14 @@ public class GameManager : MonoBehaviour
         LastRotation %= 360;
         CurrentInstanciatedChip.transform.Rotate(Vector3.up * 90);
     }
-
     public void ChangeCurrentChip(int id)
     {
-        if (CurrentShipId != -1)
+        if (IsShipSelected)
         {
             Destroy(CurrentInstanciatedChip);
-            ChipsButtons[CurrentShipId].interactable = true;
+            ShipDatas[CurrentShipId].button.interactable = true;
         }
-        ChipsButtons[id].interactable = false;
+        ShipDatas[id].button.interactable = false;
         CurrentShipId = id;
     }
     public static void PrevisualizeShipOnCell(Transform cellTransform)
@@ -176,7 +269,7 @@ public class GameManager : MonoBehaviour
         CurrentInstanciatedChip.GetComponentInChildren<Ship>().direction = vect;
         player.AddShipToGrid(CurrentInstanciatedChip, i, j, length, vect);
 
-        int trigDir = dir % 2 == 1 ? (dir + 2) % 4 : dir; //inverse 1 and 3
+        int trigDir = dir % 2 == 1 ? (dir + 2) % 4 : dir; //inverse 1 and 3 
         ClientManager.AddShip(CurrentShipId, i, j, trigDir, length);
         --NShipsToPlace;
 
