@@ -12,12 +12,6 @@ public class Player : MonoBehaviour
     private Vector3 _gridStart;
     private PlayerCell[,] _grid;
 
-    private bool _displayShipMenu = false;
-    private int _iRemove;
-    private int _jRemove;
-
-
-
     public void Initialize()
     {
         _cellSize = prefabCell.transform.localScale.x;
@@ -40,96 +34,55 @@ public class Player : MonoBehaviour
                 PlayerCell cell = cellGo.GetComponent<PlayerCell>();
                 cell.position = new Vector2Int(x, y);
                 cell.type = PlayerCell.CellType.None;
-                cell.onClick += OnCellClicked;
+                cell.onClick += GameManager.OnCellClicked;
                 _grid[x, y] = cell;
             }
         }
     }
-    void OnCellClicked(PlayerCell cell)
+    
+
+    public bool IsSpaceFree(int i, int j, int length, Vector2Int dir)
     {
-        if (_displayShipMenu || dead)
-            return;
-        if (GameManager.CurrentState == GameManager.PlayerState.Aiming && !you)
-        {
-            ClientManager.Shoot(id, cell.position.x, cell.position.y);
-        }
-        else if (GameManager.PlacingShips)
-        {
-            if (GameManager.CurrentShipId != -1)
-            {
-                if (PlaceChip(cell.position))
-                {
-                    GameManager.CurrentInstanciatedChip = null;
-                    GameManager.CurrentShipId = -1;
-                }
-            }
-            else
-            {
-                if (cell.ship != null)
-                {
-                    GameManager.CurrentInstanciatedChip = cell.ship;
-                    _iRemove = cell.position.x;
-                    _jRemove = cell.position.y;
-                    _displayShipMenu = true;
-                }
-            }
-        }
-        Debug.Log(cell.position.ToString() + cell.type.ToString());
-    }
-    public bool PlaceChip(Vector2Int cellPosition)
-    {
-        int dir = (int)GameManager.LastRotation / 90;//sens horaire
-        Vector2Int vect = Vector2Int.zero;
-        if (dir == 0)
-            vect = Vector2Int.right;
-        else if (dir == 1)
-            vect = Vector2Int.up;
-        else if (dir == 2)
-            vect = Vector2Int.left;
-        else if (dir == 3)
-            vect = Vector2Int.down;
-        int i = cellPosition.x, j = cellPosition.y;
-        int length = GameManager.ShipDatas[GameManager.CurrentShipId].length;
         for (int k = 0; k < length; k++)
         {
             if (i < 0 || i >= _grid.GetLength(0) || j < 0 || j >= _grid.GetLength(1))
                 return false;
             if (_grid[i, j].ship != null)
                 return false;
-            i += vect.x;
-            j += vect.y;
-        }
-
-        i = cellPosition.x;
-        j = cellPosition.y;
-        GameManager.CurrentInstanciatedChip.GetComponentInChildren<Ship>().direction = vect;
-        int trigDir = dir % 2 == 1 ? dir + 2 % 4 : dir;
-        ClientManager.AddShip(GameManager.CurrentShipId, i, j, trigDir, length);
-        --GameManager.NShipsToPlace;
-
-        for (int k = 0; k < GameManager.ShipDatas[GameManager.CurrentShipId].length; k++)
-        {
-            _grid[i, j].ship = GameManager.CurrentInstanciatedChip;
-            i += vect.x;
-            j += vect.y;
+            i += dir.x;
+            j += dir.y;
         }
         return true;
     }
 
-    private void RemoveShip()
+    public void AddShipToGrid(GameObject ship, int i, int j, int length, Vector2Int dir)
     {
-        Ship ship = _grid[_iRemove, _jRemove].ship.GetComponentInChildren<Ship>();
+        for (int k = 0; k < length; k++)
+        {
+            _grid[i, j].ship = ship;
+            i += dir.x;
+            j += dir.y;
+        }
+    }
+
+
+    public void RemoveShip(int iStart, int jStart)
+    {
+        Ship ship = _grid[iStart, jStart].ship.GetComponentInChildren<Ship>();
         Vector2Int shipDir = ship.direction;
         Vector2Int browseDir = new Vector2Int(shipDir.x, -shipDir.y);
         for (int k = 0; k < 2; ++k)
         {
-            int i = _iRemove;
-            int j = _jRemove;
+            int i = iStart;
+            int j = jStart;
+            _grid[i, j] = null;
+
             while (i > 0 && i < _grid.GetLength(0) && j > 0 && j < _grid.GetLength(1)
                 && _grid[i + browseDir.x, j + browseDir.y].ship == _grid[i, j].ship)
             {
                 i += browseDir.x;
                 j += browseDir.y;
+                _grid[i, j] = null;
             }
             browseDir = - browseDir;
         }
@@ -140,7 +93,7 @@ public class Player : MonoBehaviour
         return _gridStart + i * _cellSize * transform.right - j * _cellSize * transform.forward;
     }
 
-    public void CellHit(int i, int j, PlayerCell.CellType cellType)
+    public void SetCellType(int i, int j, PlayerCell.CellType cellType)
     {
         _grid[i, j].SetType(cellType);
     }
