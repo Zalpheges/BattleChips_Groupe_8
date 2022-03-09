@@ -1,154 +1,121 @@
-using Cinemachine;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using Cinemachine;
+using System;
 
 public class Missile : MonoBehaviour
 {
-    [SerializeField] private Vector3 offSetCameraPosition;
+    [SerializeField]
+    private Vector3 offSetCameraPosition;
 
     [Space(5)]
 
-    [SerializeField] private Vector3 offSetCameraRotation;
+    [SerializeField]
+    private Vector3 offSetCameraRotation;
 
     [Space(5)]
 
-    [SerializeField] private float offSetyBezierPoint;
+    [SerializeField]
+    private float offSetyBezierPoint;
 
     [Space(5)]
 
-    [SerializeField] private float travelTime;
+    [SerializeField]
+    private float travelTime;
 
     [Space(5)]
 
-    [SerializeField] private GameObject explosionPrefab;
+    [SerializeField]
+    private GameObject _explosionPrefab;
 
     [Space(5)]
 
     [SerializeField] private float explosionDelay = 0.5f;
 
-
-
-    [System.NonSerialized] public GameObject TextGameObject;
-    [System.NonSerialized] public GameObject GameUiPrefab;
     [System.NonSerialized] public Vector3 StartPosition;
     [System.NonSerialized] public Vector3 EndPosition;
 
-    private Vector3 interpolatePoint;
-
     private new CinemachineVirtualCamera camera;
 
-    private bool launchMissile = false;
-    private bool shipHit = false;
-    private float bezierProgression = 0f;
+    private bool _explode;
+
+    private Vector3 _from;
+    private Vector3 _interpolator;
+    private Vector3 _to;
+
+    private float _time;
+
+    private bool _moving = true;
+
+    private Action _onTargetReached;
+    private Action _onDestroy;
 
     private int idTarget = int.MaxValue;
     private Vector3 nextPosition;
     private Transform shipToDestroy;
 
-    private TextMeshProUGUI text;
-
-    public void Init(Vector3 startPosition, Vector3 endPosition, bool shipHit, int targetID)
+    public void Shoot(Vector3 from, Vector3 to, bool explode)
     {
-        text = TextGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
-        GameUiPrefab.SetActive(false);
-        idTarget = targetID;
-        StartPosition = startPosition;
-        EndPosition = endPosition;
+        _from = from;
+        _to = to;
 
-        transform.position = StartPosition;
+        _interpolator = (from + to) / 2f;
+        _interpolator.y += 250f;
+
+        _explode = explode;
+
         camera = CameraManager.CreateCamera(transform, offSetCameraPosition, offSetCameraRotation);
         camera.Follow = transform;
 
         CinemachineTransposer transposer = camera.GetCinemachineComponent<CinemachineTransposer>();
         transposer.m_FollowOffset = offSetCameraPosition;
-
-        StartCoroutine(CameraMove());
-        StartCoroutine(WaitTransition());
-
-        interpolatePoint = (EndPosition - StartPosition) / 2f;
-        interpolatePoint.y += offSetyBezierPoint;
-
-        this.shipHit = shipHit;
-        
     }
 
-    public void SetDestroyedShip(Transform ship)
+    public void SetCallbacks(Action onTargetReach, Action onDestroy)
     {
-        shipToDestroy = ship;
-    }
-
-    public void SetText(string message)
-    {
-        text.text = message;
-        TextGameObject.SetActive(true);
+        _onTargetReached = onTargetReach;
+        _onDestroy = onDestroy;
     }
 
     private void Update()
     {
-        if (launchMissile && bezierProgression < 1)
+        if (_moving)
         {
-            transform.position = nextPosition;
+            _time += Time.deltaTime / travelTime;
 
-            float coeff = 1 - bezierProgression;
-            nextPosition = Mathf.Pow(coeff, 2) * StartPosition + 2 * bezierProgression * coeff * interpolatePoint + Mathf.Pow(bezierProgression, 2) * EndPosition;
-            bezierProgression += Time.deltaTime / travelTime;
-            transform.LookAt(nextPosition);
-            camera.transform.LookAt(nextPosition);
+            Vector3 position = Mathf.Pow(1f - _time, 2) * _from + 2f * (1f - _time) * _interpolator + Mathf.Pow(_time, 2) * _to;
 
-            if (bezierProgression >= 1)
-            {
-                EndReached();
-                if(shipHit)
-                    Explosion();
-            }           
+            transform.LookAt(position);
+            camera.transform.LookAt(position);
 
-            if (CameraManager.transitionDelay / 10 + bezierProgression >= 1f && camera != null)
-                CameraManager.DestroyCamera(camera, idTarget);
+            transform.position = position;
+
+            if (_time >= 1f)
+                StartCoroutine(OnEndReached());
         }
     }
 
-    private void Explosion()
+    private IEnumerator OnEndReached()
     {
-        Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), explosionDelay);
-    }
+        _moving = false;
 
-    private void EndReached()
-    {
-        foreach (Transform child in transform)
+        _onTargetReached?.Invoke();
+
+        CameraManager.DestroyCamera(camera, idTarget);
+
+        if (_explode)
         {
-            child.gameObject.SetActive(false);
+            GameObject explosion = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+
+            yield return new WaitForSeconds(explosionDelay);
+
+            Destroy(explosion);
         }
-        if (shipToDestroy)
-        {
-            Vector3 vect = shipToDestroy.localRotation.eulerAngles + Vector3.right * 1000f;
-            shipToDestroy.localRotation = Quaternion.Euler(vect);
-        }
-        StartCoroutine(SetUi());
-        Destroy(gameObject, explosionDelay);
-    }
 
-    private IEnumerator SetUi()
-    {
-        yield return new WaitForSeconds(explosionDelay - 0.1f);
-        TextGameObject.SetActive(false);
-        GameUiPrefab.SetActive(true);
-        ClientManager.Wait = false;
-    }
-
-    private IEnumerator CameraMove()
-    {
-        yield return new WaitForFixedUpdate();
-        camera.Priority = int.MaxValue;
-    }
-
-    private IEnumerator WaitTransition()
-    {
         yield return new WaitForSeconds(CameraManager.transitionDelay);
-        launchMissile = true;
-        float coeff = 1 - bezierProgression;
-        nextPosition = Mathf.Pow(coeff, 2) * StartPosition + 2 * bezierProgression * coeff * interpolatePoint + Mathf.Pow(bezierProgression, 2) * EndPosition;
-        bezierProgression += Time.deltaTime / travelTime;
+
+        Destroy(gameObject);
+
+        _onDestroy?.Invoke();
     }
 }

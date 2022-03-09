@@ -4,28 +4,34 @@ using UnityEngine;
 
 public class ClientManager : MonoBehaviour
 {
-	private static ClientManager instance;
+	private static ClientManager _instance;
 
-	private Queue<Message> messages;
+	private Queue<Message> _messages;
 
-	private Connection server;
+	private Connection _server;
 	public static bool Wait = false;
 
-	public static int nCurrentPlayer = -1;
+	private int _currentTurn = -1;
 
-	public static bool MyTurn => nCurrentPlayer == Map.myId;
+	public static int MyID { get; private set; }
+	public static bool MyTurn => _instance._currentTurn == MyID;
 
-	[SerializeField] private GameObject _prefabMissile;
+	[SerializeField]
+	private Missile _missilePrefab;
 	[SerializeField] private Transform _exampleFiringPoint;
 	[SerializeField] private Transform _examplePlayer;
-	private Vector3 _offsetMissileSpawn;
+	private Vector3 _localSpawnPosition;
 
+	private Player[] _players;
+
+	private Player Me => _players[MyID];
+	private Player CurrentPlayer => _players[_currentTurn];
 
 	private void Awake()
 	{
-		if (instance == null)
+		if (_instance == null)
 		{
-			instance = this;
+			_instance = this;
 			DontDestroyOnLoad(gameObject);
 		}
 		else
@@ -34,9 +40,9 @@ public class ClientManager : MonoBehaviour
 
 	private void Start()
 	{
-		messages = new Queue<Message>();
+		_messages = new Queue<Message>();
 
-		_offsetMissileSpawn = _exampleFiringPoint.position - _examplePlayer.position;
+		_localSpawnPosition = _exampleFiringPoint.position - _examplePlayer.position;
 	}
 
 	public static void Connect(string username, string roomname)
@@ -63,21 +69,21 @@ public class ClientManager : MonoBehaviour
 					delegate (Connection connection) {
 						Debug.Log("Joined " + roomname);
 
-						instance.server = connection;
-						instance.server.OnMessage += instance.OnMessage;
-						instance.server.OnDisconnect += instance.OnDisconnect;
+						_instance._server = connection;
+						_instance._server.OnMessage += _instance.OnMessage;
+						_instance._server.OnDisconnect += _instance.OnDisconnect;
 
-						instance.server.Send("Count");
+						_instance._server.Send("Count");
 					},
 					delegate (PlayerIOError error) {
-						Debug.Log("Error Joining Room: " + error.ToString());
+						Debug.Log($"Error Joining Room: {error}");
 
 						UIManager.ShowMenu(UIManager.Menu.Connect);
 					}
 				);
 			},
 			delegate (PlayerIOError error) {
-				Debug.Log("Error connecting: " + error.ToString());
+				Debug.Log($"Error connecting: {error}");
 
 				UIManager.ShowMenu(UIManager.Menu.Connect);
 			}
@@ -86,38 +92,34 @@ public class ClientManager : MonoBehaviour
 
 	public void Ready(bool state)
 	{
-		server.Send("Ready", state);
+		_server.Send("Ready", state);
 	}
 
 	public static void AddShip(int id, int x, int y, int dir, int length)
 	{
-		Debug.Log("Add");
-		instance.server.Send("Add", id, x, y, dir, length);
+		_instance._server.Send("Add", id, x, y, dir, length);
 	}
 
 	public static void RemoveShip(int x, int y)
 	{
-		Debug.Log("Remove");
-		instance.server.Send("Remove", x, y);
+		_instance._server.Send("Remove", x, y);
 	}
 
 	public static void Boarded()
 	{
-		Debug.Log("Boarded");
-		InputManager.boarded = true;
-		instance.server.Send("Boarded");
+		GameManager.Boarded = true;
+		_instance._server.Send("Boarded");
 	}
 	public static void Shoot(int id, int x, int y)
 	{
-		Debug.Log("Shoot");
-		instance.server.Send("Shoot", id, x, y);
+		_instance._server.Send("Shoot", id, x, y);
 	}
 
 	private void FixedUpdate()
 	{
-		while (messages.Count > 0 && !Wait)
+		while (_messages.Count > 0 && !Wait)
 		{
-			Message message = messages.Dequeue();
+			Message message = _messages.Dequeue();
 
 			switch (message.Type)
 			{
@@ -128,13 +130,12 @@ public class ClientManager : MonoBehaviour
 
 					string[] playersName = ExtractMessage<string>(message, 2);
 
-					Map.nPlayers = count;
-					Map.myId = id;
-					Map.Init(playersName);
+					_players = Map.CreatePlayers(id, count);
+
 					InputManager.connected = true;
 					InputManager.instance.CanvasSelection.SetActive(true);
 
-					UIManager.ShowMenu(UIManager.Menu.None);
+					UIManager.ShowMenu(UIManager.Menu.Board);
 
 					break;
 				}
@@ -158,73 +159,77 @@ public class ClientManager : MonoBehaviour
 					bool touched = message.GetBoolean(3);
 					bool destroyed = message.GetBoolean(4);
 
-					int idShip = 0, xShip = 0, yShip = 0, dirShip = 0;
+					Player target = _players[id];
+					Transform player = CurrentPlayer.transform;
 
-					if (destroyed)
-					{
-						idShip = message.GetInt(5);
-						xShip = message.GetInt(6);
-						yShip = message.GetInt(7);
-						dirShip = message.GetInt(8);
-					}
-
-					Transform currentPlayerT = Map.GetPlayerById(nCurrentPlayer).transform;
-					Player targetedPlayer = Map.GetPlayerById(id);
+					Vector3 from = player.position + _localSpawnPosition;
+					Vector3 to = target.GetWorldPosition(x, y);
 
 					Wait = true;
-					Debug.Log("Shoot");
-					Missile missile = Instantiate(_prefabMissile).GetComponent<Missile>();
-					Vector3 relativeOffset = currentPlayerT.forward * _offsetMissileSpawn.z + currentPlayerT.right * _offsetMissileSpawn.x;
 
-					UIManager.ShowShoot(Map.GetPlayerById(nCurrentPlayer).nickName, Map.GetPlayerById(id).nickName);
-					missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y), touched, id);
-					missile.SetText(Map.GetPlayerById(nCurrentPlayer).nickName + " tire sur " + Map.GetPlayerById(id).nickName);
+					Vector3 worldSpawnPosition = player.forward * _localSpawnPosition.z + player.right * _localSpawnPosition.x;
+
+					Missile missile = Instantiate(_missilePrefab);
+					missile.SetCallbacks(
+						delegate () {
+							if (destroyed)
+								target.GetShip(x, y).transform.localRotation *= Quaternion.Euler(Vector3.right * 1000f);
+						},
+						delegate () {
+							UIManager.SetTurn(CurrentPlayer.nickName);
+						}
+					);
+
+					missile.Shoot(from, to, touched);
+
+					UIManager.ShowShoot(CurrentPlayer.nickName, target.nickName);
 
 					if (touched)
 					{
 						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coul� pendant l'animation
-						targetedPlayer.ShipCellHit(x, y);
+						target.ShipCellHit(x, y);
 						if (destroyed)
-						{
-							Transform shipT;
-							if (!targetedPlayer.you)
+							{
+
+								int idShip = message.GetInt(5);
+								int xShip = message.GetInt(6);
+								int yShip = message.GetInt(7);
+								int dirShip = message.GetInt(8);
+
+								Transform shipT;
+							if (!target.you)
 							{
 								Vector3 yRotation = new Vector3(0, -dirShip * 90, 0);
-								shipT = Instantiate(InputManager.chipsButtons[idShip].transform.GetChild(0), targetedPlayer.GetWorldPosition(xShip, yShip),
-									targetedPlayer.transform.rotation * Quaternion.Euler(yRotation), targetedPlayer.transform);
+								shipT = Instantiate(InputManager.chipsButtons[idShip].transform.GetChild(0), target.GetWorldPosition(xShip, yShip),
+									target.transform.rotation * Quaternion.Euler(yRotation), target.transform);
 							}
 							else
-								shipT = targetedPlayer.GetShip(x, y).transform;
+								shipT = target.GetShip(x, y).transform;
 						missile.SetDestroyedShip(shipT);
 						}
 					}
 					else
 					{
 						// Case devient rouge
-						targetedPlayer.EmptyCellHit(x, y);
+						target.EmptyCellHit(x, y);
 					}
 					do
 					{
-						++nCurrentPlayer;
-						nCurrentPlayer %= Map.nPlayers;
+						_currentTurn = (_currentTurn + 1) % _players.Length;
+					} while (CurrentPlayer.dead);
 
-					} while (Map.GetPlayerById(nCurrentPlayer).dead);
-					Player currentPlayer = Map.GetPlayerById(nCurrentPlayer);
-					_currentPlayerText.text = $"Tour de {currentPlayer.nickName}";
-					InputManager.currentState = currentPlayer.id == nCurrentPlayer ? InputManager.PlayerState.Aiming : InputManager.PlayerState.Waiting;
+					GameManager.CurrentState = GameManager.PlayerState.Playing;
+						
 					break;
 				}
 
 				case "Play":
 				{
-					nCurrentPlayer = 0;
-					Player currentPlayer = Map.GetPlayerById(nCurrentPlayer);
-					InputManager.currentState = currentPlayer.id == nCurrentPlayer ? InputManager.PlayerState.Aiming : InputManager.PlayerState.Waiting;
+					_currentTurn = 0;
 
-					InputManager.instance.CanvasSelection.SetActive(false);
-					_gamePanel.SetActive(true);
+					InputManager.currentState = currentPlayer.id == current ? InputManager.PlayerState.Aiming : InputManager.PlayerState.Waiting;
 
-					UIManager.SetTurn(currentPlayer.nickName);
+					UIManager.SetTurn(CurrentPlayer.nickName);
 
 					break;
 				}
@@ -233,8 +238,7 @@ public class ClientManager : MonoBehaviour
 				{
 					int id = message.GetInt(0);
 
-					Map.GetPlayerById(id).dead = true;
-					// Le joueur id vient de perdre son dernier vaisseau
+					_players[id].dead = true;
 
 					break;
 				}
@@ -253,7 +257,49 @@ public class ClientManager : MonoBehaviour
 
 	private void OnMessage(object sender, Message message)
 	{
-		messages.Enqueue(message);
+		_messages.Enqueue(message);
+	}
+
+	private void OnDisconnect(object sender, string reason)
+	{
+		Disconnect();
+	}
+
+	public static void Disconnect()
+	{
+		if (_instance._server != null)
+		{
+			_instance._server.Disconnect();
+			_instance._server = null;
+		}
+
+		UIManager.ShowMenu(UIManager.Menu.Connect);
+	}
+
+	private void OnDestroy()
+	{
+		if (_server != null)
+			Disconnect();
+	}
+
+	#region Tools
+
+	private Message CreateMessage<T>(string type, List<T> list, params object[] parameters)
+	{
+		return CreateMessage(type, list.ToArray(), parameters);
+	}
+
+	private Message CreateMessage<T>(string type, T[] list, params object[] parameters)
+	{
+		Message message = Message.Create(type);
+
+		foreach (object parameter in parameters)
+			message.Add(parameter);
+
+		foreach (T item in list)
+			message.Add(item);
+
+		return message;
 	}
 
 	private T[] ExtractMessage<T>(Message message, uint startIndex = 0)
@@ -266,25 +312,5 @@ public class ClientManager : MonoBehaviour
 		return items;
 	}
 
-	private void OnDisconnect(object sender, string reason)
-	{
-		Disconnect();
-	}
-
-	public static void Disconnect()
-	{
-		if (instance.server != null)
-		{
-			instance.server.Disconnect();
-			instance.server = null;
-		}
-
-		UIManager.ShowMenu(UIManager.Menu.Connect);
-	}
-
-	private void OnDestroy()
-	{
-		if (server != null)
-			Disconnect();
-	}
+	#endregion
 }

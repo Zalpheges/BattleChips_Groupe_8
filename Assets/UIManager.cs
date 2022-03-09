@@ -1,6 +1,5 @@
 using UnityEngine.UI;
 using UnityEngine;
-using System.Text;
 using TMPro;
 
 public class UIManager : MonoBehaviour
@@ -15,7 +14,7 @@ public class UIManager : MonoBehaviour
 		End
 	}
 
-	private static UIManager instance;
+	private static UIManager _instance;
 
 	[SerializeField]
 	private GameObject _background;
@@ -46,6 +45,19 @@ public class UIManager : MonoBehaviour
 
 	#endregion
 
+	[SerializeField]
+	private GameObject _boardParent;
+
+	#region Play
+
+	[SerializeField]
+	private GameObject _gameParent;
+
+	[SerializeField]
+	private TextMeshProUGUI _turnText;
+
+	#endregion
+
 	#region Shoot
 
 	[SerializeField]
@@ -69,22 +81,9 @@ public class UIManager : MonoBehaviour
 
 	#endregion
 
-	#region Game
-
-	[SerializeField]
-	private GameObject _gameParent;
-
-	[SerializeField]
-	private TextMeshProUGUI _turnText;
-
-	#endregion
-
-	[SerializeField]
-	private GameObject _boardParent;
-
     private void Awake()
     {
-        instance = this;
+        _instance = this;
     }
 
     private void Start()
@@ -113,36 +112,39 @@ public class UIManager : MonoBehaviour
 
 	public static void SetCount(int ready, int total)
     {
-		instance._playerCount.text = $"{ready} / {total} joueurs prêts.";
+		_instance._playerCount.text = $"{ready} / {total} joueurs prêts.";
 	}
 
 	public static void SetTurn(string username)
 	{
-		instance._turnText.text = $"Tour de {username}";
+		_instance._turnText.text = $"Tour de {username}";
+
+		ShowMenu(Menu.Play);
 	}
 
 	public static void ShowMenu(Menu menu)
     {
-		instance._background.SetActive(menu != Menu.Play && menu != Menu.Shoot);
-		instance._connectionParent.SetActive(menu == Menu.Connect);
-		instance._boardParent.SetActive(menu == Menu.Board);
-		instance._readyParent.SetActive(menu == Menu.Ready);
-		instance._endParent.SetActive(menu == Menu.End);
-		instance._gameParent.SetActive(menu == Menu.Play);
-		instance._shootParent.SetActive(menu == Menu.Shoot);
+		_instance._connectionParent.SetActive(menu == Menu.Connect);
+		_instance._readyParent.SetActive(menu == Menu.Ready);
+		_instance._boardParent.SetActive(menu == Menu.Board);
+		_instance._gameParent.SetActive(menu == Menu.Play);
+		_instance._shootParent.SetActive(menu == Menu.Shoot);
+		_instance._endParent.SetActive(menu == Menu.End);
+
+		_instance._background.SetActive(menu != Menu.Play && menu != Menu.Shoot);
 	}
 
 	public static void ShowShoot(string from, string to)
     {
-		instance._shootText.text = $"{from} tire sur {to}.";
+		_instance._shootText.text = $"{from} tire sur {to}.";
 
 		ShowMenu(Menu.Shoot);
 	}
 
 	public static void ShowEnd(string winner, string[] loosers)
 	{
-		instance._winnerText.text = $"Vainqueur :\n{winner}";
-		instance._loosersText.text = string.Join("\n", loosers);
+		_instance._winnerText.text = $"Vainqueur :\n{winner}";
+		_instance._loosersText.text = string.Join("\n", loosers);
 
 		ShowMenu(Menu.End);
 	}

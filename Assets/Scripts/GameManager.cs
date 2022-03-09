@@ -16,23 +16,21 @@ public class GameManager : MonoBehaviour
         PlacingShips,
         Playing
     }
-    public static PlayerState CurrentState;
     public static int CurrentShipId = -1;
     public static GameObject CurrentInstanciatedChip;
     public static int LastRotation;
     public static int NShipsToPlace = 1;
-    public static Dictionary<int, ShipData> ShipDatas = new Dictionary<int, ShipData>();
+    public static PlayerState CurrentState;
+    public static Dictionary<int, Button> ChipsButtons = new Dictionary<int, Button>();
+    public static Dictionary<int, int> ChipsLengths = new Dictionary<int, int>();
     public static Dictionary<PlayerCell.CellType, Material> CellMaterials = new Dictionary<PlayerCell.CellType, Material>();
     public static bool Boarded = false;
     public static bool PlacingShips => CurrentState == PlayerState.PlacingShips;
-    public static bool IsShipSelected => CurrentShipId != -1;
-
     [Serializable]
-    public struct ShipData
+    private struct ShipsData
     {
-        public GameObject prefab;
         public Button button;
-        public int id;
+        public int shipId;
         public int length;
     }
     [Serializable]
@@ -41,7 +39,7 @@ public class GameManager : MonoBehaviour
         public PlayerCell.CellType cellType;
         public Material material;
     }
-    [SerializeField] private ShipData[] _shipsDatas;
+    [SerializeField] private ShipsData[] _shipsDatas;
     [SerializeField] private CellMaterial[] _cellsMaterials;
     private bool _displayShipMenu = false;
     private Player _player;
@@ -52,9 +50,10 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-        foreach (ShipData shipData in _shipsDatas)
+        foreach (ShipsData button in _shipsDatas)
         {
-            ShipDatas.Add(shipData.id, shipData);
+            ChipsButtons.Add(button.shipId, button.button);
+            ChipsLengths.Add(button.shipId, button.length);
         }
         foreach (CellMaterial cellMat in _cellsMaterials)
         {
@@ -145,14 +144,15 @@ public class GameManager : MonoBehaviour
         LastRotation %= 360;
         CurrentInstanciatedChip.transform.Rotate(Vector3.up * 90);
     }
+
     public void ChangeCurrentChip(int id)
     {
-        if (IsShipSelected)
+        if (CurrentShipId != -1)
         {
             Destroy(CurrentInstanciatedChip);
-            ShipDatas[CurrentShipId].button.interactable = true;
+            ChipsButtons[CurrentShipId].interactable = true;
         }
-        ShipDatas[id].button.interactable = false;
+        ChipsButtons[id].interactable = false;
         CurrentShipId = id;
     }
     public static void PrevisualizeShipOnCell(Transform cellTransform)
