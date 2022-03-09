@@ -125,7 +125,7 @@ public class ClientManager : MonoBehaviour
 	public static void Boarded()
 	{
 		Debug.Log("Boarded");
-		Main.boarded = true;
+		InputManager.boarded = true;
 		instance.server.Send("Boarded");
 	}
 	public static void Shoot(int id, int x, int y)
@@ -153,8 +153,8 @@ public class ClientManager : MonoBehaviour
 					Map.nPlayers = count;
 					Map.myId = id;
 					Map.Init(playersName);
-					Main.connected = true;
-					Main.instance.canvasSelection.SetActive(true);
+					InputManager.connected = true;
+					InputManager.instance.CanvasSelection.SetActive(true);
 
 					break;
 				}
@@ -211,7 +211,7 @@ public class ClientManager : MonoBehaviour
 							if (!targetedPlayer.you)
 							{
 								Vector3 yRotation = new Vector3(0, -dirShip * 90, 0);
-								shipT = Instantiate(Main.chipsButtons[idShip].transform.GetChild(0), targetedPlayer.GetWorldPosition(xShip, yShip),
+								shipT = Instantiate(InputManager.chipsButtons[idShip].transform.GetChild(0), targetedPlayer.GetWorldPosition(xShip, yShip),
 									targetedPlayer.transform.rotation * Quaternion.Euler(yRotation), targetedPlayer.transform);
 							}
 							else
@@ -232,7 +232,7 @@ public class ClientManager : MonoBehaviour
 					} while (Map.GetPlayerById(nCurrentPlayer).dead);
 					Player currentPlayer = Map.GetPlayerById(nCurrentPlayer);
 					_currentPlayerText.text = $"Tour de {currentPlayer.nickName}";
-					Main.currentState = currentPlayer.id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
+					InputManager.currentState = currentPlayer.id == nCurrentPlayer ? InputManager.PlayerState.Aiming : InputManager.PlayerState.Waiting;
 					break;
 				}
 
@@ -241,9 +241,9 @@ public class ClientManager : MonoBehaviour
 					nCurrentPlayer = 0;
 					Player currentPlayer = Map.GetPlayerById(nCurrentPlayer);
 					_currentPlayerText.text = $"Tour de {currentPlayer.nickName}";
-					Main.currentState = currentPlayer.id == nCurrentPlayer ? Main.PlayerState.Aiming : Main.PlayerState.Waiting;
+					InputManager.currentState = currentPlayer.id == nCurrentPlayer ? InputManager.PlayerState.Aiming : InputManager.PlayerState.Waiting;
 
-					Main.instance.canvasSelection.SetActive(false);
+					InputManager.instance.CanvasSelection.SetActive(false);
 					_gamePanel.SetActive(true);
 					// La partie vient de commencer tous les joueurs ont r�pondu "Boarded"
 

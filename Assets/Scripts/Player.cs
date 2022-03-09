@@ -49,27 +49,25 @@ public class Player : MonoBehaviour
     {
         if (_displayShipMenu || dead)
             return;
-        if (Main.currentState == Main.PlayerState.Waiting)
-            Debug.Log("Ce n'est pas ton tour");
-        else if (Main.currentState == Main.PlayerState.Aiming && !you)
+        if (GameManager.CurrentState == GameManager.PlayerState.Aiming && !you)
         {
             ClientManager.Shoot(id, cell.position.x, cell.position.y);
         }
-        else if (Main.currentState == Main.PlayerState.PlacingChips)
+        else if (GameManager.PlacingShips)
         {
-            if (Main.currentId != -1)
+            if (GameManager.CurrentShipId != -1)
             {
                 if (PlaceChip(cell.position))
                 {
-                    Main.currentInstanciatedChip = null;
-                    Main.currentId = -1;
+                    GameManager.CurrentInstanciatedChip = null;
+                    GameManager.CurrentShipId = -1;
                 }
             }
             else
             {
                 if (cell.ship != null)
                 {
-                    Main.currentInstanciatedChip = cell.ship;
+                    GameManager.CurrentInstanciatedChip = cell.ship;
                     _iRemove = cell.position.x;
                     _jRemove = cell.position.y;
                     _displayShipMenu = true;
@@ -81,7 +79,7 @@ public class Player : MonoBehaviour
 
     private bool PlaceChip(Vector2Int cellPosition)
     {
-        int dir = (int)Main.lastRotation / 90;//sens horaire
+        int dir = (int)GameManager.LastRotation / 90;//sens horaire
         Vector2Int vect = Vector2Int.zero;
         if (dir == 0)
             vect = Vector2Int.right;
@@ -92,7 +90,7 @@ public class Player : MonoBehaviour
         else if (dir == 3)
             vect = Vector2Int.down;
         int i = cellPosition.x, j = cellPosition.y;
-        int length = Main.chipsLengths[Main.currentId];
+        int length = GameManager.ChipsLengths[GameManager.CurrentShipId];
         for (int k = 0; k < length; k++)
         {
             if (i < 0 || i >= _grid.GetLength(0) || j < 0 || j >= _grid.GetLength(1))
@@ -105,14 +103,14 @@ public class Player : MonoBehaviour
 
         i = cellPosition.x;
         j = cellPosition.y;
-        Main.currentInstanciatedChip.GetComponentInChildren<Chip>().direction = vect;
+        GameManager.CurrentInstanciatedChip.GetComponentInChildren<Ship>().direction = vect;
         int trigDir = dir % 2 == 1 ? dir + 2 % 4 : dir;
-        ClientManager.AddShip(Main.currentId, i, j, trigDir, length);
-        --Main.nShipsToPlace;
+        ClientManager.AddShip(GameManager.CurrentShipId, i, j, trigDir, length);
+        --GameManager.NShipsToPlace;
 
-        for (int k = 0; k < Main.chipsLengths[Main.currentId]; k++)
+        for (int k = 0; k < GameManager.ChipsLengths[GameManager.CurrentShipId]; k++)
         {
-            _grid[i, j].ship = Main.currentInstanciatedChip;
+            _grid[i, j].ship = GameManager.CurrentInstanciatedChip;
             i += vect.x;
             j += vect.y;
         }
@@ -121,7 +119,7 @@ public class Player : MonoBehaviour
 
     private void RemoveShip()
     {
-        Chip chip = _grid[_iRemove, _jRemove].ship.GetComponentInChildren<Chip>();
+        Ship chip = _grid[_iRemove, _jRemove].ship.GetComponentInChildren<Ship>();
         Vector2Int shipDir = chip.direction;
         Vector2Int browseDir = new Vector2Int(shipDir.x, -shipDir.y);
         while ((_iRemove < 0 || _iRemove >= _grid.GetLength(0) || _jRemove < 0 || _jRemove >= _grid.GetLength(1))
@@ -140,12 +138,12 @@ public class Player : MonoBehaviour
     public void EmptyCellHit(int i, int j)
     {
         _grid[i, j].type = PlayerCell.CellType.EmptyHit;
-        _grid[i, j].GetComponent<MeshRenderer>().material = Main.cellMaterials[PlayerCell.CellType.EmptyHit];
+        _grid[i, j].GetComponent<MeshRenderer>().material = GameManager.CellMaterials[PlayerCell.CellType.EmptyHit];
     }
     public void ShipCellHit(int i, int j)
     {
         _grid[i, j].type = PlayerCell.CellType.ShipHit;
-        _grid[i, j].GetComponent<MeshRenderer>().material = Main.cellMaterials[PlayerCell.CellType.ShipHit];
+        _grid[i, j].GetComponent<MeshRenderer>().material = GameManager.CellMaterials[PlayerCell.CellType.ShipHit];
     }
 
     public GameObject GetShip(int i, int j)
@@ -155,9 +153,9 @@ public class Player : MonoBehaviour
 
     void OnGUI()
     {
-        if (_displayShipMenu && !Main.boarded)
+        if (_displayShipMenu && !GameManager.Boarded)
         {
-            Vector2 position = Camera.main.WorldToScreenPoint(Main.currentInstanciatedChip.transform.position);
+            Vector2 position = Camera.main.WorldToScreenPoint(GameManager.CurrentInstanciatedChip.transform.position);
             position.y = Screen.height - position.y;
             GUILayout.BeginArea(new Rect(position.x, position.y, 300, 400), GUI.skin.box);
 
@@ -171,18 +169,18 @@ public class Player : MonoBehaviour
             {
                 RemoveShip();
                 ClientManager.RemoveShip(_iRemove, _jRemove);
-                Main.nShipsToPlace++;
-                Main.chipsButtons[Main.currentInstanciatedChip.GetComponentInChildren<Chip>().id].interactable = true;
-                Destroy(Main.currentInstanciatedChip);
-                Main.currentId = -1;
-                Main.currentInstanciatedChip = null;
+                GameManager.NShipsToPlace++;
+                GameManager.ChipsButtons[GameManager.CurrentInstanciatedChip.GetComponentInChildren<Ship>().id].interactable = true;
+                Destroy(GameManager.CurrentInstanciatedChip);
+                GameManager.CurrentShipId = -1;
+                GameManager.CurrentInstanciatedChip = null;
                 _displayShipMenu = false;
             }
 
             if (GUILayout.Button("Cancel", buttonStyle))
             {
-                Main.currentId = -1;
-                Main.currentInstanciatedChip = null;
+                GameManager.CurrentShipId = -1;
+                GameManager.CurrentInstanciatedChip = null;
                 _displayShipMenu = false;
             }
             GUILayout.EndArea();

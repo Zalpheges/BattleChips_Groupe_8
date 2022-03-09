@@ -12,6 +12,5 @@ public class Explosion : MonoBehaviour
     private void OnDestroy()
     {
         Instantiate(firePrefab, transform.position + Vector3.up * fireOffSetY, Quaternion.identity);
-        
     }
 }
