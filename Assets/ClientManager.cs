@@ -1,29 +1,25 @@
 using System.Collections.Generic;
 using PlayerIOClient;
-using UnityEngine.UI;
 using UnityEngine;
-using TMPro;
 
 public class ClientManager : MonoBehaviour
 {
+	private static ClientManager instance;
+
 	private Queue<Message> messages;
 
 	private Connection server;
-
-	private static ClientManager instance;
+	public static bool Wait = false;
 
 	public static int nCurrentPlayer = -1;
 
 	public static bool MyTurn => nCurrentPlayer == Map.myId;
 
-	[SerializeField] private GameObject _gamePanel;
-	[SerializeField] private TextMeshProUGUI _currentPlayerText;
 	[SerializeField] private GameObject _prefabMissile;
 	[SerializeField] private Transform _exampleFiringPoint;
 	[SerializeField] private Transform _examplePlayer;
 	private Vector3 _offsetMissileSpawn;
 
-	public static bool wait = false;
 
 	private void Awake()
 	{
@@ -34,33 +30,22 @@ public class ClientManager : MonoBehaviour
 		}
 		else
 			Destroy(gameObject);
-		
 	}
 
 	private void Start()
 	{
-		_offsetMissileSpawn = _exampleFiringPoint.position - _examplePlayer.position;
 		messages = new Queue<Message>();
 
-		if (PlayerPrefs.HasKey("Username"))
-		{
-			username.text = PlayerPrefs.GetString("Username");
-			roomname.text = PlayerPrefs.GetString("Roomname");
-		}
+		_offsetMissileSpawn = _exampleFiringPoint.position - _examplePlayer.position;
 	}
 
-	public void Connect()
+	public static void Connect(string username, string roomname)
 	{
-		if (username.text.Length < 3 || roomname.text.Length < 3)
-			return;
-
-		b_connect.interactable = false;
-
 		PlayerIO.Authenticate(
 			"battlechips-tmwm0lz8memju96zesetw",
 			"public",
 			new Dictionary<string, string> {
-				{ "userId", username.text },
+				{ "userId", username },
 			},
 			null,
 			delegate (Client client) {
@@ -70,37 +55,31 @@ public class ClientManager : MonoBehaviour
 				//client.Multiplayer.DevelopmentServer = new ServerEndpoint("localhost", 8184);
 
 				client.Multiplayer.CreateJoinRoom(
-					roomname.text,
+					roomname,
 					"BattleChip",
 					true,
 					null,
 					null,
 					delegate (Connection connection) {
-						Debug.Log("Joined Room.");
+						Debug.Log("Joined " + roomname);
 
-						PlayerPrefs.SetString("Username", username.text);
-						PlayerPrefs.SetString("Roomname", roomname.text);
+						instance.server = connection;
+						instance.server.OnMessage += instance.OnMessage;
+						instance.server.OnDisconnect += instance.OnDisconnect;
 
-						server = connection;
-						server.OnMessage += OnMessage;
-						server.OnDisconnect += OnDisconnect;
-
-						server.Send("Count");
-						ShowMenu(Menu.Ready);
+						instance.server.Send("Count");
 					},
 					delegate (PlayerIOError error) {
 						Debug.Log("Error Joining Room: " + error.ToString());
 
-						ShowMenu(Menu.Connect);
-						b_connect.interactable = true;
+						UIManager.ShowMenu(UIManager.Menu.Connect);
 					}
 				);
 			},
 			delegate (PlayerIOError error) {
 				Debug.Log("Error connecting: " + error.ToString());
 
-				ShowMenu(Menu.Connect);
-				b_connect.interactable = true;
+				UIManager.ShowMenu(UIManager.Menu.Connect);
 			}
 		);
 	}
@@ -136,7 +115,7 @@ public class ClientManager : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		while (messages.Count > 0 && !wait)
+		while (messages.Count > 0 && !Wait)
 		{
 			Message message = messages.Dequeue();
 
@@ -149,12 +128,13 @@ public class ClientManager : MonoBehaviour
 
 					string[] playersName = ExtractMessage<string>(message, 2);
 
-					ShowMenu(Menu.None);
 					Map.nPlayers = count;
 					Map.myId = id;
 					Map.Init(playersName);
 					InputManager.connected = true;
 					InputManager.instance.CanvasSelection.SetActive(true);
+
+					UIManager.ShowMenu(UIManager.Menu.None);
 
 					break;
 				}
@@ -164,7 +144,7 @@ public class ClientManager : MonoBehaviour
 					int ready = message.GetInt(0);
 					int total = message.GetInt(1);
 
-					playerCount.text = ready + "/" + total + " pret" + (ready > 1 ? "s" : "");
+					UIManager.SetCount(ready, total);
 
 					break;
 				}
@@ -191,13 +171,12 @@ public class ClientManager : MonoBehaviour
 					Transform currentPlayerT = Map.GetPlayerById(nCurrentPlayer).transform;
 					Player targetedPlayer = Map.GetPlayerById(id);
 
-					wait = true;
+					Wait = true;
 					Debug.Log("Shoot");
 					Missile missile = Instantiate(_prefabMissile).GetComponent<Missile>();
 					Vector3 relativeOffset = currentPlayerT.forward * _offsetMissileSpawn.z + currentPlayerT.right * _offsetMissileSpawn.x;
 
-					missile.TextGameObject = shootTextGameObject;
-					missile.GameUiPrefab = _gamePanel;
+					UIManager.ShowShoot(Map.GetPlayerById(nCurrentPlayer).nickName, Map.GetPlayerById(id).nickName);
 					missile.Init(currentPlayerT.position + relativeOffset, targetedPlayer.GetWorldPosition(x, y), touched, id);
 					missile.SetText(Map.GetPlayerById(nCurrentPlayer).nickName + " tire sur " + Map.GetPlayerById(id).nickName);
 
@@ -240,12 +219,12 @@ public class ClientManager : MonoBehaviour
 				{
 					nCurrentPlayer = 0;
 					Player currentPlayer = Map.GetPlayerById(nCurrentPlayer);
-					_currentPlayerText.text = $"Tour de {currentPlayer.nickName}";
 					InputManager.currentState = currentPlayer.id == nCurrentPlayer ? InputManager.PlayerState.Aiming : InputManager.PlayerState.Waiting;
 
 					InputManager.instance.CanvasSelection.SetActive(false);
 					_gamePanel.SetActive(true);
-					// La partie vient de commencer tous les joueurs ont r�pondu "Boarded"
+
+					UIManager.SetTurn(currentPlayer.nickName);
 
 					break;
 				}
@@ -264,8 +243,7 @@ public class ClientManager : MonoBehaviour
 				{
 					int winner = message.GetInt(0);
 
-					ShowMenu(Menu.End);
-					SetBoard(winner);
+					//UIManager.ShowEnd()
 
 					break;
 				}
@@ -301,7 +279,7 @@ public class ClientManager : MonoBehaviour
 			instance.server = null;
 		}
 
-		instance.ShowMenu(Menu.Connect);
+		UIManager.ShowMenu(UIManager.Menu.Connect);
 	}
 
 	private void OnDestroy()
@@ -309,77 +287,4 @@ public class ClientManager : MonoBehaviour
 		if (server != null)
 			Disconnect();
 	}
-
-	#region UI
-
-	[SerializeField]
-	private TMP_InputField username;
-
-	[SerializeField]
-	private TMP_InputField roomname;
-
-	[SerializeField]
-	private TextMeshProUGUI playerCount;
-
-	[SerializeField]
-	private GameObject background;
-
-	[SerializeField]
-	private GameObject connect;
-
-	[SerializeField]
-	private GameObject end;
-
-	[SerializeField]
-	private TextMeshProUGUI winnerText;
-
-	[SerializeField]
-	private TextMeshProUGUI othersText;
-
-	[SerializeField]
-	private Button b_connect;
-
-	[SerializeField]
-	private GameObject ready;
-
-	[SerializeField]
-	private GameObject shootTextGameObject;
-
-	private enum Menu
-	{
-		None,
-		Play,
-		Connect,
-		Ready,
-		End
-	}
-
-	private void ShowMenu(Menu menu)
-	{
-		background?.SetActive(menu != Menu.None && menu != Menu.Play);
-		connect?.SetActive(menu == Menu.Connect);
-		ready?.SetActive(menu == Menu.Ready);
-		end?.SetActive(menu == Menu.End);
-		_gamePanel?.SetActive(menu == Menu.Play);
-	}
-
-	private void SetBoard(int winnerID)
-    {
-		string winner = "Vainqueur :\nZalphug";
-		string others = "";
-
-		for (int i = 0; i < Map.playersTransform.Count; ++i)
-        {
-			Player component = Map.playersTransform[i].GetComponent<Player>();
-			if (component.id != winnerID)
-				others += component.nickName;
-			if (i < Map.playersTransform.Count - 1)
-				others += "\n";
-		}
-
-		winnerText.text = winner;
-		othersText.text = others;
-    }
-
-	#endregion
 }
