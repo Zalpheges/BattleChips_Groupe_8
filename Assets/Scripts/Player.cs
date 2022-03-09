@@ -76,8 +76,7 @@ public class Player : MonoBehaviour
         }
         Debug.Log(cell.position.ToString() + cell.type.ToString());
     }
-
-    private bool PlaceChip(Vector2Int cellPosition)
+    public bool PlaceChip(Vector2Int cellPosition)
     {
         int dir = (int)GameManager.LastRotation / 90;//sens horaire
         Vector2Int vect = Vector2Int.zero;
@@ -90,7 +89,7 @@ public class Player : MonoBehaviour
         else if (dir == 3)
             vect = Vector2Int.down;
         int i = cellPosition.x, j = cellPosition.y;
-        int length = GameManager.ChipsLengths[GameManager.CurrentShipId];
+        int length = GameManager.ShipDatas[GameManager.CurrentShipId].length;
         for (int k = 0; k < length; k++)
         {
             if (i < 0 || i >= _grid.GetLength(0) || j < 0 || j >= _grid.GetLength(1))
@@ -108,7 +107,7 @@ public class Player : MonoBehaviour
         ClientManager.AddShip(GameManager.CurrentShipId, i, j, trigDir, length);
         --GameManager.NShipsToPlace;
 
-        for (int k = 0; k < GameManager.ChipsLengths[GameManager.CurrentShipId]; k++)
+        for (int k = 0; k < GameManager.ShipDatas[GameManager.CurrentShipId].length; k++)
         {
             _grid[i, j].ship = GameManager.CurrentInstanciatedChip;
             i += vect.x;
@@ -119,14 +118,20 @@ public class Player : MonoBehaviour
 
     private void RemoveShip()
     {
-        Ship chip = _grid[_iRemove, _jRemove].ship.GetComponentInChildren<Ship>();
-        Vector2Int shipDir = chip.direction;
+        Ship ship = _grid[_iRemove, _jRemove].ship.GetComponentInChildren<Ship>();
+        Vector2Int shipDir = ship.direction;
         Vector2Int browseDir = new Vector2Int(shipDir.x, -shipDir.y);
-        while ((_iRemove < 0 || _iRemove >= _grid.GetLength(0) || _jRemove < 0 || _jRemove >= _grid.GetLength(1))
-            && _grid[_iRemove + browseDir.x, _jRemove + browseDir.y].ship == _grid[_iRemove, _jRemove].ship)
+        for (int k = 0; k < 2; ++k)
         {
-            _iRemove += browseDir.x;
-            _jRemove += browseDir.y;
+            int i = _iRemove;
+            int j = _jRemove;
+            while (i > 0 && i < _grid.GetLength(0) && j > 0 && j < _grid.GetLength(1)
+                && _grid[i + browseDir.x, j + browseDir.y].ship == _grid[i, j].ship)
+            {
+                i += browseDir.x;
+                j += browseDir.y;
+            }
+            browseDir = - browseDir;
         }
     }
 
@@ -135,55 +140,13 @@ public class Player : MonoBehaviour
         return _gridStart + i * _cellSize * transform.right - j * _cellSize * transform.forward;
     }
 
-    public void EmptyCellHit(int i, int j)
+    public void CellHit(int i, int j, PlayerCell.CellType cellType)
     {
-        _grid[i, j].type = PlayerCell.CellType.EmptyHit;
-        _grid[i, j].GetComponent<MeshRenderer>().material = GameManager.CellMaterials[PlayerCell.CellType.EmptyHit];
-    }
-    public void ShipCellHit(int i, int j)
-    {
-        _grid[i, j].type = PlayerCell.CellType.ShipHit;
-        _grid[i, j].GetComponent<MeshRenderer>().material = GameManager.CellMaterials[PlayerCell.CellType.ShipHit];
+        _grid[i, j].SetType(cellType);
     }
 
     public GameObject GetShip(int i, int j)
     {
         return _grid[i, j].ship;
-    }
-
-    void OnGUI()
-    {
-        if (_displayShipMenu && !GameManager.Boarded)
-        {
-            Vector2 position = Camera.main.WorldToScreenPoint(GameManager.CurrentInstanciatedChip.transform.position);
-            position.y = Screen.height - position.y;
-            GUILayout.BeginArea(new Rect(position.x, position.y, 300, 400), GUI.skin.box);
-
-            GUIStyle labelStyle = new GUIStyle("Label");
-            labelStyle.fontSize = 32;
-            GUILayout.Label("Remove this ship ?", labelStyle);
-
-            GUIStyle buttonStyle = new GUIStyle("Button");
-            buttonStyle.fontSize = 32;
-            if (GUILayout.Button("Remove it", buttonStyle))
-            {
-                RemoveShip();
-                ClientManager.RemoveShip(_iRemove, _jRemove);
-                GameManager.NShipsToPlace++;
-                GameManager.ChipsButtons[GameManager.CurrentInstanciatedChip.GetComponentInChildren<Ship>().id].interactable = true;
-                Destroy(GameManager.CurrentInstanciatedChip);
-                GameManager.CurrentShipId = -1;
-                GameManager.CurrentInstanciatedChip = null;
-                _displayShipMenu = false;
-            }
-
-            if (GUILayout.Button("Cancel", buttonStyle))
-            {
-                GameManager.CurrentShipId = -1;
-                GameManager.CurrentInstanciatedChip = null;
-                _displayShipMenu = false;
-            }
-            GUILayout.EndArea();
-        }
     }
 }

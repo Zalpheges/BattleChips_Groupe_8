@@ -31,21 +31,24 @@ public class PlayerCell : MonoBehaviour
         {
             Material mat = GetComponent<MeshRenderer>().material;
             EnableHighlight(mat);
-            if(GameManager.CurrentState == GameManager.PlayerState.PlacingShips && GameManager.CurrentShipId != -1)
-            {
-                GameObject newChip = GameManager.ChipsButtons[GameManager.CurrentShipId].transform.GetChild(0).gameObject;
-                GameManager.CurrentInstanciatedChip = Instantiate(newChip, transform.position, transform.rotation);
-                GameManager.CurrentInstanciatedChip.transform.SetParent(transform.parent);
-                GameManager.CurrentInstanciatedChip.transform.Rotate(transform.up * 1 * GameManager.LastRotation);
-            }
+
+            if (GameManager.PlacingShips && GameManager.IsShipSelected)
+                GameManager.PrevisualizeShipOnCell(transform);
         }
     }
+
     public void MouseExit()
     {
         Material mat = GetComponent<MeshRenderer>().material;
         DisableHighlight(mat);
         if (GameManager.PlacingShips && GameManager.CurrentShipId != -1)
             Destroy(GameManager.CurrentInstanciatedChip);
+    }
+
+    public void SetType(CellType newType)
+    {
+        type = newType;
+        GetComponent<MeshRenderer>().material = GameManager.CellMaterials[newType];
     }
 
     private void EnableHighlight(Material mat)

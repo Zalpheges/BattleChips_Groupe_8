@@ -16,21 +16,23 @@ public class GameManager : MonoBehaviour
         Waiting,
         Aiming
     }
+    public static PlayerState CurrentState;
     public static int CurrentShipId = -1;
     public static GameObject CurrentInstanciatedChip;
     public static float LastRotation;
     public static int NShipsToPlace = 1;
-    public static PlayerState CurrentState;
-    public static Dictionary<int, Button> ChipsButtons = new Dictionary<int, Button>();
-    public static Dictionary<int, int> ChipsLengths = new Dictionary<int, int>();
+    public static Dictionary<int, ShipData> ShipDatas = new Dictionary<int, ShipData>();
     public static Dictionary<PlayerCell.CellType, Material> CellMaterials = new Dictionary<PlayerCell.CellType, Material>();
     public static bool Boarded = false;
     public static bool PlacingShips => CurrentState == PlayerState.PlacingShips;
+    public static bool IsShipSelected => CurrentShipId != -1;
+
     [Serializable]
-    private struct ShipsData
+    public struct ShipData
     {
+        public GameObject prefab;
         public Button button;
-        public int shipId;
+        public int id;
         public int length;
     }
     [Serializable]
@@ -39,16 +41,15 @@ public class GameManager : MonoBehaviour
         public PlayerCell.CellType cellType;
         public Material material;
     }
-    [SerializeField] private ShipsData[] _shipsDatas;
+    [SerializeField] private ShipData[] _shipsDatas;
     [SerializeField] private CellMaterial[] _cellsMaterials;
 
     private void Awake()
     {
         _instance = this;
-        foreach (ShipsData button in _shipsDatas)
+        foreach (ShipData shipData in _shipsDatas)
         {
-            ChipsButtons.Add(button.shipId, button.button);
-            ChipsLengths.Add(button.shipId, button.length);
+            ShipDatas.Add(shipData.id, shipData);
         }
         foreach (CellMaterial cellMat in _cellsMaterials)
         {
@@ -73,12 +74,19 @@ public class GameManager : MonoBehaviour
     }
     public void ChangeCurrentChip(int id)
     {
-        if (CurrentShipId != -1)
+        if (IsShipSelected)
         {
             Destroy(CurrentInstanciatedChip);
-            ChipsButtons[CurrentShipId].interactable = true;
+            ShipDatas[CurrentShipId].button.interactable = true;
         }
-        ChipsButtons[id].interactable = false;
+        ShipDatas[id].button.interactable = false;
         CurrentShipId = id;
+    }
+    public static void PrevisualizeShipOnCell(Transform cellTransform)
+    {
+        GameObject newChip = ShipDatas[CurrentShipId].prefab;
+        CurrentInstanciatedChip = Instantiate(newChip, cellTransform.position, cellTransform.rotation);
+        CurrentInstanciatedChip.transform.SetParent(cellTransform.parent);
+        CurrentInstanciatedChip.transform.Rotate(cellTransform.up * LastRotation);
     }
 }
