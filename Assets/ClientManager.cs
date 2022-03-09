@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using PlayerIOClient;
 using UnityEngine;
+using System;
 
 public class ClientManager : MonoBehaviour
 {
@@ -9,23 +10,10 @@ public class ClientManager : MonoBehaviour
 	private Queue<Message> _messages;
 
 	private Connection _server;
-	public static bool Wait = false;
 
-	private int _currentTurn = -1;
+	public static bool Wait { get; set; }
 
-	public static int MyID { get; private set; }
-	public static bool MyTurn => _instance._currentTurn == MyID;
-
-	[SerializeField]
-	private Missile _missilePrefab;
-	[SerializeField] private Transform _exampleFiringPoint;
-	[SerializeField] private Transform _examplePlayer;
-	private Vector3 _localSpawnPosition;
-
-	private Player[] _players;
-
-	private Player Me => _players[MyID];
-	private Player CurrentPlayer => _players[_currentTurn];
+	private string[] _players;
 
 	private void Awake()
 	{
@@ -41,8 +29,6 @@ public class ClientManager : MonoBehaviour
 	private void Start()
 	{
 		_messages = new Queue<Message>();
-
-		_localSpawnPosition = _exampleFiringPoint.position - _examplePlayer.position;
 	}
 
 	public static void Connect(string username, string roomname)
@@ -90,31 +76,6 @@ public class ClientManager : MonoBehaviour
 		);
 	}
 
-	public void Ready(bool state)
-	{
-		_server.Send("Ready", state);
-	}
-
-	public static void AddShip(int id, int x, int y, int dir, int length)
-	{
-		_instance._server.Send("Add", id, x, y, dir, length);
-	}
-
-	public static void RemoveShip(int x, int y)
-	{
-		_instance._server.Send("Remove", x, y);
-	}
-
-	public static void Boarded()
-	{
-		GameManager.Boarded = true;
-		_instance._server.Send("Boarded");
-	}
-	public static void Shoot(int id, int x, int y)
-	{
-		_instance._server.Send("Shoot", id, x, y);
-	}
-
 	private void FixedUpdate()
 	{
 		while (_messages.Count > 0 && !Wait)
@@ -128,14 +89,9 @@ public class ClientManager : MonoBehaviour
 					int id = message.GetInt(0);
 					int count = message.GetInt(1);
 
-					string[] playersName = ExtractMessage<string>(message, 2);
+					_players = ExtractMessage<string>(message, 2);
 
-					_players = Map.CreatePlayers(id, count);
-
-					InputManager.connected = true;
-					InputManager.instance.CanvasSelection.SetActive(true);
-
-					UIManager.ShowMenu(UIManager.Menu.Board);
+					GameManager.Board(id, count);
 
 					break;
 				}
@@ -158,78 +114,23 @@ public class ClientManager : MonoBehaviour
 
 					bool touched = message.GetBoolean(3);
 					bool destroyed = message.GetBoolean(4);
+						
+					int shipId = message.GetInt(5);
+					int shipX = message.GetInt(6);
+					int shipY = message.GetInt(7);
+					int shipDir = message.GetInt(8);
 
-					Player target = _players[id];
-					Transform player = CurrentPlayer.transform;
-
-					Vector3 from = player.position + _localSpawnPosition;
-					Vector3 to = target.GetWorldPosition(x, y);
-
-					Wait = true;
-
-					Vector3 worldSpawnPosition = player.forward * _localSpawnPosition.z + player.right * _localSpawnPosition.x;
-
-					Missile missile = Instantiate(_missilePrefab);
-					missile.SetCallbacks(
-						delegate () {
-							if (destroyed)
-								target.GetShip(x, y).transform.localRotation *= Quaternion.Euler(Vector3.right * 1000f);
-						},
-						delegate () {
-							UIManager.SetTurn(CurrentPlayer.nickName);
-						}
-					);
-
-					missile.Shoot(from, to, touched);
-
-					UIManager.ShowShoot(CurrentPlayer.nickName, target.nickName);
-
-					if (touched)
-					{
-						// Lancer le missile avec la variable destroyed pour indiquer s'il faut afficher le bateau coul� pendant l'animation
-						target.ShipCellHit(x, y);
-						if (destroyed)
-							{
-
-								int idShip = message.GetInt(5);
-								int xShip = message.GetInt(6);
-								int yShip = message.GetInt(7);
-								int dirShip = message.GetInt(8);
-
-								Transform shipT;
-							if (!target.you)
-							{
-								Vector3 yRotation = new Vector3(0, -dirShip * 90, 0);
-								shipT = Instantiate(InputManager.chipsButtons[idShip].transform.GetChild(0), target.GetWorldPosition(xShip, yShip),
-									target.transform.rotation * Quaternion.Euler(yRotation), target.transform);
-							}
-							else
-								shipT = target.GetShip(x, y).transform;
-						missile.SetDestroyedShip(shipT);
-						}
-					}
+					if (destroyed)
+						GameManager.Shoot(id, x, y, shipId, shipX, shipY, shipDir);
 					else
-					{
-						// Case devient rouge
-						target.EmptyCellHit(x, y);
-					}
-					do
-					{
-						_currentTurn = (_currentTurn + 1) % _players.Length;
-					} while (CurrentPlayer.dead);
-
-					GameManager.CurrentState = GameManager.PlayerState.Playing;
+						GameManager.Shoot(id, x, y, touched);
 						
 					break;
 				}
 
 				case "Play":
 				{
-					_currentTurn = 0;
-
-					InputManager.currentState = currentPlayer.id == current ? InputManager.PlayerState.Aiming : InputManager.PlayerState.Waiting;
-
-					UIManager.SetTurn(CurrentPlayer.nickName);
+					GameManager.Play();
 
 					break;
 				}
@@ -238,7 +139,7 @@ public class ClientManager : MonoBehaviour
 				{
 					int id = message.GetInt(0);
 
-					_players[id].dead = true;
+					GameManager.KillPlayer(id);
 
 					break;
 				}
@@ -247,12 +148,37 @@ public class ClientManager : MonoBehaviour
 				{
 					int winner = message.GetInt(0);
 
-					//UIManager.ShowEnd()
+					UIManager.ShowEnd(winner, _players);
 
 					break;
 				}
 			}
 		}
+	}
+
+	public void Ready(bool state)
+	{
+		_server.Send("Ready", state);
+	}
+
+	public static void AddShip(int id, int x, int y, int dir, int length)
+	{
+		_instance._server.Send("Add", id, x, y, dir, length);
+	}
+
+	public static void RemoveShip(int x, int y)
+	{
+		_instance._server.Send("Remove", x, y);
+	}
+
+	public static void Boarded()
+	{
+		_instance._server.Send("Boarded");
+	}
+
+	public static void Shoot(int id, int x, int y)
+	{
+		_instance._server.Send("Shoot", id, x, y);
 	}
 
 	private void OnMessage(object sender, Message message)

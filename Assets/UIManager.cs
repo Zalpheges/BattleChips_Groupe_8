@@ -141,8 +141,19 @@ public class UIManager : MonoBehaviour
 		ShowMenu(Menu.Shoot);
 	}
 
-	public static void ShowEnd(string winner, string[] loosers)
+	public static void ShowEnd(int id, string[] usernames)
 	{
+		string winner = string.Empty;
+		string[] loosers = new string[usernames.Length];
+
+		for (int i = 0; i < usernames.Length; ++i)
+        {
+			if (i == id)
+				winner = usernames[i];
+			else
+				loosers[i < id ? i : i - 1] = usernames[i];
+        }
+
 		_instance._winnerText.text = $"Vainqueur :\n{winner}";
 		_instance._loosersText.text = string.Join("\n", loosers);
 

@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public static int NShipsToPlace = 1;
     public static Dictionary<int, ShipData> ShipDatas = new Dictionary<int, ShipData>();
     public static Dictionary<PlayerCell.CellType, Material> CellMaterials = new Dictionary<PlayerCell.CellType, Material>();
-    public static bool Boarded = false;
+    private bool _boarded = false;
     public static bool PlacingShips => CurrentState == PlayerState.PlacingShips;
     public static bool IsShipSelected => CurrentShipId != -1;
 
@@ -81,16 +81,23 @@ public class GameManager : MonoBehaviour
         _localSpawnPosition = _exampleFiringPoint.position - _examplePlayer.position;
     }
 
+    //-112 -45
     private void Update()
     {
         if (PlacingShips)
         {
-            SubmitButton.interactable = Boarded ? false : NShipsToPlace == 0;
+            SubmitButton.interactable = _boarded ? false : NShipsToPlace == 0;
         }
     }
+    public void Boarded()
+    {
+        _boarded = true;
+        ClientManager.Boarded();
+    }
+
     void OnGUI()
     {
-        if (_displayShipMenu && !Boarded)
+        if (_displayShipMenu && !_boarded)
         {
             Vector2 position = Camera.main.WorldToScreenPoint(CurrentInstanciatedChip.transform.position);
             position.y = Screen.height - position.y;
