@@ -5,37 +5,31 @@ using System;
 
 public class Missile : MonoBehaviour
 {
-    [SerializeField]
-    private Vector3 offSetCameraPosition;
-
-    [Space(5)]
+    [Header("Camera Offset")]
 
     [SerializeField]
-    private Vector3 offSetCameraRotation;
-
-    [Space(5)]
+    private Vector3 _localCameraPosition;
 
     [SerializeField]
-    private float offSetyBezierPoint;
+    private Vector3 _localCameraRotation;
 
     [Space(5)]
+    [Header("Movement")]
 
     [SerializeField]
-    private float travelTime;
+    private float _interpolatorHeight;
+
+    [SerializeField]
+    private float _travelTime;
 
     [Space(5)]
+    [Header("Explosion")]
 
     [SerializeField]
     private GameObject _explosionPrefab;
 
-    [Space(5)]
-
-    [SerializeField] private float explosionDelay = 0.5f;
-
-    [System.NonSerialized] public Vector3 StartPosition;
-    [System.NonSerialized] public Vector3 EndPosition;
-
-    private new CinemachineVirtualCamera camera;
+    [SerializeField]
+    private float _explosionDelay = 0.5f;
 
     private bool _explode;
 
@@ -50,9 +44,8 @@ public class Missile : MonoBehaviour
     private Action _onTargetReached;
     private Action _onDestroy;
 
-    private int idTarget = int.MaxValue;
-    private Vector3 nextPosition;
-    private Transform shipToDestroy;
+    private int _targetId = int.MaxValue;
+    private CinemachineVirtualCamera _camera;
 
     public void Shoot(Vector3 from, Vector3 to, bool explode)
     {
@@ -64,11 +57,11 @@ public class Missile : MonoBehaviour
 
         _explode = explode;
 
-        camera = CameraManager.CreateCamera(transform, offSetCameraPosition, offSetCameraRotation);
-        camera.Follow = transform;
+        _camera = CameraManager.CreateCamera(transform, _localCameraPosition, _localCameraRotation);
+        _camera.Follow = transform;
 
-        CinemachineTransposer transposer = camera.GetCinemachineComponent<CinemachineTransposer>();
-        transposer.m_FollowOffset = offSetCameraPosition;
+        CinemachineTransposer transposer = _camera.GetCinemachineComponent<CinemachineTransposer>();
+        transposer.m_FollowOffset = _localCameraPosition;
     }
 
     public void SetCallbacks(Action onTargetReach, Action onDestroy)
@@ -81,12 +74,12 @@ public class Missile : MonoBehaviour
     {
         if (_moving)
         {
-            _time += Time.deltaTime / travelTime;
+            _time += Time.deltaTime / _travelTime;
 
             Vector3 position = Mathf.Pow(1f - _time, 2) * _from + 2f * (1f - _time) * _interpolator + Mathf.Pow(_time, 2) * _to;
 
             transform.LookAt(position);
-            camera.transform.LookAt(position);
+            _camera.transform.LookAt(position);
 
             transform.position = position;
 
@@ -101,13 +94,13 @@ public class Missile : MonoBehaviour
 
         _onTargetReached?.Invoke();
 
-        CameraManager.DestroyCamera(camera, idTarget);
+        CameraManager.DestroyCamera(_camera, _targetId);
 
         if (_explode)
         {
             GameObject explosion = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
 
-            yield return new WaitForSeconds(explosionDelay);
+            yield return new WaitForSeconds(_explosionDelay);
 
             Destroy(explosion);
         }

@@ -37,7 +37,7 @@ public class InputManager : MonoBehaviour
         else
             _currentCell?.MouseExit();
 
-        if (Input.GetMouseButtonDown(1) && GameManager.CurrentState == GameManager.PlayerState.PlacingShips)
+        if (Input.GetMouseButtonDown(1) && GameManager.CurrentState == GameManager.State.PlacingShips)
                 GameManager.RotateChip();
     }
 }

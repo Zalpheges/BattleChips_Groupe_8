@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using PlayerIOClient;
 using UnityEngine;
-using System;
 
 public class ClientManager : MonoBehaviour
 {
@@ -155,6 +154,11 @@ public class ClientManager : MonoBehaviour
 			}
 		}
 	}
+
+	public static string GetName(int id)
+    {
+		return _instance._players[id];
+    }
 
 	public void Ready(bool state)
 	{

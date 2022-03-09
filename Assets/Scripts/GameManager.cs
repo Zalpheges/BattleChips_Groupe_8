@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject CanvasSelection;
     public Button SubmitButton;
     private static GameManager _instance;
-    public enum PlayerState
+    public enum State
     {
         PlacingShips,
         Playing
     }
-    public static PlayerState CurrentState;
+    public static State CurrentState;
     public static int CurrentShipId = -1;
     public static GameObject CurrentInstanciatedChip;
     public static int LastRotation;
@@ -22,19 +21,20 @@ public class GameManager : MonoBehaviour
     public static Dictionary<int, ShipData> ShipDatas = new Dictionary<int, ShipData>();
     public static Dictionary<PlayerCell.CellType, Material> CellMaterials = new Dictionary<PlayerCell.CellType, Material>();
     private bool _boarded = false;
-    public static bool PlacingShips => CurrentState == PlayerState.PlacingShips;
+    public static bool PlacingShips => CurrentState == State.PlacingShips;
     public static bool IsShipSelected => CurrentShipId != -1;
 
 
     private ShipPlacement _shipPlacement;
+    
+    private int _turn = -1;
     private Player[] _players;
 
     private Player Me => _players[MyID];
-    private Player CurrentPlayer => _players[_currentTurn];
-    private int _currentTurn = -1;
+    private Player CurrentPlayer => _players[_turn];
 
     public static int MyID { get; private set; }
-    public static bool MyTurn => _instance._currentTurn == MyID;
+    public static bool MyTurn => _instance._turn == MyID;
 
     [Serializable]
     public struct ShipData
@@ -172,17 +172,16 @@ public class GameManager : MonoBehaviour
 
     public static void KillPlayer(int id)
     {
-
+        _instance._players[id].dead = true;
     }
 
     public static void Play()
     {
+        _instance._turn = 0;
 
-        _currentTurn = 0;
+        CurrentState = State.Playing;
 
-        InputManager.currentState = currentPlayer.id == current ? InputManager.PlayerState.Aiming : InputManager.PlayerState.Waiting;
-
-        UIManager.SetTurn(CurrentPlayer.nickName);
+        UIManager.SetTurn(ClientManager.GetName(_instance._turn));
     }
 
     public static void Shoot(int id, int x, int y, Action onTargetReach = null)
@@ -213,7 +212,7 @@ public class GameManager : MonoBehaviour
 
         do
         {
-            _instance._currentTurn = (_instance._currentTurn + 1) % _instance._players.Length;
+            _instance._turn = (_instance._turn + 1) % _instance._players.Length;
         } while (_instance.CurrentPlayer.dead);
 
 
