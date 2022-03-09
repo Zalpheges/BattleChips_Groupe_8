@@ -8,8 +8,6 @@ public class GameManager : MonoBehaviour
 {
     public GameObject CanvasSelection;
     public Button SubmitButton;
-
-    private ShipPlacement _shipPlacement;
     private static GameManager _instance;
     public enum PlayerState
     {
@@ -28,7 +26,7 @@ public class GameManager : MonoBehaviour
     public static bool IsShipSelected => CurrentShipId != -1;
 
 
-
+    private ShipPlacement _shipPlacement;
     private Player[] _players;
 
     private Player Me => _players[MyID];
@@ -64,7 +62,8 @@ public class GameManager : MonoBehaviour
     private Missile _missilePrefab;
     [SerializeField] private Transform _exampleFiringPoint;
     [SerializeField] private Transform _examplePlayer;
-    private Vector3 _localSpawnPosition;
+    [SerializeField] private Vector3 _localSpawnPosition;
+    //-112 -45
 
     private void Awake()
     {
@@ -81,7 +80,6 @@ public class GameManager : MonoBehaviour
         _localSpawnPosition = _exampleFiringPoint.position - _examplePlayer.position;
     }
 
-    //-112 -45
     private void Update()
     {
         if (PlacingShips)
@@ -187,13 +185,8 @@ public class GameManager : MonoBehaviour
         UIManager.SetTurn(CurrentPlayer.nickName);
     }
 
-    public static void Shoot(int id, int x, int y, bool touched)
+    public static void Shoot(int id, int x, int y, Action onTargetReach = null)
     {
-
-    }
-    public static void Shoot(int id, int x, int y, int shipId, int shipX, int shipY, int shipDir)//destroyed == true
-    {
-
         Player target = _instance._players[id];
         Transform player = _instance.CurrentPlayer.transform;
 
@@ -206,35 +199,40 @@ public class GameManager : MonoBehaviour
 
         Missile missile = Instantiate(_instance._missilePrefab);
         missile.SetCallbacks(
-            delegate () {
-                target.GetShip(x, y).transform.localRotation *= Quaternion.Euler(Vector3.right * 1000f);
-            },
+            onTargetReach,
             delegate () {
                 UIManager.SetTurn(_instance.CurrentPlayer.nickName);
             }
         );
 
-        missile.Shoot(from, to, true);
+        missile.Shoot(from, to, onTargetReach != null);
 
         UIManager.ShowShoot(_instance.CurrentPlayer.nickName, target.nickName);
 
         target.SetCellType(x, y, PlayerCell.CellType.ShipHit);
-        Transform shipT;
-        if (!target.you)
-        {
-            Vector3 yRotation = new Vector3(0, -shipDir * 90, 0);
-            shipT = Instantiate(ShipDatas[shipId].prefab, target.GetWorldPosition(shipX, shipY),
-                target.transform.rotation * Quaternion.Euler(yRotation), target.transform).transform;
-        }
-        else
-            shipT = target.GetShip(x, y).transform;
 
         do
         {
             _instance._currentTurn = (_instance._currentTurn + 1) % _instance._players.Length;
         } while (_instance.CurrentPlayer.dead);
 
-        CurrentState = PlayerState.Playing;
+
+    }
+    public static void Shoot(int id, int x, int y, int shipId, int shipX, int shipY, int shipDir)//destroyed == true
+    {
+        Player target = _instance._players[id];
+        Shoot(id, x, y, true, delegate () {
+            Transform ship;
+            if (!target.you)
+            {
+                ship = Instantiate(ShipDatas[shipId].prefab, target.GetWorldPosition(shipX, shipY),
+                    Quaternion.identity, target.transform).transform;
+            }
+            else
+                ship = target.GetShip(x, y).transform;
+            ship.localRotation *= Quaternion.Euler(Vector3.right * 1000f);
+        });
+       
     }
 
     public static void RotateChip()

@@ -13,7 +13,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (!ClientManager.MyTurn && !GameManager.PlacingShips)
+        if (!GameManager.MyTurn && !GameManager.PlacingShips)
         {
             _currentCell?.MouseExit();
             _currentCell = null;
