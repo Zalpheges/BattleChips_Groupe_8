@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     private Player CurrentPlayer => _players[_turn];
 
     public static int MyID { get; private set; }
+    public static int PlayersNumber => _instance._players.Length;
     public static bool MyTurn => _instance._turn == MyID;
 
     [Serializable]
@@ -64,6 +65,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform _examplePlayer;
     [SerializeField] private Vector3 _localSpawnPosition;
     //-112 -45
+
+
+    //temporaire je ne sais pas comment faire avec les property : Bryan
+    public static string GetPlayerNameByID(int ID)
+    {
+        return _instance._players[ID].nickName;
+    }
 
     private void Awake()
     {
@@ -234,6 +242,14 @@ public class GameManager : MonoBehaviour
        
     }
 
+    public static void Shoot(int id, int x, int y, bool touched)
+    {
+        Vector3 startPosition = _instance.CurrentPlayer.transform.position; //Get laucnh position
+        Vector3 endPosition = _instance._players[id].transform.position;
+        Missile missile = Instantiate(_instance._missilePrefab);
+        missile.Shoot(startPosition, endPosition, touched);
+    }
+
     public static void RotateChip()
     {
         if (CurrentShipId == -1)
@@ -279,4 +295,6 @@ public class GameManager : MonoBehaviour
 
         return true;
     }
+
+
 }

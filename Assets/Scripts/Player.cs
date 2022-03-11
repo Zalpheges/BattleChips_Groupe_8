@@ -21,26 +21,28 @@ public class Player : MonoBehaviour
                     transform.right * (HEIGHT - 1) / 2f * _cellSize
                     +Vector3.up * 10;
 
-
         for (int x = 0; x < HEIGHT; x++)
         {
             for (int y = 0; y < WIDTH; y++)
             {
-                GameObject cellGo = Instantiate(prefabCell, transform);
-                cellGo.transform.position = _gridStart + 
-                                            x * _cellSize * transform.right -
-                                            _cellSize * y * transform.forward;
-                cellGo.transform.localRotation = Quaternion.identity;
-                PlayerCell cell = cellGo.GetComponent<PlayerCell>();
-                cell.position = new Vector2Int(x, y);
-                cell.type = PlayerCell.CellType.None;
-                cell.onClick += GameManager.OnCellClicked;
-                _grid[x, y] = cell;
+                CreateCell(x, y);               
             }
         }
     }
     
-
+    private void CreateCell(int x, int y)
+    {
+        GameObject cellGo = Instantiate(prefabCell, transform);
+        cellGo.transform.position = _gridStart +
+                                    x * _cellSize * transform.right -
+                                    _cellSize * y * transform.forward;
+        cellGo.transform.localRotation = Quaternion.identity;
+        PlayerCell cell = cellGo.GetComponent<PlayerCell>();
+        cell.position = new Vector2Int(x, y);
+        cell.type = PlayerCell.CellType.None;
+        cell.onClick += GameManager.OnCellClicked;
+        _grid[x, y] = cell;
+    }
     public bool IsSpaceFree(int i, int j, int length, Vector2Int dir)
     {
         for (int k = 0; k < length; k++)

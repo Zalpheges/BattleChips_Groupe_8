@@ -25,7 +25,7 @@ public class PlayerCell : MonoBehaviour
     public void MouseEnter()
     {
         Player parentPlayer = transform.parent.GetComponent<Player>();
-        if(ClientManager.MyTurn && parentPlayer.you || type != CellType.None)
+        if(GameManager.MyTurn && parentPlayer.you || type != CellType.None)
            return;
         if (!EventSystem.current.IsPointerOverGameObject())
         {

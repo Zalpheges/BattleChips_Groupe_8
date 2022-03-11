@@ -54,6 +54,9 @@ public class UIManager : MonoBehaviour
 	private GameObject _gameParent;
 
 	[SerializeField]
+	private TextMeshProUGUI _playerName;
+
+	[SerializeField]
 	private TextMeshProUGUI _turnText;
 
 	#endregion
@@ -133,6 +136,11 @@ public class UIManager : MonoBehaviour
 
 		_instance._background.SetActive(menu != Menu.Play && menu != Menu.Shoot);
 	}
+
+	public static void ShowPlayerName(string playerName)
+    {
+		_instance._playerName.text = playerName;
+    }
 
 	public static void ShowShoot(string from, string to)
     {

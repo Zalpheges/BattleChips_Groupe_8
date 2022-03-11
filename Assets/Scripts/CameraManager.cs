@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    private static CameraManager instance;
+    private static CameraManager _instance;
 
     public static float transitionDelay;
 
@@ -30,7 +30,7 @@ public class CameraManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        _instance = this;
 
         cinemachineClearShot = GetComponent<CinemachineClearShot>();
     }
@@ -45,12 +45,12 @@ public class CameraManager : MonoBehaviour
     {
         cinemachineClearShot.LiveChild.Priority = 0;
         cinemachineClearShot.ChildCameras[index].Priority = 1;
-        playerText.text = Map.GetPlayerById(index).nickName;
+        UIManager.ShowPlayerName(GameManager.GetPlayerNameByID((GameManager.MyID + index) % GameManager.PlayersNumber));
     }
 
     public void Next()
     {
-        index = (index + 1) % cinemachineClearShot.ChildCameras.Length;
+        index = (index + 1) % GameManager.PlayersNumber;
         ChangeCamera(index);
     }
 
@@ -58,17 +58,17 @@ public class CameraManager : MonoBehaviour
     {
         index = (index - 1);
         if (index < 0)
-            index = cinemachineClearShot.ChildCameras.Length - 1;
+            index = GameManager.PlayersNumber - 1;
 
         ChangeCamera(index);
     }
 
     public static CinemachineVirtualCamera CreateCamera(Transform objectTransform, Vector3 offSetPosition, Vector3 offSetRotation)
     {
-        GameObject cameraObject = Instantiate(instance.cameraPrefab, instance.cameraPrefab.transform.position, objectTransform.rotation);
-        cameraObject.transform.position = objectTransform.position + instance.offSetPosition;
-        cameraObject.transform.Rotate(instance.offSetRotation);
-        cameraObject.transform.SetParent(instance.transform, true);
+        GameObject cameraObject = Instantiate(_instance.cameraPrefab, _instance.cameraPrefab.transform.position, objectTransform.rotation);
+        cameraObject.transform.position = objectTransform.position + _instance.offSetPosition;
+        cameraObject.transform.Rotate(_instance.offSetRotation);
+        cameraObject.transform.SetParent(_instance.transform, true);
 
         CinemachineVirtualCamera cinemachineVirtualCamera = cameraObject.GetComponent<CinemachineVirtualCamera>();
 
@@ -78,20 +78,20 @@ public class CameraManager : MonoBehaviour
     {
         foreach (Transform playerTransform in playersTransform)
         {
-            CreateCamera(playerTransform, instance.offSetPosition, instance.offSetRotation);
+            CreateCamera(playerTransform, _instance.offSetPosition, _instance.offSetRotation);
         }
-
-        instance.cinemachineClearShot.ChildCameras[Map.myId].Priority = 1;
-        instance.playerText.text = Map.GetPlayerById(Map.myId).nickName;
+        _instance.index = GameManager.MyID;
+        _instance.cinemachineClearShot.ChildCameras[GameManager.MyID].Priority = 1;
+        UIManager.ShowPlayerName(GameManager.GetPlayerNameByID(GameManager.MyID));
     }
 
     public static void DestroyCamera(CinemachineVirtualCamera cinemachineVirtualCamera, int nextCamera)
     {
 
-        if (nextCamera < instance.cinemachineClearShot.ChildCameras.Length)
-            instance.ChangeCamera(nextCamera);
+        if (nextCamera < _instance.cinemachineClearShot.ChildCameras.Length)
+            _instance.ChangeCamera(nextCamera);
         else
-            instance.ChangeCamera(instance.index);
+            _instance.ChangeCamera(_instance.index);
 
         Destroy(cinemachineVirtualCamera.gameObject, transitionDelay);
 
