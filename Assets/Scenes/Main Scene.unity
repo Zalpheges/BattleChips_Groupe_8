@@ -288,7 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefabCell: {fileID: 8975873784072870405, guid: 18090b1b9757c3749a7edc4866d75883, type: 3}
   _center: {fileID: 1506706414}
-  _playerPrefab: {fileID: 3784581188055352593, guid: 8700f7701ec422f4bb56381a1c61ae6e, type: 3}
+  _playerPrefab: {fileID: 4413955877645223218, guid: 8700f7701ec422f4bb56381a1c61ae6e, type: 3}
 --- !u!4 &70659243
 Transform:
   m_ObjectHideFlags: 0
@@ -317,6 +317,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e6d835af41f0f04da300d5b41b9a616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SubmitButton: {fileID: 1401390631}
+  _shipsDatas:
+  - prefab: {fileID: 6306399041897825879, guid: 01acdcca589426c4790e84e5524ec023, type: 3}
+    button: {fileID: 2089744503}
+    id: 0
+    length: 5
+  - prefab: {fileID: 7064155888929705091, guid: b5eaf023c515c9740b01bb5668f4fa22, type: 3}
+    button: {fileID: 1280686455}
+    id: 1
+    length: 4
+  - prefab: {fileID: 988878035406456885, guid: 32765fb62b53a384194903430c49285e, type: 3}
+    button: {fileID: 116056327}
+    id: 2
+    length: 3
+  - prefab: {fileID: 6548668783712189738, guid: b79f2027998c0044e8fb3b6eb939c09c, type: 3}
+    button: {fileID: 1305711269}
+    id: 3
+    length: 3
+  - prefab: {fileID: 871154537424989836, guid: 86ddc1a7f5b52884c93514befae19f1a, type: 3}
+    button: {fileID: 18382535}
+    id: 4
+    length: 2
+  _cellsMaterials:
+  - cellType: 0
+    material: {fileID: 2100000, guid: 21237e2eeb4816a44ab6c17a0f32a471, type: 2}
+  - cellType: 1
+    material: {fileID: 2100000, guid: 0a099689bdb985540a52ac305675ee3e, type: 2}
+  - cellType: 2
+    material: {fileID: 2100000, guid: abfd2fa713eb8a149a69740220da298b, type: 2}
+  _missilePrefab: {fileID: 8190119338221220687, guid: 1d37014fd411c524db3696bba6ff1d21, type: 3}
+  _localSpawnPosition: {x: -112, y: 0, z: -45}
 --- !u!1 &77209501
 GameObject:
   m_ObjectHideFlags: 0
@@ -922,7 +953,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &243884051
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1291,8 +1322,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Pseudo
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1559,8 +1590,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1643,7 +1674,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 289374543864658972, guid: 709db3e339838a346b7d488b0ce241a0, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 289374543864658972, guid: 709db3e339838a346b7d488b0ce241a0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1912,8 +1943,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1560429288}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 1193553578}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: Connect
         m_Mode: 1
         m_Arguments:
@@ -2083,8 +2114,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Connexion
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2360,8 +2391,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Pseudo
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2770,7 +2801,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &977335776
 GameObject:
@@ -2831,8 +2862,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3567,8 +3598,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Nom du salon
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3732,6 +3763,7 @@ GameObject:
   - component: {fileID: 1193553576}
   - component: {fileID: 1193553575}
   - component: {fileID: 1193553574}
+  - component: {fileID: 1193553578}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3818,13 +3850,41 @@ RectTransform:
   - {fileID: 1883341476}
   - {fileID: 336863079}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1193553578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1193553573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 364b15f7bea0b8146a3517430ec9d0c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _background: {fileID: 1133732005}
+  _connectionParent: {fileID: 243884050}
+  _connectionButton: {fileID: 516417885}
+  _usernameInput: {fileID: 77209503}
+  _roomnameInput: {fileID: 1429783486}
+  _readyParent: {fileID: 1187345362}
+  _playerCount: {fileID: 1448657917}
+  _boardParent: {fileID: 896382219}
+  _gameParent: {fileID: 336863078}
+  _playerName: {fileID: 190643108}
+  _turnText: {fileID: 89088130}
+  _shootParent: {fileID: 1883341475}
+  _shootText: {fileID: 432463002}
+  _endParent: {fileID: 1616616749}
+  _winnerText: {fileID: 366978517}
+  _loosersText: {fileID: 1724209671}
 --- !u!1 &1280686453
 GameObject:
   m_ObjectHideFlags: 0
@@ -4150,8 +4210,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Cr\xE9er ou rejoindre\nune partie"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
-  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5137,22 +5197,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 197e42e8c87cca24cb5db12e574511ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gamePanel: {fileID: 336863078}
-  _currentPlayerText: {fileID: 89088130}
-  _prefabMissile: {fileID: 115386, guid: 1d37014fd411c524db3696bba6ff1d21, type: 3}
-  _exampleFiringPoint: {fileID: 2002304898}
-  _examplePlayer: {fileID: 1524938128}
-  username: {fileID: 77209503}
-  roomname: {fileID: 1429783486}
-  playerCount: {fileID: 1448657917}
-  background: {fileID: 1133732005}
-  connect: {fileID: 243884050}
-  end: {fileID: 1616616749}
-  winnerText: {fileID: 366978517}
-  othersText: {fileID: 1724209671}
-  b_connect: {fileID: 516417885}
-  ready: {fileID: 1187345362}
-  shootTextGameObject: {fileID: 1883341475}
 --- !u!4 &1560429289
 Transform:
   m_ObjectHideFlags: 0
@@ -5165,7 +5209,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1616616749
 GameObject:
@@ -5184,7 +5228,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1616616750
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6271,7 +6315,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2089744501
 GameObject:
@@ -6474,7 +6518,6 @@ MonoBehaviour:
   cameraPrefab: {fileID: 5839431993526260737, guid: 47b746d31cb815541a9ee8a2503719e7, type: 3}
   offSetPosition: {x: 0, y: 150, z: 0}
   offSetRotation: {x: 90, y: 0, z: 0}
-  playerText: {fileID: 190643108}
 --- !u!4 &2212950859957287999
 Transform:
   m_ObjectHideFlags: 0
@@ -6487,5 +6530,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

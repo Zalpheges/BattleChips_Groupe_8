@@ -19,6 +19,9 @@ public class UIManager : MonoBehaviour
 	[SerializeField]
 	private GameObject _background;
 
+	[Space(5)]
+	[Header("Connection")]
+
 	#region Connection
 
 	[SerializeField]
@@ -35,6 +38,9 @@ public class UIManager : MonoBehaviour
 
 	#endregion
 
+	[Space(5)]
+	[Header("Ready")]
+
 	#region Ready
 
 	[SerializeField]
@@ -45,8 +51,14 @@ public class UIManager : MonoBehaviour
 
 	#endregion
 
+	[Space(5)]
+	[Header("Board")]
+
 	[SerializeField]
 	private GameObject _boardParent;
+
+	[Space(5)]
+	[Header("Play")]
 
 	#region Play
 
@@ -61,6 +73,9 @@ public class UIManager : MonoBehaviour
 
 	#endregion
 
+	[Space(5)]
+	[Header("Shoot")]
+
 	#region Shoot
 
 	[SerializeField]
@@ -70,6 +85,9 @@ public class UIManager : MonoBehaviour
 	private TextMeshProUGUI _shootText;
 
 	#endregion
+
+	[Space(5)]
+	[Header("End")]
 
 	#region End
 

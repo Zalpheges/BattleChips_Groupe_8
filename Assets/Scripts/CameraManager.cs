@@ -9,20 +9,20 @@ public class CameraManager : MonoBehaviour
 
     public static float transitionDelay;
 
-
-    [SerializeField] private GameObject cameraPrefab;
-
-    [Space(5)]
-
-    [SerializeField] private Vector3 offSetPosition;
+    [SerializeField] 
+    private GameObject cameraPrefab;
 
     [Space(5)]
 
-    [SerializeField] private Vector3 offSetRotation;
+    [SerializeField]
+    private Vector3 offSetPosition;
+
+    [Space(5)]
+
+    [SerializeField]
+    private Vector3 offSetRotation;
 
     [Space(20)]
-
-    [SerializeField] private TextMeshProUGUI playerText;
 
     private CinemachineClearShot cinemachineClearShot;
     private int index = 0;
@@ -82,6 +82,7 @@ public class CameraManager : MonoBehaviour
         }
         _instance.index = GameManager.MyID;
         _instance.cinemachineClearShot.ChildCameras[GameManager.MyID].Priority = 1;
+
         UIManager.ShowPlayerName(GameManager.GetPlayerNameByID(GameManager.MyID));
     }
 
@@ -94,7 +95,5 @@ public class CameraManager : MonoBehaviour
             _instance.ChangeCamera(_instance.index);
 
         Destroy(cinemachineVirtualCamera.gameObject, transitionDelay);
-
     }
-
 }

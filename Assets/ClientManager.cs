@@ -59,6 +59,8 @@ public class ClientManager : MonoBehaviour
 						_instance._server.OnDisconnect += _instance.OnDisconnect;
 
 						_instance._server.Send("Count");
+
+						UIManager.ShowMenu(UIManager.Menu.Ready);
 					},
 					delegate (PlayerIOError error) {
 						Debug.Log($"Error Joining Room: {error}");

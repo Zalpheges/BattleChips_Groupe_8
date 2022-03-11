@@ -5,7 +5,6 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject CanvasSelection;
     public Button SubmitButton;
     private static GameManager _instance;
     public enum State
@@ -59,11 +58,13 @@ public class GameManager : MonoBehaviour
     private int _iRemove;
     private int _jRemove;
 
+    [Space(5)]
+    [Header("Missile")]
+
     [SerializeField]
     private Missile _missilePrefab;
-    [SerializeField] private Transform _exampleFiringPoint;
-    [SerializeField] private Transform _examplePlayer;
-    [SerializeField] private Vector3 _localSpawnPosition;
+    [SerializeField]
+    private Vector3 _localSpawnPosition;
     //-112 -45
 
 
@@ -84,8 +85,6 @@ public class GameManager : MonoBehaviour
         {
             CellMaterials.Add(cellMat.cellType, cellMat.material);
         }
-
-        _localSpawnPosition = _exampleFiringPoint.position - _examplePlayer.position;
     }
 
     private void Update()
@@ -222,13 +221,12 @@ public class GameManager : MonoBehaviour
         {
             _instance._turn = (_instance._turn + 1) % _instance._players.Length;
         } while (_instance.CurrentPlayer.dead);
-
-
     }
+
     public static void Shoot(int id, int x, int y, int shipId, int shipX, int shipY, int shipDir)//destroyed == true
     {
         Player target = _instance._players[id];
-        Shoot(id, x, y, true, delegate () {
+        Shoot(id, x, y, delegate () {
             Transform ship;
             if (!target.you)
             {

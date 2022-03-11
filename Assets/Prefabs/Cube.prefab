@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8935d1febeda4a04b9c7b76dba5470ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabCell: {fileID: 0}
+  prefabCell: {fileID: 8975873784072870405, guid: 18090b1b9757c3749a7edc4866d75883, type: 3}
   nickName: 
   id: 0
   you: 0
