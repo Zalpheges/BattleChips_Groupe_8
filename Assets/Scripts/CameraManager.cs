@@ -45,12 +45,11 @@ public class CameraManager : MonoBehaviour
     {
         cinemachineClearShot.LiveChild.Priority = 0;
         cinemachineClearShot.ChildCameras[index].Priority = 1;
-        UIManager.ShowPlayerName(GameManager.GetPlayerNameByID((GameManager.MyID + index) % GameManager.PlayersNumber));
     }
 
     public void Next()
     {
-        index = (index + 1) % GameManager.PlayersNumber;
+        index = (index + 1) % cinemachineClearShot.ChildCameras.Length;
         ChangeCamera(index);
     }
 
@@ -58,7 +57,7 @@ public class CameraManager : MonoBehaviour
     {
         index = (index - 1);
         if (index < 0)
-            index = GameManager.PlayersNumber - 1;
+            index = cinemachineClearShot.ChildCameras.Length - 1;
 
         ChangeCamera(index);
     }
@@ -74,16 +73,14 @@ public class CameraManager : MonoBehaviour
 
         return cinemachineVirtualCamera;
     }
+
     public static void InitCamera(List<Transform> playersTransform)
     {
         foreach (Transform playerTransform in playersTransform)
-        {
             CreateCamera(playerTransform, _instance.offSetPosition, _instance.offSetRotation);
-        }
+
         _instance.index = GameManager.MyID;
         _instance.cinemachineClearShot.ChildCameras[GameManager.MyID].Priority = 1;
-
-        UIManager.ShowPlayerName(GameManager.GetPlayerNameByID(GameManager.MyID));
     }
 
     public static void DestroyCamera(CinemachineVirtualCamera cinemachineVirtualCamera, int nextCamera)

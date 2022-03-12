@@ -10,6 +10,7 @@ public class PlayerCell : MonoBehaviour
         EmptyHit,
         ShipHit
     }
+
     public Action<PlayerCell> onClick;
 
     public Vector2Int position;
@@ -25,7 +26,7 @@ public class PlayerCell : MonoBehaviour
     public void MouseEnter()
     {
         Player parentPlayer = transform.parent.GetComponent<Player>();
-        if(GameManager.MyTurn && parentPlayer.you || type != CellType.None)
+        if(GameManager.MyTurn && parentPlayer.You || type != CellType.None)
            return;
         if (!EventSystem.current.IsPointerOverGameObject())
         {
@@ -48,7 +49,7 @@ public class PlayerCell : MonoBehaviour
     public void SetType(CellType newType)
     {
         type = newType;
-        GetComponent<MeshRenderer>().material = GameManager.CellMaterials[newType];
+        GetComponent<MeshRenderer>().material = GameManager._cellMaterials[newType];
     }
 
     private void EnableHighlight(Material mat)

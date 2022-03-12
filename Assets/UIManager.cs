@@ -152,7 +152,7 @@ public class UIManager : MonoBehaviour
 		_instance._shootParent.SetActive(menu == Menu.Shoot);
 		_instance._endParent.SetActive(menu == Menu.End);
 
-		_instance._background.SetActive(menu != Menu.Play && menu != Menu.Shoot);
+		_instance._background.SetActive(menu != Menu.Board && menu != Menu.Play && menu != Menu.Shoot);
 	}
 
 	public static void ShowPlayerName(string playerName)

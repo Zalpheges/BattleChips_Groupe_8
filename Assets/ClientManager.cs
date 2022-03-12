@@ -124,7 +124,7 @@ public class ClientManager : MonoBehaviour
 					if (destroyed)
 						GameManager.Shoot(id, x, y, shipId, shipX, shipY, shipDir);
 					else
-						GameManager.Shoot(id, x, y, touched);
+						GameManager.Shoot(id, x, y);
 						
 					break;
 				}
@@ -162,11 +162,6 @@ public class ClientManager : MonoBehaviour
 		return _instance._players[id];
     }
 
-	public void Ready(bool state)
-	{
-		_server.Send("Ready", state);
-	}
-
 	public static void AddShip(int id, int x, int y, int dir, int length)
 	{
 		_instance._server.Send("Add", id, x, y, dir, length);
@@ -185,6 +180,11 @@ public class ClientManager : MonoBehaviour
 	public static void Shoot(int id, int x, int y)
 	{
 		_instance._server.Send("Shoot", id, x, y);
+	}
+
+	public void Ready(bool state)
+	{
+		_server.Send("Ready", state);
 	}
 
 	private void OnMessage(object sender, Message message)

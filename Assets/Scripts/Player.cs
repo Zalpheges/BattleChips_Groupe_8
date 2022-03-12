@@ -2,37 +2,38 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public GameObject prefabCell;
-    public string nickName;
-    public int id;
-    public bool you;
-    public bool dead = false;
     private const int WIDTH = 10, HEIGHT = 10;
+
+    public int Id { get; private set; }
+    public bool You { get; private set; }
+    public bool dead = false;
     private float _cellSize;
     private Vector3 _gridStart;
     private PlayerCell[,] _grid;
 
-    public void Initialize()
+    [SerializeField]
+    private GameObject _cellPrefab;
+
+    public void Initialize(int id, bool you)
     {
-        _cellSize = prefabCell.transform.localScale.x;
+        Id = id;
+        You = you;
+
+        _cellSize = _cellPrefab.transform.localScale.x;
         _grid = new PlayerCell[HEIGHT, WIDTH];
         _gridStart = transform.position +
                     transform.forward * (WIDTH - 1) / 2f * _cellSize -
                     transform.right * (HEIGHT - 1) / 2f * _cellSize
-                    +Vector3.up * 10;
+                    + Vector3.up * 10f;
 
         for (int x = 0; x < HEIGHT; x++)
-        {
             for (int y = 0; y < WIDTH; y++)
-            {
-                CreateCell(x, y);               
-            }
-        }
+                CreateCell(x, y);
     }
     
     private void CreateCell(int x, int y)
     {
-        GameObject cellGo = Instantiate(prefabCell, transform);
+        GameObject cellGo = Instantiate(_cellPrefab, transform);
         cellGo.transform.position = _gridStart +
                                     x * _cellSize * transform.right -
                                     _cellSize * y * transform.forward;

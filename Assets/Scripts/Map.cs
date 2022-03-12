@@ -4,8 +4,6 @@ public class Map : MonoBehaviour
 {
     private static Map _instance;
 
-    public GameObject _prefabCell;
-
     [SerializeField]
     private Transform _center;
 
@@ -19,7 +17,7 @@ public class Map : MonoBehaviour
 
     public static Player[] CreatePlayers(int myId, int nPlayers)
     {
-        float radius = 10.3f * _instance._prefabCell.transform.localScale.x;
+        float radius = 10.3f * 15f;
 
         Player[] players = new Player[nPlayers];
         Vector3[] positions = _instance.ComputePlayerPositions(nPlayers, radius);
@@ -29,10 +27,7 @@ public class Map : MonoBehaviour
             Player player = Instantiate(_instance._playerPrefab, positions[i], Quaternion.identity);
             player.transform.LookAt(_instance._center);
 
-            player.you = i == myId;
-            player.id = i;
-            player.prefabCell = _instance._prefabCell;
-            player.Initialize();
+            player.Initialize(i, i == GameManager.MyID);
         }
 
         return players;
