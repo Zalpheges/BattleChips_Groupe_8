@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public static bool Playing => CurrentState == State.Playing;
 
 
-    public static ShipPlacement shipPlacement;
+    public static ShipPlacement ShipPlacement;
 
     [Header("Board")]
 
@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
     {
         _instance = this;
 
-        shipPlacement = GetComponent<ShipPlacement>();
+        ShipPlacement = GetComponent<ShipPlacement>();
 
     }
 
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
     public static void Shoot(int id, int x, int y, int shipId, int shipX, int shipY, int shipDir)
     {
         Player target = _instance._players[id];
-        GameObject shipPrefab = shipPlacement.GetShipDataByID(shipId).prefab;
+        GameObject shipPrefab = ShipPlacement.GetShipDataByID(shipId).prefab;
 
         Shoot(id, x, y, delegate () {
             Transform ship;

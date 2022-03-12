@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
                                     x * _cellSize * transform.right -
                                     _cellSize * y * transform.forward;
 
-        cell.Init(new Vector2Int(x, y), GameManager.OnCellClicked);
+        cell.Init(new Vector2Int(x, y), GameManager.ShipPlacement.OnCellClicked);
         
         _grid[x, y] = cell;
     }
@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
             if (i < 0 || i >= _grid.GetLength(0) || j < 0 || j >= _grid.GetLength(1))
                 return false;
 
-            if (_grid[i, j].ship != null)
+            if (_grid[i, j].Ship != null)
                 return false;
 
             i += dir.x;
@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
     {
         for (int k = 0; k < length; k++)
         {
-            _grid[i, j].ship = ship;
+            _grid[i, j].Ship = ship;
             i += dir.x;
             j += dir.y;
         }
@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
 
     public void RemoveShip(int iStart, int jStart)
     {
-        Ship ship = _grid[iStart, jStart].ship.GetComponentInChildren<Ship>();
+        Ship ship = _grid[iStart, jStart].Ship.GetComponentInChildren<Ship>();
         Vector2Int shipDir = ship.direction;
         Vector2Int browseDir = new Vector2Int(shipDir.x, -shipDir.y);
         for (int k = 0; k < 2; ++k)
@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
             _grid[i, j] = null;
 
             while (i > 0 && i < _grid.GetLength(0) && j > 0 && j < _grid.GetLength(1)
-                && _grid[i + browseDir.x, j + browseDir.y].ship == _grid[i, j].ship)
+                && _grid[i + browseDir.x, j + browseDir.y].Ship == _grid[i, j].Ship)
             {
                 i += browseDir.x;
                 j += browseDir.y;
@@ -111,6 +111,6 @@ public class Player : MonoBehaviour
 
     public GameObject GetShip(int i, int j)
     {
-        return _grid[i, j].ship;
+        return _grid[i, j].Ship;
     }
 }

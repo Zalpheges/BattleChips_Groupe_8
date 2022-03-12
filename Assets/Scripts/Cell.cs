@@ -18,6 +18,8 @@ public class Cell : MonoBehaviour
 
     private Player _owner;
 
+    public GameObject Ship;
+
     public void Init(Vector2Int position, Action<Cell> onClick)
     {
         _type = Type.None;
@@ -43,8 +45,8 @@ public class Cell : MonoBehaviour
         {
             EnableHighlight(GetComponent<MeshRenderer>().material);
 
-            if (GameManager.PlacingShips && GameManager.IsShipSelected)
-                GameManager.PrevisualizeShipOnCell(transform);
+            if (GameManager.PlacingShips && GameManager.ShipPlacement.IsShipSelected)
+                GameManager.ShipPlacement.PrevisualizeShipOnCell(transform);
         }
     }
 
@@ -52,15 +54,15 @@ public class Cell : MonoBehaviour
     {
         DisableHighlight(GetComponent<MeshRenderer>().material);
 
-        if (GameManager.PlacingShips && GameManager.CurrentShipId != -1)
-            Destroy(GameManager.CurrentInstanciatedChip);
+        if (GameManager.PlacingShips && GameManager.ShipPlacement.CurrentShipId != -1)
+            Destroy(GameManager.ShipPlacement.CurrentInstanciatedChip);
     }
 
     public void SetType(Type newType)
     {
         _type = newType;
 
-        GetComponent<MeshRenderer>().material = GameManager._cellMaterials[newType];
+        GetComponent<MeshRenderer>().material = GameManager.ShipPlacement.CellMaterials[newType];
     }
 
     private void EnableHighlight(Material mat)

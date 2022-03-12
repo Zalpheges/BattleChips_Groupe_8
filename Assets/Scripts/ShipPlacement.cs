@@ -17,7 +17,7 @@ public class ShipPlacement : MonoBehaviour
     [Serializable]
     private struct CellMaterial
     {
-        public PlayerCell.CellType cellType;
+        public Cell.Type cellType;
         public Material material;
     }
 
@@ -28,14 +28,14 @@ public class ShipPlacement : MonoBehaviour
     private CellMaterial[] _cellsMaterials;
 
     private Dictionary<int, ShipData> _shipDatas;
-    public Dictionary<PlayerCell.CellType, Material> cellMaterials;
+    public Dictionary<Cell.Type, Material> CellMaterials;
 
     private Button _submitButton;
 
-    public int currentShipId = -1;
-    public GameObject currentInstanciatedChip;
+    public int CurrentShipId = -1;
+    public GameObject CurrentInstanciatedChip;
 
-    public bool IsShipSelected => currentShipId != -1;
+    public bool IsShipSelected => CurrentShipId != -1;
 
     private int _lastRotation;
     private int _nShipsToPlace = 1;
@@ -51,13 +51,13 @@ public class ShipPlacement : MonoBehaviour
             _shipDatas.Add(shipData.id, shipData);
 
         foreach (CellMaterial cellMat in _cellsMaterials)
-            cellMaterials.Add(cellMat.cellType, cellMat.material);
+            CellMaterials.Add(cellMat.cellType, cellMat.material);
     }
 
     private void Start()
     {
         _shipDatas = new Dictionary<int, ShipData>();
-        cellMaterials = new Dictionary<PlayerCell.CellType, Material>();
+        CellMaterials = new Dictionary<Cell.Type, Material>();
     }
 
     private void Update()
@@ -79,7 +79,7 @@ public class ShipPlacement : MonoBehaviour
         {
             _lastRotation += 90;
             _lastRotation %= 360;
-            currentInstanciatedChip.transform.Rotate(Vector3.up * 90);
+            CurrentInstanciatedChip.transform.Rotate(Vector3.up * 90);
         }
     }
 
@@ -87,20 +87,20 @@ public class ShipPlacement : MonoBehaviour
     {
         if (IsShipSelected)
         {
-            Destroy(currentInstanciatedChip);
-            _shipDatas[currentShipId].button.interactable = true;
+            Destroy(CurrentInstanciatedChip);
+            _shipDatas[CurrentShipId].button.interactable = true;
         }
 
         _shipDatas[id].button.interactable = false;
-        currentShipId = id;
+        CurrentShipId = id;
     }
 
     public void PrevisualizeShipOnCell(Transform cellTransform)
     {
-        GameObject newChip = _shipDatas[currentShipId].prefab;
-        currentInstanciatedChip = Instantiate(newChip, cellTransform.position, cellTransform.rotation);
-        currentInstanciatedChip.transform.SetParent(cellTransform.parent);
-        currentInstanciatedChip.transform.Rotate(cellTransform.up * _lastRotation);
+        GameObject newChip = _shipDatas[CurrentShipId].prefab;
+        CurrentInstanciatedChip = Instantiate(newChip, cellTransform.position, cellTransform.rotation);
+        CurrentInstanciatedChip.transform.SetParent(cellTransform.parent);
+        CurrentInstanciatedChip.transform.Rotate(cellTransform.up * _lastRotation);
     }
 
     public bool PlaceChip(Vector2Int cellPosition, Player player)
@@ -109,16 +109,16 @@ public class ShipPlacement : MonoBehaviour
         Vector2Int vect = Ship.DirToVector(dir);
 
         int i = cellPosition.x, j = cellPosition.y;
-        int length = _shipDatas[currentShipId].length;
+        int length = _shipDatas[CurrentShipId].length;
 
         if (!player.IsSpaceFree(i, j, length, vect))
             return false;
 
-        currentInstanciatedChip.GetComponentInChildren<Ship>().direction = vect;
-        player.AddShipToGrid(currentInstanciatedChip, i, j, length, vect);
+        CurrentInstanciatedChip.GetComponentInChildren<Ship>().direction = vect;
+        player.AddShipToGrid(CurrentInstanciatedChip, i, j, length, vect);
 
         int trigDir = dir % 2 == 1 ? (dir + 2) % 4 : dir; //inverse 1 and 3 
-        ClientManager.AddShip(currentShipId, i, j, trigDir, length);
+        ClientManager.AddShip(CurrentShipId, i, j, trigDir, length);
         --_nShipsToPlace;
 
         return true;
@@ -128,7 +128,7 @@ public class ShipPlacement : MonoBehaviour
     {
         if (_displayShipMenu && GameManager.PlacingShips)
         {
-            Vector2 position = Camera.main.WorldToScreenPoint(currentInstanciatedChip.transform.position);
+            Vector2 position = Camera.main.WorldToScreenPoint(CurrentInstanciatedChip.transform.position);
             position.y = Screen.height - position.y;
             GUILayout.BeginArea(new Rect(position.x, position.y, 300, 400), GUI.skin.box);
 
@@ -143,54 +143,54 @@ public class ShipPlacement : MonoBehaviour
                 ClientManager.RemoveShip(_iRemove, _jRemove);
 
                 ++_nShipsToPlace;
-                _shipDatas[currentInstanciatedChip.GetComponentInChildren<Ship>().id].button.interactable = true;
-                Destroy(currentInstanciatedChip);
-                currentShipId = -1;
-                currentInstanciatedChip = null;
+                _shipDatas[CurrentInstanciatedChip.GetComponentInChildren<Ship>().id].button.interactable = true;
+                Destroy(CurrentInstanciatedChip);
+                CurrentShipId = -1;
+                CurrentInstanciatedChip = null;
 
                 _displayShipMenu = false;
             }
 
             if (GUILayout.Button("Cancel", buttonStyle))
             {
-                currentInstanciatedChip = null;
+                CurrentInstanciatedChip = null;
 
                 _displayShipMenu = false;
             }
             GUILayout.EndArea();
         }
     }
-    public void OnCellClicked(PlayerCell cell)
+
+    public void OnCellClicked(Cell cell)
     {
         Player player = cell.transform.parent.GetComponent<Player>();
         if (_displayShipMenu)
             return;
         if (GameManager.MyTurn && !player.You)
         {
-            ClientManager.Shoot(player.Id, cell.position.x, cell.position.y);
+            ClientManager.Shoot(player.Id, cell.Position.x, cell.Position.y);
         }
         else if (GameManager.CurrentState == GameManager.State.PlacingShips)
         {
             if (IsShipSelected)
             {
-                if (PlaceChip(cell.position, player))
+                if (PlaceChip(cell.Position, player))
                 {
-                    currentInstanciatedChip = null;
-                    currentShipId = -1;
+                    CurrentInstanciatedChip = null;
+                    CurrentShipId = -1;
                 }
             }
             else
             {
-                if (cell.ship != null)
+                if (cell.Ship != null)
                 {
-                    currentInstanciatedChip = cell.ship;
-                    _iRemove = cell.position.x;
-                    _jRemove = cell.position.y;
+                    CurrentInstanciatedChip = cell.Ship;
+                    _iRemove = cell.Position.x;
+                    _jRemove = cell.Position.y;
                     _displayShipMenu = true;
                 }
             }
         }
-        Debug.Log(cell.position.ToString() + cell.type.ToString());
     }
 
 }
