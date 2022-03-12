@@ -206,8 +206,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 70659244}
-        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+      - m_Target: {fileID: 70659241}
+        m_TargetAssemblyTypeName: ShipPlacement, Assembly-CSharp
         m_MethodName: ChangeCurrentChip
         m_Mode: 3
         m_Arguments:
@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 70659243}
   - component: {fileID: 70659242}
   - component: {fileID: 70659244}
+  - component: {fileID: 70659241}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -274,6 +275,48 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &70659241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70659240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8959762788bbc4a40889f704a2917f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shipsDatas:
+  - prefab: {fileID: 1813258765252098, guid: aea52f5da97018c4aaecffcdfa9035d8, type: 3}
+    button: {fileID: 2089744503}
+    id: 0
+    length: 5
+  - prefab: {fileID: 1042197431107668, guid: ec5d6bc6e2d4942448a8b3d9eddf3865, type: 3}
+    button: {fileID: 1280686455}
+    id: 1
+    length: 4
+  - prefab: {fileID: 1307028158353980, guid: 09419625ea90e2f478b96ae476784b2c, type: 3}
+    button: {fileID: 116056327}
+    id: 2
+    length: 3
+  - prefab: {fileID: 1171684472522874, guid: 74d0740f4abc7e54fab50d33af2582da, type: 3}
+    button: {fileID: 1305711269}
+    id: 3
+    length: 3
+  - prefab: {fileID: 1257255175192470, guid: c3672f9b2e0555e418f7dcc46c6d0d10, type: 3}
+    button: {fileID: 18382535}
+    id: 4
+    length: 2
+  _cellsMaterials:
+  - cellType: 0
+    material: {fileID: 2100000, guid: eeb1f62320396114fa79791a44a45049, type: 2}
+  - cellType: 1
+    material: {fileID: 2100000, guid: 0a099689bdb985540a52ac305675ee3e, type: 2}
+  - cellType: 2
+    material: {fileID: 2100000, guid: abfd2fa713eb8a149a69740220da298b, type: 2}
+  currentShipId: -1
+  currentInstanciatedChip: {fileID: 0}
 --- !u!114 &70659242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,7 +329,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d64efccde7c97c04db4aad9be8cc38c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabCell: {fileID: 8975873784072870405, guid: 18090b1b9757c3749a7edc4866d75883, type: 3}
   _center: {fileID: 1506706414}
   _playerPrefab: {fileID: 4413955877645223218, guid: 8700f7701ec422f4bb56381a1c61ae6e, type: 3}
 --- !u!4 &70659243
@@ -317,35 +359,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e6d835af41f0f04da300d5b41b9a616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SubmitButton: {fileID: 1401390631}
-  _shipsDatas:
-  - prefab: {fileID: 6306399041897825879, guid: 01acdcca589426c4790e84e5524ec023, type: 3}
-    button: {fileID: 2089744503}
-    id: 0
-    length: 5
-  - prefab: {fileID: 7064155888929705091, guid: b5eaf023c515c9740b01bb5668f4fa22, type: 3}
-    button: {fileID: 1280686455}
-    id: 1
-    length: 4
-  - prefab: {fileID: 988878035406456885, guid: 32765fb62b53a384194903430c49285e, type: 3}
-    button: {fileID: 116056327}
-    id: 2
-    length: 3
-  - prefab: {fileID: 6548668783712189738, guid: b79f2027998c0044e8fb3b6eb939c09c, type: 3}
-    button: {fileID: 1305711269}
-    id: 3
-    length: 3
-  - prefab: {fileID: 871154537424989836, guid: 86ddc1a7f5b52884c93514befae19f1a, type: 3}
-    button: {fileID: 18382535}
-    id: 4
-    length: 2
-  _cellsMaterials:
-  - cellType: 0
-    material: {fileID: 2100000, guid: 21237e2eeb4816a44ab6c17a0f32a471, type: 2}
-  - cellType: 1
-    material: {fileID: 2100000, guid: 0a099689bdb985540a52ac305675ee3e, type: 2}
-  - cellType: 2
-    material: {fileID: 2100000, guid: abfd2fa713eb8a149a69740220da298b, type: 2}
   _missilePrefab: {fileID: 8190119338221220687, guid: 1d37014fd411c524db3696bba6ff1d21, type: 3}
   _localSpawnPosition: {x: -112, y: 0, z: -45}
 --- !u!1 &77209501
@@ -752,8 +765,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 70659244}
-        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+      - m_Target: {fileID: 70659241}
+        m_TargetAssemblyTypeName: ShipPlacement, Assembly-CSharp
         m_MethodName: ChangeCurrentChip
         m_Mode: 3
         m_Arguments:
@@ -3968,8 +3981,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 70659244}
-        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+      - m_Target: {fileID: 70659241}
+        m_TargetAssemblyTypeName: ShipPlacement, Assembly-CSharp
         m_MethodName: ChangeCurrentChip
         m_Mode: 3
         m_Arguments:
@@ -4101,8 +4114,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 70659244}
-        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+      - m_Target: {fileID: 70659241}
+        m_TargetAssemblyTypeName: ShipPlacement, Assembly-CSharp
         m_MethodName: ChangeCurrentChip
         m_Mode: 3
         m_Arguments:
@@ -6400,8 +6413,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 70659244}
-        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+      - m_Target: {fileID: 70659241}
+        m_TargetAssemblyTypeName: ShipPlacement, Assembly-CSharp
         m_MethodName: ChangeCurrentChip
         m_Mode: 3
         m_Arguments:
