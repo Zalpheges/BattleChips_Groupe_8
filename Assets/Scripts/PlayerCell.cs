@@ -27,7 +27,7 @@ public class PlayerCell : MonoBehaviour
     {
         Player parentPlayer = transform.parent.GetComponent<Player>();
 
-        if(GameManager.MyTurn && parentPlayer.you || type != CellType.None)
+        if(GameManager.MyTurn && parentPlayer.You || type != CellType.None)
            return;
 
         if (!EventSystem.current.IsPointerOverGameObject())
@@ -35,8 +35,8 @@ public class PlayerCell : MonoBehaviour
             Material mat = GetComponent<MeshRenderer>().material;
             EnableHighlight(mat);
 
-            if (GameManager.PlacingShips && GameManager.IsShipSelected)
-                GameManager.PrevisualizeShipOnCell(transform);
+            if (GameManager.PlacingShips && GameManager.shipPlacement.IsShipSelected)
+                GameManager.shipPlacement.PrevisualizeShipOnCell(transform);
         }
     }
 
@@ -45,14 +45,14 @@ public class PlayerCell : MonoBehaviour
         Material mat = GetComponent<MeshRenderer>().material;
         DisableHighlight(mat);
 
-        if (GameManager.PlacingShips && GameManager.CurrentShipId != -1)
-            Destroy(GameManager.CurrentInstanciatedChip);
+        if (GameManager.PlacingShips && GameManager.shipPlacement.currentShipId != -1)
+            Destroy(GameManager.shipPlacement.currentInstanciatedChip);
     }
 
     public void SetType(CellType newType)
     {
         type = newType;
-        GetComponent<MeshRenderer>().material = GameManager._cellMaterials[newType];
+        GetComponent<MeshRenderer>().material = GameManager.shipPlacement.cellMaterials[newType];
     }
 
     private void EnableHighlight(Material mat)

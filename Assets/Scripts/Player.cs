@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
         PlayerCell cell = cellGo.GetComponent<PlayerCell>();
         cell.position = new Vector2Int(x, y);
         cell.type = PlayerCell.CellType.None;
-        cell.onClick += GameManager.OnCellClicked;
+        cell.onClick += GameManager.shipPlacement.OnCellClicked;
         _grid[x, y] = cell;
     }
     public bool IsSpaceFree(int i, int j, int length, Vector2Int dir)
