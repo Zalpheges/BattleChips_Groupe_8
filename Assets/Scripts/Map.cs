@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Map : MonoBehaviour
@@ -24,6 +25,8 @@ public class Map : MonoBehaviour
         Player[] players = new Player[nPlayers];
         Vector3[] positions = _instance.ComputePlayerPositions(nPlayers, radius);
 
+        List<Transform> playerTransforms = new List<Transform>();
+
         for (int i = 0; i < nPlayers; ++i)
         {
             Player player = Instantiate(_instance._playerPrefab, positions[i], Quaternion.identity);
@@ -33,7 +36,11 @@ public class Map : MonoBehaviour
             player.id = i;
             player.prefabCell = _instance._prefabCell;
             player.Initialize();
+
+            playerTransforms.Add(player.transform);
         }
+
+        CameraManager.InitCamera(playerTransforms);
 
         return players;
     }

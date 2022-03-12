@@ -74,16 +74,16 @@ public class CameraManager : MonoBehaviour
 
         return cinemachineVirtualCamera;
     }
-    public static void InitCamera(List<Transform> playersTransform)
+    public static void InitCamera(List<Transform> playersPosition)
     {
-        foreach (Transform playerTransform in playersTransform)
+        foreach (Transform playerTransform in playersPosition)
         {
             CreateCamera(playerTransform, _instance.offSetPosition, _instance.offSetRotation);
         }
         _instance.index = GameManager.MyID;
         _instance.cinemachineClearShot.ChildCameras[GameManager.MyID].Priority = 1;
 
-        UIManager.ShowPlayerName(GameManager.GetPlayerNameByID(GameManager.MyID));
+        UIManager.ShowPlayerName(ClientManager.GetName(GameManager.MyID));
     }
 
     public static void DestroyCamera(CinemachineVirtualCamera cinemachineVirtualCamera, int nextCamera)
