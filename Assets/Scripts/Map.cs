@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Map : MonoBehaviour
@@ -22,13 +23,18 @@ public class Map : MonoBehaviour
         Player[] players = new Player[nPlayers];
         Vector3[] positions = _instance.ComputePlayerPositions(nPlayers, radius);
 
+        List<Transform> playerTransforms = new List<Transform>();
+
         for (int i = 0; i < nPlayers; ++i)
         {
             Player player = Instantiate(_instance._playerPrefab, positions[i], Quaternion.identity);
             player.transform.LookAt(_instance._center);
 
             player.Initialize(i, i == GameManager.MyID);
+            playerTransforms.Add(player.transform);
         }
+
+        CameraManager.InitCamera(playerTransforms);
 
         return players;
     }
@@ -46,7 +52,7 @@ public class Map : MonoBehaviour
         return positions;
     }
 
-    // Warning : Code des Dieux - Ne pas essayer ne serait-ce que d'appréhender //
+    // Warning : Code des Dieux - Ne pas essayer ne serait-ce que d'apprï¿½hender //
     private Vector3 ComputePlayerOffset(float angle, float radius)
     {
         Vector3 offset = Vector3.zero;

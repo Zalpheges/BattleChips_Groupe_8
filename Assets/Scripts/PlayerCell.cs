@@ -26,8 +26,10 @@ public class PlayerCell : MonoBehaviour
     public void MouseEnter()
     {
         Player parentPlayer = transform.parent.GetComponent<Player>();
-        if(GameManager.MyTurn && parentPlayer.You || type != CellType.None)
+
+        if(GameManager.MyTurn && parentPlayer.you || type != CellType.None)
            return;
+
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             Material mat = GetComponent<MeshRenderer>().material;
@@ -42,6 +44,7 @@ public class PlayerCell : MonoBehaviour
     {
         Material mat = GetComponent<MeshRenderer>().material;
         DisableHighlight(mat);
+
         if (GameManager.PlacingShips && GameManager.CurrentShipId != -1)
             Destroy(GameManager.CurrentInstanciatedChip);
     }
@@ -57,6 +60,7 @@ public class PlayerCell : MonoBehaviour
         mat.EnableKeyword("_EMISSION");
         mat.SetColor("_EmissionColor", Color.grey);
     }
+
     private void DisableHighlight(Material mat)
     {
         mat.DisableKeyword("_EMISSION");

@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public bool You { get; private set; }
     public bool dead = false;
     private float _cellSize;
+
     private Vector3 _gridStart;
     private PlayerCell[,] _grid;
 
@@ -48,10 +49,13 @@ public class Player : MonoBehaviour
     {
         for (int k = 0; k < length; k++)
         {
+
             if (i < 0 || i >= _grid.GetLength(0) || j < 0 || j >= _grid.GetLength(1))
                 return false;
+
             if (_grid[i, j].ship != null)
                 return false;
+
             i += dir.x;
             j += dir.y;
         }
@@ -87,6 +91,7 @@ public class Player : MonoBehaviour
                 j += browseDir.y;
                 _grid[i, j] = null;
             }
+
             browseDir = - browseDir;
         }
     }
