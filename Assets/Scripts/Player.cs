@@ -7,21 +7,23 @@ public class Player : MonoBehaviour
     public int Id { get; private set; }
     public bool You { get; private set; }
     public bool dead = false;
+
+    private Cell[,] _grid;
     private float _cellSize;
 
     private Vector3 _gridStart;
-    private PlayerCell[,] _grid;
 
     [SerializeField]
-    private GameObject _cellPrefab;
+    private Cell _cellPrefab;
 
     public void Initialize(int id, bool you)
     {
         Id = id;
         You = you;
 
+        _grid = new Cell[HEIGHT, WIDTH];
         _cellSize = _cellPrefab.transform.localScale.x;
-        _grid = new PlayerCell[HEIGHT, WIDTH];
+
         _gridStart = transform.position +
                     transform.forward * (WIDTH - 1) / 2f * _cellSize -
                     transform.right * (HEIGHT - 1) / 2f * _cellSize
@@ -34,22 +36,22 @@ public class Player : MonoBehaviour
     
     private void CreateCell(int x, int y)
     {
-        GameObject cellGo = Instantiate(_cellPrefab, transform);
-        cellGo.transform.position = _gridStart +
+        Cell cell = Instantiate(_cellPrefab, transform);
+
+        cell.transform.localRotation = Quaternion.identity;
+        cell.transform.position = _gridStart +
                                     x * _cellSize * transform.right -
                                     _cellSize * y * transform.forward;
-        cellGo.transform.localRotation = Quaternion.identity;
-        PlayerCell cell = cellGo.GetComponent<PlayerCell>();
-        cell.position = new Vector2Int(x, y);
-        cell.type = PlayerCell.CellType.None;
-        cell.onClick += GameManager.OnCellClicked;
+
+        cell.Init(new Vector2Int(x, y), GameManager.OnCellClicked);
+        
         _grid[x, y] = cell;
     }
+
     public bool IsSpaceFree(int i, int j, int length, Vector2Int dir)
     {
         for (int k = 0; k < length; k++)
         {
-
             if (i < 0 || i >= _grid.GetLength(0) || j < 0 || j >= _grid.GetLength(1))
                 return false;
 
@@ -59,6 +61,7 @@ public class Player : MonoBehaviour
             i += dir.x;
             j += dir.y;
         }
+
         return true;
     }
 
@@ -101,7 +104,7 @@ public class Player : MonoBehaviour
         return _gridStart + i * _cellSize * transform.right - j * _cellSize * transform.forward;
     }
 
-    public void SetCellType(int i, int j, PlayerCell.CellType cellType)
+    public void SetCellType(int i, int j, Cell.Type cellType)
     {
         _grid[i, j].SetType(cellType);
     }

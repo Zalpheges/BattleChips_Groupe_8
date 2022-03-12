@@ -1,15 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static InputManager instance;
+    public static InputManager _instance;
 
-    [SerializeField] private LayerMask _cellsLayer;
+    [SerializeField]
+    private LayerMask _cellLayer;
 
-    private PlayerCell _currentCell;
+    private Cell _currentCell;
 
     private void Update()
     {
@@ -17,16 +15,20 @@ public class InputManager : MonoBehaviour
         {
             _currentCell?.MouseExit();
             _currentCell = null;
+
             return;
         }
 
-        PlayerCell tmp;
+        Cell tmp;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, _cellsLayer))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, _cellLayer))
         {
-            tmp = hitInfo.transform.GetComponent<PlayerCell>();
+            tmp = hitInfo.transform.GetComponent<Cell>();
+
             if (Input.GetMouseButtonDown(0))
                 tmp.PointerClick();
+
             if (_currentCell != tmp)
             {
                 _currentCell?.MouseExit();

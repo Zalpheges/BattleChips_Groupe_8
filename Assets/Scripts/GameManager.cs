@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     [Serializable]
     private struct CellMaterial
     {
-        public PlayerCell.CellType cellType;
+        public Cell.Type cellType;
         public Material material;
     }
 
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     private CellMaterial[] _cellsMaterials;
 
     private Dictionary<int, ShipData> _shipDatas;
-    private Dictionary<PlayerCell.CellType, Material> _cellMaterials;
+    private Dictionary<Cell.Type, Material> _cellMaterials;
 
     public Button SubmitButton;
     private static GameManager _instance;
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _shipDatas = new Dictionary<int, ShipData>();
-        _cellMaterials = new Dictionary<PlayerCell.CellType, Material>();
+        _cellMaterials = new Dictionary<Cell.Type, Material>();
     }
 
     private void Update()
@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void OnCellClicked(PlayerCell cell)
+    public static void OnCellClicked(Cell cell)
     {
         Player player = cell.transform.parent.GetComponent<Player>();
         if (_instance._displayShipMenu)
@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
         {
             if (IsShipSelected)
             {
-                if (PlaceChip(cell.position, player))
+                if (PlaceChip(cell.Position, player))
                 {
                     CurrentInstanciatedChip = null;
                     CurrentShipId = -1;
@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        Debug.Log(cell.position.ToString() + cell.type.ToString());
+        Debug.Log(cell.position.ToString() + cell._type.ToString());
     }
 
     public static void Board(int id, int count)
@@ -221,7 +221,7 @@ public class GameManager : MonoBehaviour
 
         UIManager.ShowShoot(ClientManager.GetName(CurrentPlayer.Id), ClientManager.GetName(target.Id));
 
-        target.SetCellType(x, y, PlayerCell.CellType.ShipHit);
+        target.SetCellType(x, y, Cell.Type.ShipHit);
 
         do
         {
