@@ -289,19 +289,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shipsDatas:
-  - prefab: {fileID: 1813258765252098, guid: aea52f5da97018c4aaecffcdfa9035d8, type: 3}
+  - prefab: {fileID: 6306399041897825879, guid: 01acdcca589426c4790e84e5524ec023, type: 3}
     button: {fileID: 2089744503}
     id: 0
     length: 5
-  - prefab: {fileID: 1042197431107668, guid: ec5d6bc6e2d4942448a8b3d9eddf3865, type: 3}
+  - prefab: {fileID: 7064155888929705091, guid: b5eaf023c515c9740b01bb5668f4fa22, type: 3}
     button: {fileID: 1280686455}
     id: 1
     length: 4
-  - prefab: {fileID: 1307028158353980, guid: 09419625ea90e2f478b96ae476784b2c, type: 3}
+  - prefab: {fileID: 988878035406456885, guid: 32765fb62b53a384194903430c49285e, type: 3}
     button: {fileID: 116056327}
     id: 2
     length: 3
-  - prefab: {fileID: 1171684472522874, guid: 74d0740f4abc7e54fab50d33af2582da, type: 3}
+  - prefab: {fileID: 6548668783712189738, guid: b79f2027998c0044e8fb3b6eb939c09c, type: 3}
     button: {fileID: 1305711269}
     id: 3
     length: 3
