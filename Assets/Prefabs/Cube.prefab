@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4418995132510495835}
   - component: {fileID: 4413955877645223218}
+  - component: {fileID: 8699242845157664705}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -45,3 +46,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dead: 0
   _cellPrefab: {fileID: 7105360405055077312, guid: 18090b1b9757c3749a7edc4866d75883, type: 3}
+--- !u!210 &8699242845157664705
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3784581188055352593}
+  m_Enabled: 1
+  m_SortingLayerID: -530033051
+  m_SortingLayer: 2
+  m_SortingOrder: 0

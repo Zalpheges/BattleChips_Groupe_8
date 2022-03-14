@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 70659242}
   - component: {fileID: 70659244}
   - component: {fileID: 70659241}
+  - component: {fileID: 70659245}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -362,6 +363,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _missilePrefab: {fileID: 8190119338221220687, guid: 1d37014fd411c524db3696bba6ff1d21, type: 3}
   _localSpawnPosition: {x: -112, y: 0, z: -45}
+--- !u!114 &70659245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70659240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c8a99b7efe6f4244902c68ee8cac243, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cellLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &77209501
 GameObject:
   m_ObjectHideFlags: 0
