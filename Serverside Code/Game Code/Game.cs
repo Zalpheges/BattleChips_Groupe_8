@@ -162,6 +162,10 @@ public class GameCode : Game<Player>
     public override void UserJoined(Player player)
     {
         players.Add(player);
+
+        int count = players.FindAll(p => p.IsReady).Count;
+
+        Broadcast("Count", count, players.Count);
     }
 
     public override void UserLeft(Player player)
