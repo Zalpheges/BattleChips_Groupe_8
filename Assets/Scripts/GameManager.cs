@@ -95,14 +95,13 @@ public class GameManager : MonoBehaviour
         Player target = _instance._players[id];
         Transform player = CurrentPlayer.transform;
 
-        Vector3 from = player.position + _instance._localSpawnPosition;
+        Vector3 worldSpawnPosition = player.forward * _instance._localSpawnPosition.z + player.right * _instance._localSpawnPosition.x;
+        Vector3 from = worldSpawnPosition + _instance._localSpawnPosition;
         Vector3 to = target.GetWorldPosition(x, y);
 
         ClientManager.Wait = true;
 
-        Vector3 worldSpawnPosition = player.forward * _instance._localSpawnPosition.z + player.right * _instance._localSpawnPosition.x;
-
-        Missile missile = Instantiate(_instance._missilePrefab);
+        Missile missile = Instantiate(_instance._missilePrefab, from, Quaternion.identity);
         missile.SetCallbacks(
             onTargetReach,
             delegate ()
@@ -136,7 +135,7 @@ public class GameManager : MonoBehaviour
             if (!target.You)
             {
                 ship = Instantiate(shipPrefab, target.GetWorldPosition(shipX, shipY),
-                    target.transform.rotation * Quaternion.Euler(90 * shipDir * Vector3.up), target.transform).transform;
+                    target.transform.rotation * Quaternion.Euler(90 * shipDir * -Vector3.up), target.transform).transform;
             }
             else
                 ship = target.GetShip(x, y).transform;
