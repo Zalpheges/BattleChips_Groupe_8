@@ -19,18 +19,6 @@ public class GameManager : MonoBehaviour
 
     public static ShipPlacement ShipPlacement;
 
-    [Header("Board")]
-
-
-
-
-
-
-
-
-
-
-
     [Space(5)]
     [Header("Game")]
 

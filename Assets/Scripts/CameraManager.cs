@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
+    /*
+    la caméra à la priorité la plus élevée sera celle utilisée
+    ChildCamera est un tableau de caméras que CameraManager peut gérer (l'ajout se fait quand un GameObject CinemachineVirtualCamera est ajouté en enfant)
+    */
+    
     private static CameraManager _instance;
 
     public static float transitionDelay { get; private set; }
@@ -69,10 +74,13 @@ public class CameraManager : MonoBehaviour
 
     public static CinemachineVirtualCamera CreateCamera(Transform objectTransform, Vector3 offSetPosition, Vector3 offSetRotation)
     {
+        //placement de la camera pour une bonne vue
         GameObject cameraObject = Instantiate(_instance.cameraPrefab, _instance.cameraPrefab.transform.position, objectTransform.rotation);
         cameraObject.transform.position = objectTransform.position + _instance.offSetPosition;
         cameraObject.transform.Rotate(_instance.offSetRotation);
-        cameraObject.transform.SetParent(_instance.transform, true);
+        //
+
+        cameraObject.transform.SetParent(_instance.transform, true); //on accroche la camera à CameraManager dans la hiérarchie pour le bon fonctionnement de la librairie
 
         CinemachineVirtualCamera cinemachineVirtualCamera = cameraObject.GetComponent<CinemachineVirtualCamera>();
 
@@ -85,7 +93,8 @@ public class CameraManager : MonoBehaviour
             CreateCamera(playerTransform, _instance.offSetPosition, _instance.offSetRotation);
 
         _instance._index = GameManager.MyID;
-        _instance._cinemachineClearShot.ChildCameras[GameManager.MyID].Priority = 1;
+
+        _instance._cinemachineClearShot.ChildCameras[GameManager.MyID].Priority = 1; 
         UIManager.ShowPlayerName(ClientManager.GetName(GameManager.MyID));
     }
 

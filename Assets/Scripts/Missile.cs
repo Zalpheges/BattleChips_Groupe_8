@@ -49,12 +49,13 @@ public class Missile : MonoBehaviour
 
     public void Shoot(Vector3 from, Vector3 to, bool explode)
     {
-
+        // Définition point Bézier
         _from = from;
         _to = to;
 
         _interpolator = (from + to) / 2f;
         _interpolator.y += 250f;
+        //
 
         _explode = explode;
 
@@ -81,8 +82,10 @@ public class Missile : MonoBehaviour
 
             Vector3 position = Mathf.Pow(1f - _time, 2) * _from + 2f * (1f - _time) * _time * _interpolator + Mathf.Pow(_time, 2) * _to;
 
+            // rotation du missile et de la caméra en direction de sa position à _time + 1 frame
             transform.LookAt(position);
             _camera.transform.LookAt(position);
+            //
 
             transform.position = position;
 
@@ -93,9 +96,9 @@ public class Missile : MonoBehaviour
 
     private IEnumerator CameraSetUp()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame(); //attendre de la frame suivante pour que le CameraManager intègre la nouvelle caméra
         CameraManager.ChangeCamera(_camera);
-        yield return new WaitForSeconds(CameraManager.transitionDelay);
+        yield return new WaitForSeconds(CameraManager.transitionDelay); // attente de la fin de la transition sur le missile
         _moving = true;
     }
 
@@ -105,8 +108,8 @@ public class Missile : MonoBehaviour
 
         _onTargetReached?.Invoke();
 
-        foreach (Transform child in transform)
-            child.gameObject.SetActive(false);
+        foreach (Transform child in transform) //désactiver les objects graphiques du missile
+            child.gameObject.SetActive(false); 
 
         CameraManager.DestroyCamera(_camera, _targetId);
 
