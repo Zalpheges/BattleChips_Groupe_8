@@ -69,6 +69,8 @@ public class GameManager : MonoBehaviour
 
     public static void Board(int id, int count)
     {
+        MyID = id;
+
         _instance._players = Map.CreatePlayers(id, count);
 
         CurrentState = State.PlacingShips;
@@ -144,7 +146,7 @@ public class GameManager : MonoBehaviour
 
     public static void RemoveShip(int x, int y)
     {
-        _instance._players[MyID].RemoveShip(x, y);
+        Me.RemoveShip(x, y);
     }
 
     

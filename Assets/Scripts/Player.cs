@@ -78,21 +78,21 @@ public class Player : MonoBehaviour
 
     public void RemoveShip(int iStart, int jStart)
     {
-        Ship ship = _grid[iStart, jStart].Ship.GetComponentInChildren<Ship>();
-        Vector2Int shipDir = ship.direction;
+        GameObject ship = _grid[iStart, jStart].Ship;
+        Vector2Int shipDir = ship.GetComponentInChildren<Ship>().direction;
         Vector2Int browseDir = new Vector2Int(shipDir.x, -shipDir.y);
         for (int k = 0; k < 2; ++k)
         {
             int i = iStart;
             int j = jStart;
-            _grid[i, j] = null;
+            _grid[i, j].Ship = null;
 
             while (i > 0 && i < _grid.GetLength(0) && j > 0 && j < _grid.GetLength(1)
-                && _grid[i + browseDir.x, j + browseDir.y].Ship == _grid[i, j].Ship)
+                && _grid[i + browseDir.x, j + browseDir.y].Ship == ship)
             {
                 i += browseDir.x;
                 j += browseDir.y;
-                _grid[i, j] = null;
+                _grid[i, j].Ship = null;
             }
 
             browseDir = - browseDir;

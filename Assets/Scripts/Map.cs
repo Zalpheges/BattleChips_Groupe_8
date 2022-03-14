@@ -32,6 +32,7 @@ public class Map : MonoBehaviour
 
             player.Initialize(i, i == GameManager.MyID);
             playerTransforms.Add(player.transform);
+            players[i] = player;
         }
 
         CameraManager.InitCamera(playerTransforms);
