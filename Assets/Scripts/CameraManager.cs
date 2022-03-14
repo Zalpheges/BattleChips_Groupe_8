@@ -43,6 +43,7 @@ public class CameraManager : MonoBehaviour
     {
         _cinemachineClearShot.LiveChild.Priority = 0;
         _cinemachineClearShot.ChildCameras[index].Priority = 1;
+        UIManager.ShowPlayerName(ClientManager.GetName(index));
     }
 
     public static void ChangeCamera(CinemachineVirtualCamera camera)
@@ -85,6 +86,7 @@ public class CameraManager : MonoBehaviour
 
         _instance._index = GameManager.MyID;
         _instance._cinemachineClearShot.ChildCameras[GameManager.MyID].Priority = 1;
+        UIManager.ShowPlayerName(ClientManager.GetName(GameManager.MyID));
     }
 
     public static void DestroyCamera(CinemachineVirtualCamera cinemachineVirtualCamera, int nextCamera)
