@@ -126,7 +126,7 @@ public class ClientManager : MonoBehaviour
 						GameManager.Shoot(id, x, y, shipId, shipX, shipY, shipDir);
 					}
 					else
-						GameManager.Shoot(id, x, y);
+						GameManager.Shoot(id, x, y, touched);
 						
 					break;
 				}

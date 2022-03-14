@@ -161,12 +161,16 @@ public class ShipPlacement : MonoBehaviour
 
     public void OnCellClicked(Cell cell)
     {
+        
         Player player = cell.transform.parent.GetComponent<Player>();
+        Debug.Log("display Menu : " + _displayShipMenu + " You : " + player.You);
+
         if (_displayShipMenu)
             return;
         if (GameManager.MyTurn && !player.You)
         {
             ClientManager.Shoot(player.Id, cell.Position.x, cell.Position.y);
+            Debug.Log("Shoot");
         }
         else if (GameManager.CurrentState == GameManager.State.PlacingShips)
         {

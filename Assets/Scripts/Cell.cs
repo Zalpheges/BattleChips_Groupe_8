@@ -38,7 +38,7 @@ public class Cell : MonoBehaviour
 
     public void MouseEnter()
     {
-        if(_type != Type.None || _owner.You)
+        if(_type != Type.None || (_owner.You && GameManager.MyTurn))
            return;
 
         if (!EventSystem.current.IsPointerOverGameObject())

@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
         Playing
     }
 
-    
+
     private static GameManager _instance;
 
     public static State CurrentState;
@@ -23,13 +23,13 @@ public class GameManager : MonoBehaviour
 
     [Header("Board")]
 
-    
-    
-    
-    
 
 
-    
+
+
+
+
+
 
 
 
@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour
     public static void Board(int id, int count)
     {
         MyID = id;
-
         _instance._players = Map.CreatePlayers(id, count);
 
         CurrentState = State.PlacingShips;
@@ -91,9 +90,9 @@ public class GameManager : MonoBehaviour
         UIManager.SetTurn(ClientManager.GetName(_instance._turn));
     }
 
-    
 
-    public static void Shoot(int id, int x, int y, Action onTargetReach = null)
+
+    public static void Shoot(int id, int x, int y, bool touched, Action onTargetReach = null)
     {
         Player target = _instance._players[id];
         Transform player = CurrentPlayer.transform;
@@ -108,16 +107,17 @@ public class GameManager : MonoBehaviour
         Missile missile = Instantiate(_instance._missilePrefab);
         missile.SetCallbacks(
             onTargetReach,
-            delegate () {
+            delegate ()
+            {
                 UIManager.SetTurn(ClientManager.GetName(CurrentPlayer.Id));
             }
         );
 
-        missile.Shoot(from, to, onTargetReach != null);
+        missile.Shoot(from, to, touched);
 
         UIManager.ShowShoot(ClientManager.GetName(CurrentPlayer.Id), ClientManager.GetName(target.Id));
 
-        target.SetCellType(x, y, Cell.Type.ShipHit);
+        target.SetCellType(x, y, touched ? Cell.Type.ShipHit : Cell.Type.EmptyHit);
 
         do
         {
@@ -130,7 +130,8 @@ public class GameManager : MonoBehaviour
         Player target = _instance._players[id];
         GameObject shipPrefab = ShipPlacement.GetShipDataByID(shipId).prefab;
 
-        Shoot(id, x, y, delegate () {
+        Shoot(id, x, y, true, delegate ()
+        {
             Transform ship;
             if (!target.You)
             {
@@ -141,7 +142,7 @@ public class GameManager : MonoBehaviour
                 ship = target.GetShip(x, y).transform;
             ship.localRotation *= Quaternion.Euler(Vector3.right * 1000f);
         });
-       
+
     }
 
     public static void RemoveShip(int x, int y)
@@ -149,5 +150,5 @@ public class GameManager : MonoBehaviour
         Me.RemoveShip(x, y);
     }
 
-    
+
 }
