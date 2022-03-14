@@ -61,7 +61,6 @@ public class Player : MonoBehaviour
             i += dir.x;
             j += dir.y;
         }
-
         return true;
     }
 
@@ -74,7 +73,6 @@ public class Player : MonoBehaviour
             j += dir.y;
         }
     }
-
 
     public void RemoveShip(int iStart, int jStart)
     {

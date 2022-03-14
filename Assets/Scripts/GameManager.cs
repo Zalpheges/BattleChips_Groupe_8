@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Missile _missilePrefab;
 
-    [SerializeField] //-112 -45
+    [SerializeField]
     private Vector3 _localSpawnPosition;
 
     private void Awake()
@@ -57,7 +57,6 @@ public class GameManager : MonoBehaviour
         _instance = this;
 
         ShipPlacement = GetComponent<ShipPlacement>();
-
     }
 
     public void Boarded()
@@ -148,6 +147,4 @@ public class GameManager : MonoBehaviour
     {
         Me.RemoveShip(x, y);
     }
-
-
 }

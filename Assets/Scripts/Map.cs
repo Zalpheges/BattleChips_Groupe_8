@@ -55,7 +55,6 @@ public class Map : MonoBehaviour
         return positions;
     }
 
-    // Warning : Code des Dieux - Ne pas essayer ne serait-ce que d'appr�hender //
     private Vector3 ComputePlayerOffset(float angle, float radius)
     {
         Vector3 offset = Vector3.zero;

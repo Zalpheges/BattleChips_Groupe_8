@@ -115,7 +115,7 @@ public class ShipPlacement : MonoBehaviour
         CurrentInstanciatedChip.GetComponentInChildren<Ship>().direction = vect;
         player.AddShipToGrid(CurrentInstanciatedChip, i, j, length, vect);
 
-        int trigDir = dir % 2 == 1 ? (dir + 2) % 4 : dir; //inverse 1 and 3 
+        int trigDir = dir % 2 == 1 ? (dir + 2) % 4 : dir; //swap 1 and 3 
         ClientManager.AddShip(CurrentShipId, i, j, trigDir, length);
         --_nShipsToPlace;
 
@@ -163,14 +163,12 @@ public class ShipPlacement : MonoBehaviour
     {
         
         Player player = cell.transform.parent.GetComponent<Player>();
-        Debug.Log("display Menu : " + _displayShipMenu + " You : " + player.You);
 
         if (_displayShipMenu)
             return;
         if (GameManager.MyTurn && !player.You)
         {
             ClientManager.Shoot(player.Id, cell.Position.x, cell.Position.y);
-            Debug.Log("Shoot");
         }
         else if (GameManager.CurrentState == GameManager.State.PlacingShips)
         {
@@ -194,5 +192,4 @@ public class ShipPlacement : MonoBehaviour
             }
         }
     }
-
 }
