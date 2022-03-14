@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
     {
         _instance._players = Map.CreatePlayers(id, count);
 
+        CurrentState = State.PlacingShips;
         UIManager.ShowMenu(UIManager.Menu.Board);
     }
 
