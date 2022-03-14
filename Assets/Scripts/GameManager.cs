@@ -109,6 +109,8 @@ public class GameManager : MonoBehaviour
             onTargetReach,
             delegate ()
             {
+                ClientManager.Wait = false;
+
                 UIManager.SetTurn(ClientManager.GetName(CurrentPlayer.Id));
             }
         );
