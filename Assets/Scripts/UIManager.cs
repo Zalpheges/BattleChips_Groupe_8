@@ -124,8 +124,8 @@ public class UIManager : MonoBehaviour
 		{
 			_connectionButton.interactable = false;
 
-			PlayerPrefs.SetString("username", _usernameInput.text);
-			PlayerPrefs.SetString("roomname", _roomnameInput.text);
+			PlayerPrefs.SetString("Username", _usernameInput.text);
+			PlayerPrefs.SetString("Roomname", _roomnameInput.text);
 
 			ClientManager.Connect(_usernameInput.text, _roomnameInput.text);
 		}

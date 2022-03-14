@@ -11,13 +11,11 @@ public class GameManager : MonoBehaviour
         Playing
     }
 
-
     private static GameManager _instance;
 
     public static State CurrentState;
     public static bool PlacingShips => CurrentState == State.PlacingShips;
     public static bool Playing => CurrentState == State.Playing;
-
 
     public static ShipPlacement ShipPlacement;
 
@@ -138,7 +136,7 @@ public class GameManager : MonoBehaviour
             if (!target.You)
             {
                 ship = Instantiate(shipPrefab, target.GetWorldPosition(shipX, shipY),
-                    Quaternion.identity, target.transform).transform;
+                    target.transform.rotation * Quaternion.Euler(90 * shipDir * Vector3.up), target.transform).transform;
             }
             else
                 ship = target.GetShip(x, y).transform;

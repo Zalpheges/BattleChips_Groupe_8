@@ -48,7 +48,9 @@ public class Map : MonoBehaviour
         positions[0] = _center.position + Vector3.back * radius;
 
         for (int i = 1; i < nPlayers; ++i)
+        {
             positions[i] = _center.position + ComputePlayerOffset(i * deltaAngle, radius);
+        }
 
         return positions;
     }
@@ -58,18 +60,11 @@ public class Map : MonoBehaviour
     {
         Vector3 offset = Vector3.zero;
 
-        float horizontalLength = Mathf.Sin(angle % 90f * Mathf.Deg2Rad);
-
-        if (Mathf.FloorToInt(angle / 90f) % 2 == 1)
-            horizontalLength += Mathf.PI / 2f;
+        float horizontalLength = Mathf.Sin(angle % 90f * Mathf.Deg2Rad + ((int)(angle / 90) % 2 == 0 ? 0 : Mathf.PI / 2));
 
         offset.x += horizontalLength * radius * (angle <= 180f ? 1f : -1f);
 
-        float verticalLength = Mathf.Sin(angle % 90f * Mathf.Deg2Rad);
-
-        if (Mathf.FloorToInt(angle / 90f) % 2 == 0)
-            verticalLength += Mathf.PI / 2f;
-
+        float verticalLength = Mathf.Sin(angle % 90f * Mathf.Deg2Rad + ((int)(angle / 90) % 2 == 1 ? 0 : Mathf.PI / 2));
         offset.z = verticalLength * radius * (angle >= 90f && angle <= 270f ? 1f : -1f);
 
         return offset;
