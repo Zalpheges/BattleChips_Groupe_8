@@ -39,7 +39,7 @@ public class ShipPlacement : MonoBehaviour
     public bool IsShipSelected => CurrentShipId != -1;
 
     private int _lastRotation;
-    private int _nShipsToPlace = 1;
+    private int _nShipsToPlace = 5;
 
     private bool _displayShipMenu = false;
 

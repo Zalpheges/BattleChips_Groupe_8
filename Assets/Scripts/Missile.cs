@@ -39,7 +39,7 @@ public class Missile : MonoBehaviour
 
     private float _time;
 
-    private bool _moving = true;
+    private bool _moving = false;
 
     private Action _onTargetReached;
     private Action _onDestroy;
@@ -49,6 +49,7 @@ public class Missile : MonoBehaviour
 
     public void Shoot(Vector3 from, Vector3 to, bool explode)
     {
+
         _from = from;
         _to = to;
 
@@ -62,6 +63,8 @@ public class Missile : MonoBehaviour
 
         CinemachineTransposer transposer = _camera.GetCinemachineComponent<CinemachineTransposer>();
         transposer.m_FollowOffset = _localCameraPosition;
+
+        StartCoroutine(CameraSetUp());
     }
 
     public void SetCallbacks(Action onTargetReach, Action onDestroy)
@@ -76,7 +79,7 @@ public class Missile : MonoBehaviour
         {
             _time += Time.deltaTime / _travelTime;
 
-            Vector3 position = Mathf.Pow(1f - _time, 2) * _from + 2f * (1f - _time) * _interpolator + Mathf.Pow(_time, 2) * _to;
+            Vector3 position = Mathf.Pow(1f - _time, 2) * _from + 2f * (1f - _time) * _time * _interpolator + Mathf.Pow(_time, 2) * _to;
 
             transform.LookAt(position);
             _camera.transform.LookAt(position);
@@ -88,11 +91,22 @@ public class Missile : MonoBehaviour
         }
     }
 
+    private IEnumerator CameraSetUp()
+    {
+        yield return new WaitForEndOfFrame();
+        CameraManager.ChangeCamera(_camera);
+        yield return new WaitForSeconds(CameraManager.transitionDelay);
+        _moving = true;
+    }
+
     private IEnumerator OnEndReached()
     {
         _moving = false;
 
         _onTargetReached?.Invoke();
+
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(false);
 
         CameraManager.DestroyCamera(_camera, _targetId);
 

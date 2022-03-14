@@ -45,6 +45,12 @@ public class CameraManager : MonoBehaviour
         _cinemachineClearShot.ChildCameras[index].Priority = 1;
     }
 
+    public static void ChangeCamera(CinemachineVirtualCamera camera)
+    {
+        _instance._cinemachineClearShot.LiveChild.Priority = 0;
+        camera.Priority = 10;
+    }
+
     public void Next()
     {
         _index = (_index + 1) % _cinemachineClearShot.ChildCameras.Length;

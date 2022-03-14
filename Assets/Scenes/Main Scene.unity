@@ -305,7 +305,7 @@ MonoBehaviour:
     button: {fileID: 1305711269}
     id: 3
     length: 3
-  - prefab: {fileID: 1257255175192470, guid: c3672f9b2e0555e418f7dcc46c6d0d10, type: 3}
+  - prefab: {fileID: 871154537424989836, guid: 86ddc1a7f5b52884c93514befae19f1a, type: 3}
     button: {fileID: 18382535}
     id: 4
     length: 2

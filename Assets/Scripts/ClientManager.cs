@@ -116,13 +116,15 @@ public class ClientManager : MonoBehaviour
 					bool touched = message.GetBoolean(3);
 					bool destroyed = message.GetBoolean(4);
 						
-					int shipId = message.GetInt(5);
-					int shipX = message.GetInt(6);
-					int shipY = message.GetInt(7);
-					int shipDir = message.GetInt(8);
-
 					if (destroyed)
+                    {
+						int shipId = message.GetInt(5);
+						int shipX = message.GetInt(6);
+						int shipY = message.GetInt(7);
+						int shipDir = message.GetInt(8);
+
 						GameManager.Shoot(id, x, y, shipId, shipX, shipY, shipDir);
+					}
 					else
 						GameManager.Shoot(id, x, y);
 						
