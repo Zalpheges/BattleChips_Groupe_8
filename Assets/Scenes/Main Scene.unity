@@ -310,13 +310,14 @@ MonoBehaviour:
     length: 2
   _cellsMaterials:
   - cellType: 0
-    material: {fileID: 2100000, guid: eeb1f62320396114fa79791a44a45049, type: 2}
+    material: {fileID: 2100000, guid: 55a027ef6e44b1a4eb6310b1e09eef2d, type: 2}
   - cellType: 1
     material: {fileID: 2100000, guid: 0a099689bdb985540a52ac305675ee3e, type: 2}
   - cellType: 2
     material: {fileID: 2100000, guid: abfd2fa713eb8a149a69740220da298b, type: 2}
-  currentShipId: -1
-  currentInstanciatedChip: {fileID: 0}
+  _submitButton: {fileID: 1401390631}
+  CurrentShipId: -1
+  CurrentInstanciatedChip: {fileID: 0}
 --- !u!114 &70659242
 MonoBehaviour:
   m_ObjectHideFlags: 0

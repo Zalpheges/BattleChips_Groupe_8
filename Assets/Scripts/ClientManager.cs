@@ -43,7 +43,7 @@ public class ClientManager : MonoBehaviour
 				Debug.Log("Successfully connected to Player.IO");
 
 				//client.Multiplayer.DevelopmentServer = new ServerEndpoint("25.59.158.42", 8184);
-				client.Multiplayer.DevelopmentServer = new ServerEndpoint("localhost", 8184);
+				//client.Multiplayer.DevelopmentServer = new ServerEndpoint("localhost", 8184);
 
 				client.Multiplayer.CreateJoinRoom(
 					roomname,

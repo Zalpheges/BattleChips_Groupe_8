@@ -30,6 +30,7 @@ public class ShipPlacement : MonoBehaviour
     private Dictionary<int, ShipData> _shipDatas;
     public Dictionary<Cell.Type, Material> CellMaterials;
 
+    [SerializeField]
     private Button _submitButton;
 
     public int CurrentShipId = -1;
@@ -45,19 +46,16 @@ public class ShipPlacement : MonoBehaviour
     private int _iRemove;
     private int _jRemove;
 
-    private void Awake()
+    private void Start()
     {
+        _shipDatas = new Dictionary<int, ShipData>();
+        CellMaterials = new Dictionary<Cell.Type, Material>();
+
         foreach (ShipData shipData in _shipsDatas)
             _shipDatas.Add(shipData.id, shipData);
 
         foreach (CellMaterial cellMat in _cellsMaterials)
             CellMaterials.Add(cellMat.cellType, cellMat.material);
-    }
-
-    private void Start()
-    {
-        _shipDatas = new Dictionary<int, ShipData>();
-        CellMaterials = new Dictionary<Cell.Type, Material>();
     }
 
     private void Update()
