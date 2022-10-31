@@ -5,10 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
   - enabled: 1
-    path: Assets/Scenes/LaSeineDeBryan.unity
-    guid: afd54e47a712a5d4bbedd3069913e724
+    path: Assets/Scenes/Main Scene.unity
+    guid: 2e98287e785b26f40ab13d8de6313db3
   m_configObjects: {}
